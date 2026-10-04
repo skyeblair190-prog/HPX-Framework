@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>hpx_garages</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app" class="hidden">
+  <section id="panel">
+    <header>
+      <h1 id="title">GARAGE</h1>
+      <input id="search" type="text" placeholder="SEARCH" autocomplete="off" spellcheck="false" maxlength="32">
+      <button id="close" type="button" aria-label="Close">&times;</button>
+    </header>
+    <div id="grid"></div>
+    <div id="empty" class="hidden">NO VEHICLES</div>
+    <footer><span><kbd>ESC</kbd> CLOSE</span><span><kbd>CLICK</kbd> SELECT</span></footer>
+  </section>
+  <div id="overlay" class="hidden">
+    <div id="modal" role="dialog" aria-modal="true">
+      <div class="m-head">
+        <span id="m-name"></span>
+        <button id="m-close" type="button" aria-label="Close">&times;</button>
+      </div>
+      <div class="m-body">
+        <div id="m-plate" class="plate"></div>
+        <div id="m-stats" class="stats"></div>
+        <div id="m-info"></div>
+      </div>
+      <button id="m-btn" type="button" class="primary"></button>
+    </div>
+  </div>
+</div>
+<script src="script.js"></script>
+</body>
+</html>
