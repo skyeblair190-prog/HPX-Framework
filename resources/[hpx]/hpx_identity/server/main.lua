@@ -5,7 +5,8 @@ local function sync(source)
     citizenid = player.citizenid,
     name = player:GetName(),
     phone = player.phone,
-    job = player.job
+    job = player.job,
+    gang = player.gang
   })
 end
 
