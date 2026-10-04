@@ -25,7 +25,9 @@ function HPXServer.Character.Load(source, characterId)
   row.metadata = decode(row.metadata, {})
 
   local player = HPXServer.BuildPlayer(source, row)
+  player.phone = row.phone
   HPXServer.SetPlayer(source, player)
+  TriggerEvent('hpx:server:characterLoaded', source, player)
   return player
 end
 
@@ -35,7 +37,7 @@ function HPXServer.Character.Save(source)
 
   local changed = MySQL.update.await([[
     UPDATE hpx_characters
-    SET charinfo = ?, money = ?, job = ?, gang = ?, metadata = ?, position = ?, permission = ?, last_seen = CURRENT_TIMESTAMP
+    SET charinfo = ?, money = ?, job = ?, gang = ?, metadata = ?, position = ?, permission = ?, phone = ?, last_seen = CURRENT_TIMESTAMP
     WHERE id = ? AND license = ?
   ]], {
     json.encode(player.charinfo),
@@ -45,6 +47,7 @@ function HPXServer.Character.Save(source)
     json.encode(player.metadata),
     player.position and json.encode(player.position) or nil,
     player.permission,
+    player.phone,
     player.charid,
     player.license
   })
@@ -64,11 +67,11 @@ function HPXServer.Character.Create(source, slot, charinfo)
   local citizenid = HPXServer.GenerateCitizenId()
   local phone = HPXServer.GeneratePhoneNumber()
   local data = {
-    firstname = tostring(charinfo.firstname or 'John'),
-    lastname = tostring(charinfo.lastname or 'Doe'),
-    birthdate = tostring(charinfo.birthdate or '01/01/2000'),
-    gender = tostring(charinfo.gender or 'male'),
-    nationality = tostring(charinfo.nationality or 'Los Santos')
+    firstname = tostring(charinfo and charinfo.firstname or 'John'),
+    lastname = tostring(charinfo and charinfo.lastname or 'Doe'),
+    birthdate = tostring(charinfo and charinfo.birthdate or '01/01/2000'),
+    gender = tostring(charinfo and charinfo.gender or 'male'),
+    nationality = tostring(charinfo and charinfo.nationality or 'Los Santos')
   }
 
   local id = MySQL.insert.await([[
@@ -80,10 +83,11 @@ function HPXServer.Character.Create(source, slot, charinfo)
     json.encode(HPXConfig.character.defaultMoney),
     json.encode(HPXConfig.character.defaultJob),
     json.encode(HPXConfig.character.defaultGang),
-    json.encode({})
+    json.encode({}), phone
   })
 
-  return id and HPXServer.Character.Load(source, id) or nil
+  if not id then return nil, 'database_error' end
+  return HPXServer.Character.Load(source, id)
 end
 
 function HPXServer.Character.Delete(source, characterId)
