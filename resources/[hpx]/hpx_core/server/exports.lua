@@ -31,9 +31,25 @@ exports('SavePlayer', function(source)
 end)
 
 exports('LoadCharacter', function(source, id)
-  return HPXServer.Character.Load(source, id)
+  local player, err = HPXServer.Character.Load(source, id)
+  if player then TriggerEvent('hpx:server:characterLoaded', source, player) end
+  return player, err
 end)
 
 exports('CreateCharacter', function(source, slot, charinfo)
-  return HPXServer.Character.Create(source, slot, charinfo)
+  local player, err = HPXServer.Character.Create(source, slot, charinfo)
+  if player then TriggerEvent('hpx:server:characterLoaded', source, player) end
+  return player, err
+end)
+
+exports('GenerateAccountNumber', function()
+  return HPXServer.GenerateAccountNumber()
+end)
+
+exports('GenerateCitizenId', function()
+  return HPXServer.GenerateCitizenId()
+end)
+
+exports('GeneratePhoneNumber', function()
+  return HPXServer.GeneratePhoneNumber()
 end)
