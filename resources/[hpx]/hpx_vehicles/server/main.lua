@@ -113,6 +113,7 @@ exports('AddOwned', function(characterId, model, garage, plate, props)
 
   props = type(props) == 'table' and props or {}
   props.plate = plate
+  props.model = props.model or joaat(model)
 
   local ok, id = pcall(MySQL.insert.await,
     'INSERT INTO hpx_vehicles (character_id, plate, model, props, stored, garage, state) VALUES (?, ?, ?, ?, 1, ?, ?)',
@@ -143,4 +144,166 @@ exports('Impound', function(plate, price)
     { 'impounded', price, plate }
   )
   return (changed or 0) > 0
+end)
+
+-- qbx_vehicles compatible API used by hpx_garages.
+-- Numeric states: 0 = out, 1 = garaged, 2 = impounded (stored on the row as stored/state).
+local VEHICLE_STATE <const> = { OUT = 0, GARAGED = 1, IMPOUNDED = 2 }
+local SELECT_VEHICLE <const> = 'SELECT v.id, v.plate, v.model, v.props, v.stored, v.garage, v.state, v.depot_price, c.citizenid FROM hpx_vehicles v LEFT JOIN hpx_characters c ON c.id = v.character_id'
+
+local function toVehicleState(row)
+  if row.state == 'impounded' then return VEHICLE_STATE.IMPOUNDED end
+  return (row.stored == 1 or row.stored == true) and VEHICLE_STATE.GARAGED or VEHICLE_STATE.OUT
+end
+
+local function fromVehicleState(state)
+  if state == VEHICLE_STATE.IMPOUNDED then return 1, 'impounded' end
+  if state == VEHICLE_STATE.GARAGED then return 1, 'normal' end
+  return 0, 'normal'
+end
+
+local function toPlayerVehicle(row)
+  local props = decodeProps(row.props)
+  props.plate = props.plate or row.plate
+  props.model = props.model or tonumber(row.model) or joaat(row.model)
+  return {
+    id = row.id,
+    citizenid = row.citizenid,
+    modelName = row.model,
+    garage = row.garage,
+    state = toVehicleState(row),
+    depotPrice = tonumber(row.depot_price) or 0,
+    props = props,
+  }
+end
+
+local function stateClause(states)
+  if type(states) == 'number' then states = { states } end
+  if type(states) ~= 'table' then return nil end
+  local parts = {}
+  for _, state in ipairs(states) do
+    if state == VEHICLE_STATE.OUT then
+      parts[#parts + 1] = '(v.stored = 0)'
+    elseif state == VEHICLE_STATE.GARAGED then
+      parts[#parts + 1] = "(v.stored = 1 AND v.state <> 'impounded')"
+    elseif state == VEHICLE_STATE.IMPOUNDED then
+      parts[#parts + 1] = "(v.state = 'impounded')"
+    end
+  end
+  if #parts == 0 then return nil end
+  return '(' .. table.concat(parts, ' OR ') .. ')'
+end
+
+local function appendFilter(filter, where, params)
+  if type(filter) ~= 'table' then return end
+  if filter.citizenid ~= nil then
+    where[#where + 1] = 'c.citizenid = ?'
+    params[#params + 1] = tostring(filter.citizenid)
+  end
+  if filter.garage ~= nil then
+    where[#where + 1] = 'v.garage = ?'
+    params[#params + 1] = tostring(filter.garage)
+  end
+  local clause = stateClause(filter.states)
+  if clause then where[#where + 1] = clause end
+end
+
+exports('GetPlayerVehicles', function(filter)
+  local where, params = {}, {}
+  appendFilter(filter, where, params)
+  local query = SELECT_VEHICLE
+  if #where > 0 then query = query .. ' WHERE ' .. table.concat(where, ' AND ') end
+  local rows = MySQL.query.await(query .. ' ORDER BY v.id DESC', params) or {}
+  local vehicles = {}
+  for i = 1, #rows do vehicles[i] = toPlayerVehicle(rows[i]) end
+  return vehicles
+end)
+
+exports('GetPlayerVehicle', function(vehicleId, filter)
+  vehicleId = math.tointeger(tonumber(vehicleId))
+  if not vehicleId then return nil end
+  local where, params = { 'v.id = ?' }, { vehicleId }
+  appendFilter(filter, where, params)
+  local row = MySQL.single.await(SELECT_VEHICLE .. ' WHERE ' .. table.concat(where, ' AND ') .. ' LIMIT 1', params)
+  return row and toPlayerVehicle(row) or nil
+end)
+
+local function getIdByPlate(plate)
+  plate = normalizePlate(plate)
+  if not validPlate(plate) then return nil end
+  return MySQL.scalar.await('SELECT id FROM hpx_vehicles WHERE plate = ? LIMIT 1', { plate })
+end
+
+exports('GetVehicleIdByPlate', getIdByPlate)
+
+-- Saves garage/state/depotPrice/props for the vehicle behind a world entity.
+exports('SaveVehicle', function(entity, data)
+  if type(entity) ~= 'number' or entity == 0 or not DoesEntityExist(entity) or type(data) ~= 'table' then
+    return false
+  end
+
+  local id = math.tointeger(tonumber(Entity(entity).state.vehicleid)) or getIdByPlate(GetVehicleNumberPlateText(entity))
+  if not id then return false end
+
+  local sets, params = {}, {}
+  if data.garage ~= nil then
+    sets[#sets + 1] = 'garage = ?'
+    params[#params + 1] = tostring(data.garage)
+  end
+  if data.state ~= nil then
+    local stored, status = fromVehicleState(data.state)
+    sets[#sets + 1] = 'stored = ?'
+    sets[#sets + 1] = 'state = ?'
+    params[#params + 1] = stored
+    params[#params + 1] = status
+  end
+  if data.depotPrice ~= nil then
+    sets[#sets + 1] = 'depot_price = ?'
+    params[#params + 1] = math.max(0, math.floor(tonumber(data.depotPrice) or 0))
+  end
+  if type(data.props) == 'table' then
+    local encoded = json.encode(data.props)
+    if not encoded or #encoded > 32768 then return false end
+    sets[#sets + 1] = 'props = ?'
+    params[#params + 1] = encoded
+  end
+  if #sets == 0 then return false end
+
+  params[#params + 1] = id
+  local changed = MySQL.update.await(('UPDATE hpx_vehicles SET %s WHERE id = ?'):format(table.concat(sets, ', ')), params)
+  return (changed or 0) > 0
+end)
+
+-- Spawns a vehicle server side; the owner's client reports the vehicle type and applies props.
+exports('SpawnVehicle', function(params)
+  if type(params) ~= 'table' then return nil end
+
+  local owner = math.tointeger(tonumber(params.owner))
+  local hash = tonumber(params.model) or (type(params.model) == 'string' and joaat(params.model)) or nil
+  local spawn = params.spawnSource
+  if not owner or not hash or type(spawn) == 'nil' or type(spawn.x) ~= 'number' then return nil end
+
+  local vehicleType = lib.callback.await('hpx_vehicles:client:getVehicleType', owner, hash)
+  if not vehicleType then return nil end
+
+  local heading = type(spawn) == 'vector3' and 0.0 or tonumber(spawn.w) or 0.0
+  local entity = CreateVehicleServerSetter(hash, vehicleType, spawn.x, spawn.y, spawn.z, heading)
+  if not entity or entity == 0 then return nil end
+
+  local deadline = GetGameTimer() + 5000
+  while not DoesEntityExist(entity) do
+    if GetGameTimer() > deadline then return nil end
+    Wait(0)
+  end
+
+  if type(params.props) == 'table' then
+    Entity(entity).state:set('setVehicleProperties', params.props, true)
+  end
+
+  if params.warp then
+    local ped = type(params.warp) == 'number' and params.warp or GetPlayerPed(owner)
+    pcall(SetPedIntoVehicle, ped, entity, -1)
+  end
+
+  return NetworkGetNetworkIdFromEntity(entity), entity
 end)
