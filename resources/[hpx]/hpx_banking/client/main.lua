@@ -1,37 +1,32 @@
-local active = nil
+local open = false
 
 local function close()
-    if not active then return end
-    exports.hpx_dui:Destroy(active)
-    active = nil
+  if not open then return end
+  open = false
+  SendNUIMessage({ action = 'hpx:bank:close' })
+  SetNuiFocus(false, false)
 end
 
 local function openBank()
-    if active then return end
-
-    local account = lib.callback.await('hpx:banking:getAccount', false)
-    if not account then return end
-
-    local surface = exports.hpx_dui:Create({
-        width = HPXBankingConfig.dui.width,
-        height = HPXBankingConfig.dui.height
-    })
-
-    if not surface then return end
-
-    active = surface.id
-
-    exports.hpx_dui:Send(active, {
-        action = 'render',
-        html = string.format(
-            '<div style="height:100%%;background:#101216;color:white;padding:40px"><h1>HPX BANK</h1><h2>%s%.2f</h2><p>Checking account</p></div>',
-            HPXBankingConfig.currency,
-            tonumber(account.balance) or 0
-        )
-    })
+  if open then return end
+  local account = lib.callback.await('hpx:banking:getAccount', false)
+  if not account then return end
+  open = true
+  SetNuiFocus(true, true)
+  SendNUIMessage({ action = 'hpx:bank:open', account = account })
 end
 
-RegisterCommand('hpxbank', openBank, false)
+RegisterNUICallback('close', function(_, cb) close(); cb(true) end)
+RegisterNUICallback('deposit', function(data, cb)
+  cb({ ok = lib.callback.await('hpx:banking:deposit', false, data.amount, data.description) })
+end)
+RegisterNUICallback('withdraw', function(data, cb)
+  cb({ ok = lib.callback.await('hpx:banking:withdraw', false, data.amount, data.description) })
+end)
+RegisterNUICallback('transfer', function(data, cb)
+  cb({ ok = lib.callback.await('hpx:banking:transfer', false, data) })
+end)
 
+RegisterCommand('hpxbank', openBank, false)
 exports('Open', openBank)
 exports('Close', close)
