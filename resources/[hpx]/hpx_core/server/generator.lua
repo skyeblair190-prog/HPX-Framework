@@ -1,9 +1,18 @@
-local function unique(prefix, length, query, params)
-  for _ = 1, 20 do
-    local value = prefix .. lib.string.random(length, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789')
-    if not MySQL.scalar.await(query, params and table.unpack(params) or { value }) then
-      return value
-    end
+local alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
+local function randomString(length)
+  local out = {}
+  for i = 1, length do
+    local index = math.random(1, #alphabet)
+    out[i] = alphabet:sub(index, index)
+  end
+  return table.concat(out)
+end
+
+local function unique(prefix, length, query)
+  for _ = 1, 30 do
+    local value = prefix .. randomString(length)
+    if not MySQL.scalar.await(query, { value }) then return value end
   end
   error('HPX failed to generate a unique identifier')
 end
