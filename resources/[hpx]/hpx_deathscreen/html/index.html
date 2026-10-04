@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Death UI</title>
+    <!-- Barlow & Barlow Condensed Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700;1,800;1,900&family=Barlow:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="death-container" class="death-container bottom hidden">
+        <!-- Top Timer Box -->
+        <div id="timer-box" class="timer-box">
+            <span id="timer-text">00:00</span>
+        </div>
+
+        <!-- Stacked Gradient Banners -->
+        <div class="banners-wrapper">
+            <!-- Red Gradient Banner -->
+            <div class="banner-top">
+                <span id="death-title">YOU ARE INCAPACITATED</span>
+            </div>
+
+            <!-- Dark Charcoal Gradient Banner -->
+            <div class="banner-bottom">
+                <!-- State 1: Waiting for doctors -->
+                <div id="wait-state" class="banner-content">
+                    <span id="death-subtitle">PLEASE WAIT FOR DOCTORS, EVERYTHING WILL BE FINE.</span>
+                </div>
+
+                <!-- State 2: Timer expired, Hold E to respawn -->
+                <div id="respawn-state" class="banner-content hidden">
+                    <div id="key-badge" class="key-badge">E</div>
+                    <div class="respawn-text">
+                        <span id="respawn-prefix">HOLD</span>
+                        <span id="hold-seconds" class="highlight-cyan">5s</span>
+                        <span id="respawn-suffix">TO RESPAWN OR WAIT FOR THE EMS</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Soft Red Gradient Banner (Bottom) -->
+            <div id="banner-footer" class="banner-footer"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
