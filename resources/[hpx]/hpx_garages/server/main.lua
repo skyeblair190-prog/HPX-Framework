@@ -1,233 +1,292 @@
-local Config <const> = HPXGarages
-local Garages <const> = Config.garages
+local logger = require 'server.logger'
 
-local STATE_NORMAL <const> = 'normal'
-local STATE_IMPOUNDED <const> = 'impounded'
-local VEHICLE_SLACK <const> = 7.0
-local COLUMNS <const> = 'id, character_id, plate, model, props, stored, garage, state, depot_price'
+---@class ErrorResult
+---@field code string
+---@field message string
 
-local lastAction = {}
+---@class PlayerVehicle
+---@field id number
+---@field citizenid? string
+---@field modelName string
+---@field garage string
+---@field state VehicleState
+---@field depotPrice integer
+---@field props table ox_lib properties table
 
-local function fail(reason) return { ok = false, error = reason } end
-local function truthy(value) return value == 1 or value == true end
+Config = require 'config.server'
+Storage = require 'server.storage'
+---@type table<string, GarageConfig>
+Garages = Config.garages
 
-local function normalizePlate(plate)
-  return (tostring(plate or ''):gsub('^%s+', ''):gsub('%s+$', '')):upper()
+---@param source number
+---@return table?
+function GetHPXPlayer(source)
+    local player = exports.hpx_core:GetPlayer(source)
+    if player then player.source = source end
+    return player
 end
 
-local function decodeProps(raw)
-  if type(raw) ~= 'string' or raw == '' then return {} end
-  local ok, decoded = pcall(json.decode, raw)
-  return ok and type(decoded) == 'table' and decoded or {}
+---@param source number
+---@param message string
+---@param kind string
+function Notify(source, message, kind)
+    TriggerClientEvent('codera-notify:notify', source, message, kind, 5000)
 end
 
-local function percent(value, max)
-  value = tonumber(value)
-  if not value then return 100 end
-  return math.floor(math.max(0, math.min(100, value / max * 100)) + 0.5)
-end
-
-local function throttled(source)
-  local now = GetGameTimer()
-  if (lastAction[source] or 0) + Config.actionCooldown > now then return true end
-  lastAction[source] = now
-  return false
-end
-
-AddEventHandler('playerDropped', function()
-  lastAction[source] = nil
-end)
-
-local function hasGroupAccess(player, groups)
-  if not groups then return true end
-  local job, gang = player.job or {}, player.gang or {}
-  for name, minGrade in pairs(groups) do
-    if type(name) == 'number' then name, minGrade = minGrade, 0 end
-    if (job.name == name and (tonumber(job.grade) or 0) >= minGrade)
-      or (gang.name == name and (tonumber(gang.grade) or 0) >= minGrade) then
-      return true
+---@param groups string | string[] | table<string, number>
+---@param job? { name: string, grade: number }
+---@param gang? { name: string, grade: number }
+---@return boolean
+function HasPrimaryGroup(groups, job, gang)
+    if type(groups) == 'string' then
+        groups = { [groups] = 0 }
+    elseif type(groups) ~= 'table' then
+        return false
     end
-  end
-  return false
-end
 
-local function getAccess(source, garageName, pointIndex)
-  pointIndex = math.tointeger(pointIndex)
-  if type(garageName) ~= 'string' or not pointIndex then return nil end
-
-  local player = exports.hpx_core:GetPlayer(source)
-  local garage = Garages[garageName]
-  if not player or not garage or not hasGroupAccess(player, garage.groups) then return nil end
-
-  local point = garage.accessPoints[pointIndex]
-  if not point then return nil end
-
-  local ped = GetPlayerPed(source)
-  if not ped or ped == 0 then return nil end
-  local limit = (point.radius or Config.interactDistance) + Config.distanceSlack
-  if #(GetEntityCoords(ped) - point.coords.xyz) > limit then return nil end
-
-  return player, garage, point, limit
-end
-
-local function worldPlates()
-  local plates = {}
-  for _, vehicle in ipairs(GetAllVehicles()) do
-    plates[normalizePlate(GetVehicleNumberPlateText(vehicle))] = true
-  end
-  return plates
-end
-
-local function canAfford(source, amount)
-  return (exports.hpx_core:GetMoney(source, 'cash') or 0) >= amount
-    or (exports.hpx_core:GetMoney(source, 'bank') or 0) >= amount
-end
-
-local function charge(source, amount, reason)
-  if (exports.hpx_core:GetMoney(source, 'cash') or 0) >= amount then
-    return exports.hpx_core:RemoveMoney(source, 'cash', amount, reason)
-  end
-  if (exports.hpx_core:GetMoney(source, 'bank') or 0) >= amount then
-    return exports.hpx_core:RemoveMoney(source, 'bank', amount, reason)
-  end
-  return false
-end
-
-lib.callback.register('hpx:garages:list', function(source, garageName, pointIndex)
-  local player, garage = getAccess(source, garageName, pointIndex)
-  if not player then return nil end
-
-  local rows
-  if garage.type == 'depot' then
-    rows = MySQL.query.await(
-      ('SELECT %s FROM hpx_vehicles WHERE character_id = ? AND (stored = 0 OR state = ?) ORDER BY id DESC'):format(COLUMNS),
-      { player.charid, STATE_IMPOUNDED }
-    )
-  elseif garage.shared then
-    rows = MySQL.query.await(
-      ('SELECT %s FROM hpx_vehicles WHERE garage = ? AND stored = 1 AND state = ? ORDER BY id DESC'):format(COLUMNS),
-      { garageName, STATE_NORMAL }
-    )
-  else
-    rows = MySQL.query.await(
-      ('SELECT %s FROM hpx_vehicles WHERE character_id = ? AND garage = ? AND stored = 1 AND state = ? ORDER BY id DESC'):format(COLUMNS),
-      { player.charid, garageName, STATE_NORMAL }
-    )
-  end
-
-  local inWorld = garage.type == 'depot' and worldPlates() or {}
-  local list = {}
-  for _, row in ipairs(rows or {}) do
-    if not inWorld[row.plate] then
-      local props = decodeProps(row.props)
-      local price = 0
-      if garage.type == 'depot' then
-        price = (tonumber(row.depot_price) or 0) > 0 and row.depot_price or Config.depotFee
-      end
-      list[#list + 1] = {
-        id = row.id,
-        plate = row.plate,
-        model = row.model,
-        engine = percent(props.engineHealth, 1000),
-        body = percent(props.bodyHealth, 1000),
-        fuel = percent(props.fuelLevel, 100),
-        price = price,
-        impounded = row.state == STATE_IMPOUNDED,
-        mine = row.character_id == player.charid
-      }
+    for name, minGrade in pairs(groups) do
+        if type(name) == 'number' then
+            name, minGrade = minGrade, 0
+        end
+        minGrade = tonumber(minGrade) or 0
+        if job and job.name == name and (tonumber(job.grade) or 0) >= minGrade then return true end
+        if gang and gang.name == name and (tonumber(gang.grade) or 0) >= minGrade then return true end
     end
-  end
-  return list
+
+    return false
+end
+
+lib.callback.register('qbx_garages:server:getCitizenId', function(source)
+    local player = GetHPXPlayer(source)
+    return player and player.citizenid
 end)
 
-lib.callback.register('hpx:garages:retrieve', function(source, vehicleId, garageName, pointIndex)
-  if throttled(source) then return fail('busy') end
-
-  vehicleId = math.tointeger(vehicleId)
-  if not vehicleId or vehicleId < 1 then return fail('invalid') end
-
-  local player, garage = getAccess(source, garageName, pointIndex)
-  if not player then return fail('denied') end
-
-  local row = MySQL.single.await(('SELECT %s FROM hpx_vehicles WHERE id = ? LIMIT 1'):format(COLUMNS), { vehicleId })
-  if not row then return fail('not_found') end
-
-  local wasStored = truthy(row.stored) and 1 or 0
-  local depotPrice = tonumber(row.depot_price) or 0
-  local fee, affected = 0, 0
-
-  if garage.type == 'depot' then
-    if row.character_id ~= player.charid then return fail('not_owned') end
-    if wasStored == 1 and row.state ~= STATE_IMPOUNDED then return fail('not_impounded') end
-    if worldPlates()[row.plate] then return fail('in_world') end
-
-    fee = depotPrice > 0 and depotPrice or Config.depotFee
-    if not canAfford(source, fee) then return fail('no_funds') end
-
-    affected = MySQL.update.await(
-      'UPDATE hpx_vehicles SET stored = 0, state = ?, depot_price = 0 WHERE id = ? AND character_id = ? AND stored = ? AND state = ?',
-      { STATE_NORMAL, row.id, player.charid, wasStored, row.state }
-    )
-  else
-    if wasStored ~= 1 or row.state ~= STATE_NORMAL or row.garage ~= garageName then return fail('not_available') end
-    if not garage.shared and row.character_id ~= player.charid then return fail('not_owned') end
-
-    affected = MySQL.update.await(
-      'UPDATE hpx_vehicles SET stored = 0 WHERE id = ? AND stored = 1 AND state = ? AND garage = ?',
-      { row.id, STATE_NORMAL, garageName }
-    )
-  end
-
-  if (affected or 0) ~= 1 then return fail('busy') end
-
-  if fee > 0 and not charge(source, fee, 'depot-fee') then
-    MySQL.update.await(
-      'UPDATE hpx_vehicles SET stored = ?, state = ?, depot_price = ? WHERE id = ?',
-      { wasStored, row.state, depotPrice, row.id }
-    )
-    return fail('no_funds')
-  end
-
-  local props = decodeProps(row.props)
-  props.plate = row.plate
-
-  TriggerEvent('hpx:garages:vehicleRetrieved', source, row.id, row.plate, garageName)
-  return { ok = true, vehicle = { model = row.model, plate = row.plate, props = props } }
+lib.callback.register('qbx_garages:server:hasGroupAccess', function(source, groups)
+    local player = GetHPXPlayer(source)
+    return player ~= nil and HasPrimaryGroup(groups, player.job, player.gang)
 end)
 
-lib.callback.register('hpx:garages:park', function(source, netId, props, garageName, pointIndex)
-  if throttled(source) then return fail('busy') end
+lib.callback.register('qbx_garages:server:getGarages', function()
+    return Garages
+end)
 
-  netId = math.tointeger(netId)
-  if not netId or type(props) ~= 'table' then return fail('invalid') end
+---Returns garages for use server side.
+local function getGarages()
+    return Garages
+end
+exports('GetGarages', getGarages)
 
-  local player, garage, point, limit = getAccess(source, garageName, pointIndex)
-  if not player or garage.type == 'depot' then return fail('denied') end
+---@param name string
+---@param config GarageConfig
+local function registerGarage(name, config)
+    Garages[name] = config
+    TriggerClientEvent('qbx_garages:client:garageRegistered', -1, name, config)
+    TriggerEvent('qbx_garages:server:garageRegistered', name, config)
+end
 
-  local entity = NetworkGetEntityFromNetworkId(netId)
-  if not entity or entity == 0 or not DoesEntityExist(entity) or GetEntityType(entity) ~= 2 then
-    return fail('invalid')
-  end
-  if #(GetEntityCoords(entity) - point.coords.xyz) > limit + VEHICLE_SLACK then return fail('too_far') end
+exports('RegisterGarage', registerGarage)
 
-  local plate = normalizePlate(GetVehicleNumberPlateText(entity))
-  local row = MySQL.single.await('SELECT id, character_id, garage, state FROM hpx_vehicles WHERE plate = ? LIMIT 1', { plate })
-  if not row or row.state ~= STATE_NORMAL then return fail('not_owned') end
-  if row.character_id ~= player.charid and not (garage.shared and row.garage == garageName) then
-    return fail('not_owned')
-  end
+---Sets the vehicle's garage. It is the caller's responsibility to make sure the vehicle is not currently spawned in the world, or else this may have no effect.
+---@param vehicleId integer
+---@param garageName string
+---@return boolean success, ErrorResult?
+local function setVehicleGarage(vehicleId, garageName)
+    local garage = Garages[garageName]
+    if not garage then
+        return false, {
+            code = 'not_found',
+            message = string.format('garage name %s not found. Did you forget to register it?', garageName)
+        }
+    end
 
-  props.plate = plate
-  local encoded = json.encode(props)
-  if not encoded or #encoded > Config.maxPropsSize then return fail('invalid') end
+    local state = garage.type == GarageType.DEPOT and VehicleState.IMPOUNDED or VehicleState.GARAGED
+    local numRowsAffected = Storage.setVehicleGarage(vehicleId, garageName, state)
+    if numRowsAffected == 0 then
+        return false, {
+            code = 'no_rows_changed',
+            message = string.format('no rows were changed for vehicleId=%s', vehicleId)
+        }
+    end
+    return true
+end
 
-  local affected = MySQL.update.await(
-    'UPDATE hpx_vehicles SET stored = 1, state = ?, garage = ?, props = ?, depot_price = 0 WHERE id = ?',
-    { STATE_NORMAL, garageName, encoded, row.id }
-  )
-  if (affected or 0) < 1 then return fail('busy') end
+exports('SetVehicleGarage', setVehicleGarage)
 
-  DeleteEntity(entity)
-  TriggerEvent('hpx:garages:vehicleStored', source, row.id, plate, garageName)
-  return { ok = true }
+---Sets the vehicle's price for retrieval at a depot. Only affects vehicles that are OUT or IMPOUNDED.
+---@param vehicleId integer
+---@param depotPrice integer
+---@return boolean success, ErrorResult?
+local function setVehicleDepotPrice(vehicleId, depotPrice)
+    local numRowsAffected = Storage.setVehicleDepotPrice(vehicleId, depotPrice)
+    if numRowsAffected == 0 then
+        return false, {
+            code = 'no_rows_changed',
+            message = string.format('no rows were changed for vehicleId=%s', vehicleId)
+        }
+    end
+    return true
+end
+
+exports('SetVehicleDepotPrice', setVehicleDepotPrice)
+
+function FindPlateOnServer(plate)
+    local vehicles = GetAllVehicles()
+    for i = 1, #vehicles do
+        if plate == GetVehicleNumberPlateText(vehicles[i]) then
+            return true
+        end
+    end
+end
+
+---@param garage string
+---@return GarageType?
+function GetGarageType(garage)
+    return Garages[garage]?.type
+end
+
+---@class PlayerVehiclesFilters
+---@field citizenid? string
+---@field states? VehicleState|VehicleState[]
+---@field garage? string
+
+---@param source number
+---@param garageName string
+---@return PlayerVehiclesFilters
+function GetPlayerVehicleFilter(source, garageName)
+    local player = GetHPXPlayer(source)
+    local garage = Garages[garageName]
+    local filter = {}
+    filter.citizenid = not garage.shared and player.citizenid or nil
+    filter.states = garage.states or VehicleState.GARAGED
+    filter.garage = not garage.skipGarageCheck and garageName or nil
+    return filter
+end
+
+---@param source number
+---@param garageName string
+---@return GarageConfig?
+function TryGetGarage(source, garageName)
+    local garage = Garages[garageName]
+    if garage then return garage end
+
+    logger.log({
+        source = source,
+        event = 'error',
+        message = string.format(
+            'Attempted to spawn a vehicle from a non-existent garage: %s',
+            garageName
+        ),
+        webhook = Config.logging.webhook.error,
+        color = 'red'
+    })
+end
+
+local function getCanAccessGarage(player, garage)
+    if not player or not garage then return false end
+    if garage.groups and not HasPrimaryGroup(garage.groups, player.job, player.gang) then
+        return false
+    end
+    if garage.canAccess ~= nil and not garage.canAccess(player.source) then
+        return false
+    end
+    return true
+end
+
+---@param vehicle number vehicle entity
+---@return VehicleType
+local function getVehicleType(vehicle)
+    local entityType = GetVehicleType(vehicle)
+    if entityType == 'heli' or entityType == 'plane' then
+        return VehicleType.AIR
+    elseif entityType == 'boat' or entityType == 'submarine' then
+        return VehicleType.SEA
+    else
+        return VehicleType.CAR
+    end
+end
+
+---@param source number
+---@param garageName string
+---@return PlayerVehicle[]?
+lib.callback.register('qbx_garages:server:getGarageVehicles', function(source, garageName)
+    local player = GetHPXPlayer(source)
+    local garage = TryGetGarage(source, garageName)
+    if not garage then return end
+    if not getCanAccessGarage(player, garage) then return end
+    local filter = GetPlayerVehicleFilter(source, garageName)
+    local playerVehicles = exports.hpx_vehicles:GetPlayerVehicles(filter)
+    local toSend = {}
+    if not playerVehicles[1] then return end
+
+    for _, vehicle in pairs(playerVehicles) do
+        if not FindPlateOnServer(vehicle.props.plate) then
+            OverrideFreeDepotPriceForOutVehicle(vehicle)
+            toSend[#toSend + 1] = vehicle
+        end
+    end
+    return toSend
+end)
+
+---@param source number
+---@param vehicleId string
+---@param garageName string
+---@return boolean
+local function isParkable(source, vehicleId, garageName, vehicle)
+    local garageType = GetGarageType(garageName)
+    --- DEPOTS are only for retrieving, not storing
+    if garageType == GarageType.DEPOT then return false end
+    if not vehicleId then return false end
+    local player = GetHPXPlayer(source)
+    local garage = Garages[garageName]
+    if not getCanAccessGarage(player, garage) then
+        return false
+    end
+    ---@type PlayerVehicle
+    local playerVehicle = exports.hpx_vehicles:GetPlayerVehicle(vehicleId)
+    if not playerVehicle or getVehicleType(vehicle) ~= garage.vehicleType then
+        return false
+    end
+    if not garage.shared then
+        if playerVehicle.citizenid ~= player.citizenid then
+            return false
+        end
+    end
+    return true
+end
+
+lib.callback.register('qbx_garages:server:isParkable', function(source, garage, netId)
+    local vehicle = NetworkGetEntityFromNetworkId(netId)
+    local vehicleId = Entity(vehicle).state.vehicleid or exports.hpx_vehicles:GetVehicleIdByPlate(GetVehicleNumberPlateText(vehicle))
+    return isParkable(source, vehicleId, garage, vehicle)
+end)
+
+---@param source number
+---@param netId number
+---@param props table ox_lib vehicle props https://github.com/communityox/ox_lib/blob/master/resource/vehicleProperties/client.lua#L3
+---@param garage string
+lib.callback.register('qbx_garages:server:parkVehicle', function(source, netId, props, garage)
+    assert(Garages[garage] ~= nil, string.format('Garage %s not found. Did you register this garage?', garage))
+    local vehicle = NetworkGetEntityFromNetworkId(netId)
+    local vehicleId = Entity(vehicle).state.vehicleid or exports.hpx_vehicles:GetVehicleIdByPlate(GetVehicleNumberPlateText(vehicle))
+    local owned = isParkable(source, vehicleId, garage, vehicle) --Check ownership
+    if not owned then
+        Notify(source, locale('error.not_owned'), 'error')
+        return
+    end
+
+    exports.hpx_vehicles:SaveVehicle(vehicle, {
+        garage = garage,
+        state = VehicleState.GARAGED,
+        props = props
+    })
+
+    DeleteEntity(vehicle)
+end)
+
+AddEventHandler('onResourceStart', function(resource)
+    if resource ~= cache.resource then return end
+    Wait(100)
+    if Config.autoRespawn then
+        Storage.moveOutVehiclesIntoGarages()
+    end
 end)

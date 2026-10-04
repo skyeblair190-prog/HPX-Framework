@@ -1,133 +1,147 @@
 (() => {
-  'use strict';
+    const $ = (id) => document.getElementById(id);
+    const app = $('app'), stage = $('stage'), grid = $('grid'), search = $('search');
+    const overlay = $('overlay'), mBtn = $('m-btn');
 
-  const $ = (id) => document.getElementById(id);
-  const app = $('app');
-  const grid = $('grid');
-  const empty = $('empty');
-  const title = $('title');
-  const search = $('search');
-  const overlay = $('overlay');
-  const mName = $('m-name');
-  const mPlate = $('m-plate');
-  const mStats = $('m-stats');
-  const mInfo = $('m-info');
-  const mBtn = $('m-btn');
+    let vehicles = [], filter = 'all', selected = 0, current = null, imageUrl = '', currency = '$';
+    const FILTERS = ['all', 'personal', 'shared'];
 
-  let vehicles = [];
-  let depot = false;
-  let selected = null;
+    const post = (name, data = {}) =>
+        fetch(`https://${GetParentResourceName()}/${name}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+            body: JSON.stringify(data),
+        }).catch(() => {});
 
-  const post = (name, data) =>
-    fetch(`https://${GetParentResourceName()}/${name}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json; charset=UTF-8' },
-      body: JSON.stringify(data || {}),
-    }).catch(() => {});
-
-  const el = (tag, className, text) => {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    if (text !== undefined) node.textContent = text;
-    return node;
-  };
-
-  const clamp = (n) => Math.max(0, Math.min(100, Number(n) || 0));
-  const money = (n) => `$${Number(n || 0).toLocaleString('en-US')}`;
-
-  const stat = (label, value) => {
-    const pct = clamp(value);
-    const row = el('div', 'stat');
-    const bar = el('div', 'bar');
-    const fill = el('i', pct < 35 ? 'low' : '');
-    fill.style.width = `${pct}%`;
-    bar.append(fill);
-    row.append(el('span', '', label), bar, el('span', 'stat-value', `${pct}%`));
-    return row;
-  };
-
-  const stats = (v) => {
-    const wrap = el('div', 'stats');
-    wrap.append(stat('ENG', v.engine), stat('BODY', v.body), stat('FUEL', v.fuel));
-    return wrap;
-  };
-
-  const closeModal = () => {
-    selected = null;
-    overlay.classList.add('hidden');
-  };
-
-  const openModal = (v) => {
-    selected = v;
-    mName.textContent = v.name;
-    mPlate.textContent = v.plate;
-    mStats.replaceChildren(...stats(v).children);
-    mInfo.textContent = v.impounded ? 'Impounded vehicle.' : depot ? 'Vehicle is out of the garage.' : '';
-    mBtn.disabled = !v.available;
-    mBtn.textContent = !v.available ? 'UNAVAILABLE' : depot ? `RETRIEVE - ${money(v.price)}` : 'RETRIEVE VEHICLE';
-    overlay.classList.remove('hidden');
-  };
-
-  const render = () => {
-    const query = search.value.trim().toLowerCase();
-    const shown = vehicles.filter(
-      (v) => !query || String(v.name).toLowerCase().includes(query) || String(v.plate).toLowerCase().includes(query)
-    );
-    grid.replaceChildren();
-    empty.classList.toggle('hidden', shown.length > 0);
-
-    for (const v of shown) {
-      const card = el('button', 'card');
-      card.type = 'button';
-      const top = el('div', 'card-top');
-      top.append(el('span', 'card-name', v.name));
-      if (v.impounded) top.append(el('span', 'tag warn', 'IMPOUNDED'));
-      else if (depot) top.append(el('span', 'tag', 'OUT'));
-      card.append(top, el('div', 'plate', v.plate), stats(v));
-      if (depot) card.append(el('div', 'fee', money(v.price)));
-      card.addEventListener('click', () => openModal(v));
-      grid.append(card);
+    function rescale() {
+        const s = window.innerHeight / 1080;
+        stage.style.transform = `scale(${s})`;
+        stage.style.marginLeft = `${-960 * s}px`;
     }
-  };
+    window.addEventListener('resize', rescale);
+    rescale();
 
-  mBtn.addEventListener('click', () => {
-    if (!selected || mBtn.disabled) return;
-    mBtn.disabled = true;
-    post('retrieve', { id: selected.id });
-  });
+    const img = (model) => imageUrl.replace('{model}', model);
+    const statusInfo = (v) => v.state === 1 ? ['STORED', ''] : v.state === 2 ? ['IMPOUNDED', 'imp'] : ['OUT', 'out'];
+    const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-  $('close').addEventListener('click', () => post('close'));
-  $('m-close').addEventListener('click', closeModal);
-  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
-  search.addEventListener('input', render);
+    function visible() {
+        const q = search.value.trim().toLowerCase();
+        return vehicles.filter((v) => {
+            if (filter === 'personal' && !v.owned) return false;
+            if (filter === 'shared' && v.owned) return false;
+            if (q && !(v.label.toLowerCase().includes(q) || v.plate.toLowerCase().includes(q))) return false;
+            return true;
+        });
+    }
 
-  window.addEventListener('keydown', (e) => {
-    if (e.key !== 'Escape' || app.classList.contains('hidden')) return;
-    if (selected) closeModal();
-    else post('close');
-  });
+    function render() {
+        const list = visible();
+        if (selected >= list.length) selected = Math.max(0, list.length - 1);
+        if (!list.length) { grid.innerHTML = '<div class="empty">No vehicles found.</div>'; return; }
+        grid.innerHTML = list.map((v, i) => {
+            const [st, cls] = statusInfo(v);
+            return `<div class="card${i === selected ? ' sel' : ''}" data-i="${i}">
+                <div class="c-top"></div>
+                <div class="c-name">${esc(v.label)}</div>
+                <div class="c-status ${cls}">${st}</div>
+                <div class="plate"><small>SAN ANDREAS</small><span>${esc(v.plate)}</span></div>
+                <div class="c-img"><img src="${esc(img(v.model))}" onerror="this.style.display='none'"></div>
+                <div class="c-stats"><span><em>FUEL</em>${v.fuel}%</span><span><em>ENGINE</em>${v.engine}%</span><span><em>BODY</em>${v.body}%</span></div>
+            </div>`;
+        }).join('');
+    }
 
-  window.addEventListener('message', (event) => {
-    const msg = event.data || {};
-    switch (msg.action) {
-      case 'open':
-        depot = !!msg.depot;
-        title.textContent = String(msg.title || 'GARAGE').toUpperCase();
-        vehicles = Array.isArray(msg.vehicles) ? msg.vehicles : [];
-        search.value = '';
-        closeModal();
+    function setFilter(f) {
+        filter = f; selected = 0;
+        document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('active', t.dataset.filter === f));
         render();
-        app.classList.remove('hidden');
-        break;
-      case 'update':
-        vehicles = Array.isArray(msg.vehicles) ? msg.vehicles : [];
-        closeModal();
-        render();
-        break;
-      case 'close':
+    }
+
+    function openModal(v) {
+        current = v;
+        const [st, cls] = statusInfo(v);
+        $('m-title').textContent = v.label;
+        $('m-img').src = img(v.model);
+        $('m-img').style.display = '';
+        $('m-img').onerror = function () { this.style.display = 'none'; };
+        const rows = [
+            ['VEHICLE PLATE', esc(v.plate), ''],
+            ['VEHICLE STATUS', st, cls || 'green'],
+            ['VEHICLE SEATS', v.seats, ''],
+            ['FUEL', v.fuel + '%', ''],
+            ['ENGINE', v.engine + '%', ''],
+            ['BODY', v.body + '%', ''],
+        ];
+        if (v.depotPrice && v.state !== 1) rows.splice(3, 0, ['IMPOUND FEE', currency + v.depotPrice, '']);
+        $('m-rows').innerHTML = rows.map((r) => `<div class="m-row"><span>${r[0]}</span><span class="${r[2]}">${r[1]}</span></div>`).join('');
+
+        if (v.state === 1) { mBtn.textContent = 'RETRIEVE VEHICLE'; mBtn.disabled = false; }
+        else if (v.state === 0 && v.depot) { mBtn.textContent = `RETRIEVE VEHICLE - ${currency}${v.depotPrice}`; mBtn.disabled = false; }
+        else if (v.state === 2) { mBtn.textContent = 'VEHICLE IMPOUNDED'; mBtn.disabled = true; }
+        else { mBtn.textContent = 'VEHICLE IS ALREADY OUT'; mBtn.disabled = true; }
+        overlay.classList.remove('hidden');
+    }
+    const closeModal = () => { current = null; overlay.classList.add('hidden'); };
+
+    function closeAll() {
         closeModal();
         app.classList.add('hidden');
-        break;
+        post('close');
     }
-  });
+
+    // Events
+    grid.addEventListener('click', (e) => {
+        const c = e.target.closest('.card'); if (!c) return;
+        selected = +c.dataset.i; render(); openModal(visible()[selected]);
+    });
+    document.querySelectorAll('.tab').forEach((t) => t.addEventListener('click', () => setFilter(t.dataset.filter)));
+    search.addEventListener('input', () => { selected = 0; render(); });
+    $('m-close').addEventListener('click', closeModal);
+    mBtn.addEventListener('click', () => {
+        if (!current || mBtn.disabled) return;
+        const id = current.id;
+        closeModal();
+        app.classList.add('hidden');
+        post('retrieve', { id });
+    });
+
+    window.addEventListener('keydown', (e) => {
+        if (app.classList.contains('hidden')) return;
+        const typing = document.activeElement === search;
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            if (!overlay.classList.contains('hidden')) closeModal(); else closeAll();
+            return;
+        }
+        if (!overlay.classList.contains('hidden')) {
+            if (e.key === 'Enter') mBtn.click();
+            return;
+        }
+        if (typing) { if (e.key === 'Enter') search.blur(); return; }
+        const k = e.key.toLowerCase();
+        if (k === 'q') setFilter(FILTERS[(FILTERS.indexOf(filter) + 2) % 3]);
+        else if (k === 'e') setFilter(FILTERS[(FILTERS.indexOf(filter) + 1) % 3]);
+        else if (['arrowright', 'arrowleft', 'arrowdown', 'arrowup'].includes(k)) {
+            e.preventDefault();
+            const n = visible().length; if (!n) return;
+            const d = { arrowright: 1, arrowleft: -1, arrowdown: 3, arrowup: -3 }[k];
+            selected = Math.min(n - 1, Math.max(0, selected + d));
+            render();
+            const el = grid.querySelector('.card.sel'); if (el) el.scrollIntoView({ block: 'nearest' });
+        } else if (k === 'enter') { const v = visible()[selected]; if (v) openModal(v); }
+    });
+
+    window.addEventListener('message', (e) => {
+        const d = e.data;
+        if (d.action === 'open') {
+            vehicles = d.vehicles || []; imageUrl = d.imageUrl || ''; currency = d.currency || '$';
+            filter = 'all'; selected = 0; search.value = '';
+            document.querySelectorAll('.tab').forEach((t) => t.classList.toggle('active', t.dataset.filter === 'all'));
+            closeModal(); render();
+            app.classList.remove('hidden');
+        } else if (d.action === 'close') {
+            closeModal(); app.classList.add('hidden');
+        }
+    });
 })();
