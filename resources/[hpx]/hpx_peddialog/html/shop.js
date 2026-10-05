@@ -1,4 +1,4 @@
-const shopResource = typeof GetParentResourceName === "function" ? GetParentResourceName() : "hasib_peddialog";
+const shopResource = typeof GetParentResourceName === "function" ? GetParentResourceName() : "hpx_peddialog";
 const shopRoot = document.getElementById("shop");
 const shopLabel = document.getElementById("shop-label");
 const shopAddr1 = document.getElementById("shop-addr1");

@@ -11,11 +11,11 @@ local rpc = function(name, payload)
     local id = rpcId
     local pending = promise.new()
     rpcWait[id] = pending
-    TriggerServerEvent('hasib_peddialog:rpc', id, name, payload or {})
+    TriggerServerEvent('hpx_peddialog:rpc', id, name, payload or {})
     return Citizen.Await(pending)
 end
 
-RegisterNetEvent('hasib_peddialog:rpc:res', function(id, result)
+RegisterNetEvent('hpx_peddialog:rpc:res', function(id, result)
     local pending = rpcWait[id]
     if not pending then return end
     rpcWait[id] = nil
@@ -219,7 +219,7 @@ local closeDialog = function()
     SetNuiFocus(false, false)
     SendNUIMessage({ action = 'closeClerkShop', data = {} })
     SendNUIMessage({ action = 'closePedDialog', data = {} })
-    TriggerEvent('hasib_peddialog:closed', pedId)
+    TriggerEvent('hpx_peddialog:closed', pedId)
 end
 
 local popHistory = function()
@@ -238,7 +238,7 @@ local popHistory = function()
 end
 
 local fireOption = function(pedId, opt)
-    TriggerEvent('hasib_peddialog:option', pedId, opt.id)
+    TriggerEvent('hpx_peddialog:option', pedId, opt.id)
     local clientEvent = opt.client or opt.event
     if type(clientEvent) == 'string' and clientEvent ~= '' then
         TriggerEvent(clientEvent, pedId, opt.id)
@@ -428,15 +428,15 @@ exports('Open', function(data)
     openDialog(data)
 end)
 
-RegisterNetEvent('hasib_peddialog:open', function(data)
+RegisterNetEvent('hpx_peddialog:open', function(data)
     openDialog(data)
 end)
 
-RegisterNetEvent('hasib_peddialog:update', function(data)
+RegisterNetEvent('hpx_peddialog:update', function(data)
     updateDialog(data)
 end)
 
-RegisterNetEvent('hasib_peddialog:close', function()
+RegisterNetEvent('hpx_peddialog:close', function()
     closeDialog()
 end)
 

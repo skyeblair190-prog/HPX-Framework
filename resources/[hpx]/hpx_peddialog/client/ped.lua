@@ -2,7 +2,7 @@ local spawned = {}
 
 local dbg = function(msg)
     if Config.Debug then
-        print(('[hasib_peddialog] %s'):format(msg))
+        print(('[hpx_peddialog] %s'):format(msg))
     end
 end
 
@@ -133,7 +133,7 @@ local spawnPed = function(entry)
     local icon = target.icon or fallback.icon or 'fas fa-comments'
     local distance = target.distance or fallback.distance or 2.5
     local system = targetSystem()
-    local targetName = ('hasib_peddialog_%s'):format(entry.id)
+    local targetName = ('hpx_peddialog_%s'):format(entry.id)
     local ok, err = pcall(function()
         if system == 'ox' then
             exports.ox_target:addLocalEntity(ped, {

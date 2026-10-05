@@ -91,12 +91,12 @@ local takeMoney = function(src, account, amount)
     local fw = framework()
     account = account or 'cash'
     if fw == 'hpx' then
-        return exports.hpx_core:RemoveMoney(src, account, amount, 'hasib_peddialog') == true
+        return exports.hpx_core:RemoveMoney(src, account, amount, 'hpx_peddialog') == true
     end
     if fw == 'qbx' or fw == 'qb' then
         local player = corePlayer(src)
         if not player then return false end
-        return player.Functions.RemoveMoney(account, amount, 'hasib_peddialog')
+        return player.Functions.RemoveMoney(account, amount, 'hpx_peddialog')
     end
     if fw == 'esx' then
         local xPlayer = esxPlayer(src)
@@ -118,12 +118,12 @@ local giveMoney = function(src, account, amount)
     local fw = framework()
     account = account or 'cash'
     if fw == 'hpx' then
-        return exports.hpx_core:AddMoney(src, account, amount, 'hasib_peddialog') == true
+        return exports.hpx_core:AddMoney(src, account, amount, 'hpx_peddialog') == true
     end
     if fw == 'qbx' or fw == 'qb' then
         local player = corePlayer(src)
         if not player then return false end
-        return player.Functions.AddMoney(account, amount, 'hasib_peddialog')
+        return player.Functions.AddMoney(account, amount, 'hpx_peddialog')
     end
     if fw == 'esx' then
         local xPlayer = esxPlayer(src)
@@ -187,7 +187,7 @@ local giveItem = function(src, item, count)
     if inv == 'qb' then
         if GetResourceState('qb-inventory') == 'started' then
             local ok, res = pcall(function()
-                return exports['qb-inventory']:AddItem(src, item, count, false, false, 'hasib_peddialog')
+                return exports['qb-inventory']:AddItem(src, item, count, false, false, 'hpx_peddialog')
             end)
             return ok and res == true
         end
@@ -213,7 +213,7 @@ local takeItem = function(src, item, count)
     if inv == 'qb' then
         if GetResourceState('qb-inventory') == 'started' then
             local ok, res = pcall(function()
-                return exports['qb-inventory']:RemoveItem(src, item, count, false, 'hasib_peddialog')
+                return exports['qb-inventory']:RemoveItem(src, item, count, false, 'hpx_peddialog')
             end)
             return ok and res == true
         end
@@ -364,7 +364,7 @@ local buyShop = function(src, pedId, cart, payment)
     return { success = true, moneyType = moneyType, total = total }
 end
 
-RegisterNetEvent('hasib_peddialog:rpc', function(id, name, payload)
+RegisterNetEvent('hpx_peddialog:rpc', function(id, name, payload)
     local src = source
     if type(id) ~= 'number' or type(name) ~= 'string' or type(payload) ~= 'table' then return end
     local result = { success = false, reason = 'bad' }
@@ -373,10 +373,10 @@ RegisterNetEvent('hasib_peddialog:rpc', function(id, name, payload)
     elseif name == 'option' then
         result = runOption(src, payload.pedId, payload.optionId)
     end
-    TriggerClientEvent('hasib_peddialog:rpc:res', src, id, result)
+    TriggerClientEvent('hpx_peddialog:rpc:res', src, id, result)
 end)
 
-AddEventHandler('hasib_peddialog:fleet:paper', function(src, pedId, optionId, result)
+AddEventHandler('hpx_peddialog:fleet:paper', function(src, pedId, optionId, result)
     if (moneyOf(src, 'cash') or 0) < 2 or not takeMoney(src, 'cash', 2) then
         result.success = false
         result.reason = 'money'

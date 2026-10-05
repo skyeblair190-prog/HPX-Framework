@@ -44,7 +44,7 @@ Config.Peds = {
             -- next = 'nodeId'   back = true   keepOpen = true
             options = {
                 { id = 'shop', label = 'SHOP' },
-                { id = 'paper', label = 'BUY PAPER', keepOpen = true, server = 'hasib_peddialog:fleet:paper' },
+                { id = 'paper', label = 'BUY PAPER', keepOpen = true, server = 'hpx_peddialog:fleet:paper' },
                 { id = 'garage', label = 'GARAGE', next = 'garage' },
             },
         },

@@ -1,4 +1,4 @@
-const resource = typeof GetParentResourceName === "function" ? GetParentResourceName() : "hasib_peddialog";
+const resource = typeof GetParentResourceName === "function" ? GetParentResourceName() : "hpx_peddialog";
 
 const root = document.getElementById("dialog");
 const nameEl = document.getElementById("name");
