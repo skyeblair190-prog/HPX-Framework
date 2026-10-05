@@ -1,31 +1,33 @@
-local function license(source)
-  return HPXGetLicense(source)
+local function snapshot(player)
+  return {
+    citizenid = player.citizenid,
+    charinfo = player.charinfo,
+    money = player.money,
+    job = player.job,
+    gang = player.gang,
+    metadata = player.metadata,
+    position = player.position,
+    phone = player.phone
+  }
 end
 
 lib.callback.register('hpx:characters:list', function(source)
-  local rows = MySQL.query.await(
-    'SELECT id, citizenid, slot, charinfo, job, gang, phone, last_seen FROM hpx_characters WHERE license = ? ORDER BY slot ASC',
-    { license(source) }
-  )
-
-  for _, row in ipairs(rows) do
-    row.charinfo = json.decode(row.charinfo or '{}') or {}
-    row.job = json.decode(row.job or '{}') or {}
-    row.gang = json.decode(row.gang or '{}') or {}
-  end
-
-  return rows
+  return exports.hpx_core:GetCharacters(source)
 end)
 
 lib.callback.register('hpx:characters:create', function(source, data)
   if type(data) ~= 'table' then return nil, 'invalid_data' end
-  return HPXServer.Character.Create(source, data.slot, data.charinfo)
+  local player, err = exports.hpx_core:CreateCharacter(source, data.slot, data.charinfo)
+  if not player then return nil, err end
+  return snapshot(player)
 end)
 
 lib.callback.register('hpx:characters:select', function(source, id)
-  return HPXServer.Character.Load(source, id)
+  local player, err = exports.hpx_core:LoadCharacter(source, id)
+  if not player then return nil, err end
+  return snapshot(player)
 end)
 
 lib.callback.register('hpx:characters:delete', function(source, id)
-  return HPXServer.Character.Delete(source, id)
+  return exports.hpx_core:DeleteCharacter(source, id)
 end)

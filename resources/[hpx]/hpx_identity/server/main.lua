@@ -13,3 +13,11 @@ end
 AddEventHandler('hpx:server:characterLoaded', function(source)
   sync(source)
 end)
+
+AddEventHandler('hpx:server:jobChanged', function(source)
+  sync(source)
+end)
+
+AddEventHandler('hpx:server:gangChanged', function(source)
+  sync(source)
+end)

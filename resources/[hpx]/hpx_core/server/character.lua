@@ -10,6 +10,8 @@ end
 function HPXServer.Character.Load(source, characterId)
   local license = HPXGetLicense(source)
   if not license then return nil, 'no_license' end
+  characterId = math.tointeger(tonumber(characterId))
+  if not characterId or characterId < 1 then return nil, 'invalid_id' end
 
   local row = MySQL.single.await([[
     SELECT id, license, citizenid, slot, charinfo, money, job, gang, metadata, position, permission, phone
@@ -17,6 +19,11 @@ function HPXServer.Character.Load(source, characterId)
   ]], { characterId, license })
 
   if not row then return nil, 'not_found' end
+
+  for otherSource, other in pairs(HPXServer.Players) do
+    if otherSource ~= source and other.charid == row.id then return nil, 'already_loaded' end
+  end
+  if HPXServer.GetPlayer(source) then HPXServer.Character.Save(source) end
 
   row.charinfo = decode(row.charinfo, {})
   row.money = decode(row.money, HPX.copy(HPXConfig.character.defaultMoney))
@@ -55,6 +62,24 @@ function HPXServer.Character.Save(source)
   return changed == 1
 end
 
+function HPXServer.Character.List(source)
+  local license = HPXGetLicense(source)
+  if not license then return nil, 'no_license' end
+
+  local rows = MySQL.query.await(
+    'SELECT id, citizenid, slot, charinfo, job, gang, phone, last_seen FROM hpx_characters WHERE license = ? ORDER BY slot ASC',
+    { license }
+  ) or {}
+
+  for _, row in ipairs(rows) do
+    row.charinfo = decode(row.charinfo, {})
+    row.job = decode(row.job, {})
+    row.gang = decode(row.gang, {})
+  end
+
+  return rows
+end
+
 function HPXServer.Character.Create(source, slot, charinfo)
   local license = HPXGetLicense(source)
   if not license then return nil, 'no_license' end
@@ -66,12 +91,16 @@ function HPXServer.Character.Create(source, slot, charinfo)
 
   local citizenid = HPXServer.GenerateCitizenId()
   local phone = HPXServer.GeneratePhoneNumber()
+  charinfo = type(charinfo) == 'table' and charinfo or {}
+  local function field(value, fallback)
+    return tostring(value or fallback):sub(1, 64)
+  end
   local data = {
-    firstname = tostring(charinfo and charinfo.firstname or 'John'),
-    lastname = tostring(charinfo and charinfo.lastname or 'Doe'),
-    birthdate = tostring(charinfo and charinfo.birthdate or '01/01/2000'),
-    gender = tostring(charinfo and charinfo.gender or 'male'),
-    nationality = tostring(charinfo and charinfo.nationality or 'Los Santos')
+    firstname = field(charinfo.firstname, 'John'),
+    lastname = field(charinfo.lastname, 'Doe'),
+    birthdate = field(charinfo.birthdate, '01/01/2000'),
+    gender = field(charinfo.gender, 'male'),
+    nationality = field(charinfo.nationality, 'Los Santos')
   }
 
   local id = MySQL.insert.await([[
@@ -93,7 +122,9 @@ end
 function HPXServer.Character.Delete(source, characterId)
   local license = HPXGetLicense(source)
   local player = HPXServer.GetPlayer(source)
-  if player and tonumber(player.charid) == tonumber(characterId) then return false, 'active_character' end
+  characterId = math.tointeger(tonumber(characterId))
+  if not license or not characterId then return false, 'invalid' end
+  if player and tonumber(player.charid) == characterId then return false, 'active_character' end
   local changed = MySQL.update.await('DELETE FROM hpx_characters WHERE id = ? AND license = ?', { characterId, license })
   return changed == 1
 end
@@ -111,5 +142,6 @@ function HPXServer.Character.SetGang(source, name, grade)
   local player = HPXServer.GetPlayer(source)
   if not player or not HPXValidate.text(name, 64) then return false end
   player.gang = { name = name, label = name, grade = tonumber(grade) or 0 }
+  TriggerEvent('hpx:server:gangChanged', source, player.gang)
   return true
 end

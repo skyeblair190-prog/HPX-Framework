@@ -31,15 +31,19 @@ exports('SavePlayer', function(source)
 end)
 
 exports('LoadCharacter', function(source, id)
-  local player, err = HPXServer.Character.Load(source, id)
-  if player then TriggerEvent('hpx:server:characterLoaded', source, player) end
-  return player, err
+  return HPXServer.Character.Load(source, id)
 end)
 
 exports('CreateCharacter', function(source, slot, charinfo)
-  local player, err = HPXServer.Character.Create(source, slot, charinfo)
-  if player then TriggerEvent('hpx:server:characterLoaded', source, player) end
-  return player, err
+  return HPXServer.Character.Create(source, slot, charinfo)
+end)
+
+exports('GetCharacters', function(source)
+  return HPXServer.Character.List(source)
+end)
+
+exports('DeleteCharacter', function(source, id)
+  return HPXServer.Character.Delete(source, id)
 end)
 
 exports('GenerateAccountNumber', function()
