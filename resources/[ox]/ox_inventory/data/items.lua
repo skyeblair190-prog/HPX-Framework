@@ -227,4 +227,24 @@ return {
 		label = 'Scrap Metal',
 		weight = 80,
 	},
+
+	['newskit'] = {
+		label = 'News Kit',
+		weight = 500,
+	},
+
+	['laptopnews'] = {
+		label = 'News Laptop',
+		weight = 1500,
+	},
+
+	['paper'] = {
+		label = 'Paper',
+		weight = 10,
+	},
+
+	['printer'] = {
+		label = 'Printer',
+		weight = 2500,
+	},
 }

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,600;0,800;1,700;1,800&family=Bebas+Neue&family=Oswald:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="shop.css" />
+</head>
+<body>
+    <div id="dialog" class="ped-dialog" hidden>
+        <div class="ped-dialog-header">
+            <div id="name" class="ped-dialog-name"></div>
+            <div id="role" class="ped-dialog-role" hidden></div>
+        </div>
+        <div id="text" class="ped-dialog-subtitle" hidden></div>
+        <div id="options" class="ped-dialog-options"></div>
+        <div class="ped-dialog-hints">
+            <div class="ped-dialog-hint">
+                <img class="ped-dialog-keycap" src="img/keyboard_arrows.png" alt="Arrows" draggable="false" />
+                <span id="hint-move">MOVE</span>
+            </div>
+            <span class="ped-dialog-hint-sep">/</span>
+            <div id="hint-select" class="ped-dialog-hint is-clickable">
+                <img class="ped-dialog-keycap" src="img/keyboard_enter.png" alt="Enter" draggable="false" />
+                <span id="hint-select-label">SELECT</span>
+            </div>
+            <span class="ped-dialog-hint-sep">/</span>
+            <div id="hint-back" class="ped-dialog-hint is-clickable">
+                <img class="ped-dialog-keycap" src="img/keyboard_escape.png" alt="Escape" draggable="false" />
+                <span id="hint-back-label">BACK</span>
+            </div>
+        </div>
+        <div id="version" class="ped-dialog-version" hidden></div>
+    </div>
+    <div id="shop" class="clerk-shop" hidden>
+        <div class="clerk-shop-root">
+            <nav class="clerk-shop-nav">
+                <div class="clerk-shop-brand">
+                    <span id="shop-label" class="clerk-shop-brand-title"></span>
+                    <span id="shop-addr1" class="clerk-shop-brand-sub"></span>
+                    <span id="shop-addr2" class="clerk-shop-brand-sub"></span>
+                </div>
+                <div id="shop-cats" class="clerk-shop-cats"></div>
+            </nav>
+            <div class="clerk-shop-header">
+                <span class="clerk-shop-header-title">SHOP</span>
+                <div class="clerk-shop-header-accent"><span></span><span></span><span></span></div>
+            </div>
+            <div class="clerk-shop-body">
+                <section class="clerk-shop-catalog">
+                    <div class="clerk-shop-catalog-head"><span id="shop-cat-title"></span></div>
+                    <div id="shop-grid" class="clerk-shop-grid"></div>
+                </section>
+                <aside class="clerk-shop-cart">
+                    <div class="clerk-shop-cart-head">
+                        <div>
+                            <h2>SHOPPING CART</h2>
+                            <p id="shop-price-type"></p>
+                        </div>
+                        <span class="clerk-shop-cart-geo"></span>
+                    </div>
+                    <div id="shop-cart" class="clerk-shop-cart-body"></div>
+                    <div class="clerk-shop-cart-fees">
+                        <div><span>Subtotal</span><span id="shop-subtotal">$0</span></div>
+                        <div><span id="shop-tax-label">Tax (0%)</span><span id="shop-tax">$0</span></div>
+                    </div>
+                    <div class="clerk-shop-cart-totalbar">
+                        <span>TOTAL COST</span>
+                        <span id="shop-total">$0</span>
+                    </div>
+                    <div class="clerk-shop-cart-pay">
+                        <button type="button" id="shop-pay-gift" disabled>GIFT CARD</button>
+                        <button type="button" id="shop-pay-card" disabled>CARD PAY</button>
+                        <button type="button" id="shop-pay-cash" disabled>CASH PAY</button>
+                    </div>
+                </aside>
+            </div>
+            <div class="clerk-shop-footer">
+                <div class="clerk-shop-footer-bar">
+                    <div class="clerk-shop-footer-item"><img src="img/keyboard_arrows.png" alt="" />NAVIGATE</div>
+                    <span class="clerk-shop-footer-divider">/</span>
+                    <div class="clerk-shop-footer-item"><img src="img/mouse_left.png" alt="" />ADD TO CART</div>
+                    <span class="clerk-shop-footer-divider">/</span>
+                    <div class="clerk-shop-footer-item"><img src="img/keyboard_shift.png" alt="" />HOLD +10</div>
+                    <span class="clerk-shop-footer-divider">/</span>
+                    <div class="clerk-shop-footer-item"><img src="img/keyboard_escape.png" alt="" />CLOSE</div>
+                </div>
+                <span id="shop-version" class="clerk-shop-footer-version"></span>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+    <script src="shop.js"></script>
+</body>
+</html>

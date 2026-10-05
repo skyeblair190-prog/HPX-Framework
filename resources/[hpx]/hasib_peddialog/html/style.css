@@ -1,0 +1,175 @@
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+}
+
+.ped-dialog {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9000;
+    color: #fff;
+    user-select: none;
+}
+
+.ped-dialog[hidden] {
+    display: none !important;
+}
+
+.ped-dialog * {
+    box-sizing: border-box;
+}
+
+.ped-dialog-header {
+    position: absolute;
+    top: 5.2vh;
+    left: 3.2vw;
+    max-width: 42vw;
+    padding: 12px 20px 10px;
+    text-align: left;
+    pointer-events: none;
+}
+
+.ped-dialog-name {
+    font-family: "Bebas Neue", "Oswald", sans-serif;
+    font-size: clamp(52px, 5vw, 78px);
+    font-weight: 400;
+    font-style: italic;
+    letter-spacing: 0.06em;
+    line-height: 0.9;
+    text-transform: uppercase;
+}
+
+.ped-dialog-role {
+    margin-top: 0.28em;
+    font-family: "Oswald", "Barlow Condensed", sans-serif;
+    font-size: clamp(16px, 1.15vw, 22px);
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.82);
+}
+
+.ped-dialog-subtitle {
+    position: absolute;
+    left: 1.6vw;
+    right: 1.6vw;
+    bottom: 18vh;
+    width: auto;
+    padding: 14px 18px;
+    background: rgba(0, 0, 0, 0.34);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: "Oswald", "Barlow Condensed", sans-serif;
+    font-size: clamp(16px, 1.2vw, 21px);
+    font-weight: 400;
+    line-height: 1.4;
+    text-align: left;
+    pointer-events: none;
+}
+
+.ped-dialog-options {
+    position: absolute;
+    top: 48%;
+    right: 3.2vw;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+    min-width: 280px;
+    pointer-events: auto;
+}
+
+.ped-dialog-option {
+    min-width: 280px;
+    padding: 12px 22px;
+    background: rgba(26, 28, 35, 0.95);
+    color: rgba(255, 255, 255, 0.86);
+    font-family: "Oswald", "Barlow Condensed", sans-serif;
+    font-size: clamp(16px, 1.2vw, 22px);
+    font-weight: 700;
+    font-style: italic;
+    letter-spacing: 0.1em;
+    line-height: 1.05;
+    text-align: right;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: background 0.12s ease, color 0.12s ease;
+}
+
+.ped-dialog-option span {
+    pointer-events: none;
+}
+
+.ped-dialog-option:hover {
+    background: #3f3f46;
+    color: #fff;
+}
+
+.ped-dialog-option.is-selected {
+    background: #ffffff;
+    color: #000000;
+}
+
+.ped-dialog-hints {
+    position: absolute;
+    right: 3.2vw;
+    bottom: 3.2vh;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    padding: 1.15vh 2vh;
+    background: rgba(0, 0, 0, 0.34);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: "Barlow Condensed", "Oswald", sans-serif;
+    font-size: clamp(16px, 2.15vh, 22px);
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    pointer-events: auto;
+}
+
+.ped-dialog-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.75vh;
+}
+
+.ped-dialog-hint.is-clickable {
+    cursor: pointer;
+}
+
+.ped-dialog-hint-sep {
+    color: rgba(255, 255, 255, 0.28);
+    margin: 0 1.15vh;
+    font-weight: 800;
+}
+
+.ped-dialog-keycap {
+    display: block;
+    flex-shrink: 0;
+    height: clamp(28px, 3.8vh, 38px);
+    width: auto;
+    object-fit: contain;
+    user-select: none;
+    pointer-events: none;
+    filter: drop-shadow(1px 1px 1px rgba(0, 0, 0, 0.8));
+}
+
+.ped-dialog-version {
+    position: absolute;
+    right: 1.1vw;
+    bottom: 0.85vh;
+    font-family: "Barlow Condensed", "Oswald", sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    opacity: 0.45;
+    pointer-events: none;
+}
