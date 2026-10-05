@@ -10,9 +10,14 @@ shared_scripts {
   'shared/validators.lua'
 }
 
+client_scripts {
+  'client/main.lua'
+}
+
 server_scripts {
   '@oxmysql/lib/MySQL.lua',
   'server/cache.lua',
+  'server/sync.lua',
   'server/identifiers.lua',
   'server/database.lua',
   'server/state.lua',
@@ -21,6 +26,7 @@ server_scripts {
   'server/player.lua',
   'server/character.lua',
   'server/money.lua',
+  'server/items.lua',
   'server/callbacks.lua',
   'server/events.lua',
   'server/main.lua',

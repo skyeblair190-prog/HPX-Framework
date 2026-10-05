@@ -7,7 +7,7 @@ local function decode(value, fallback)
   return ok and type(result) == 'table' and result or fallback
 end
 
-function HPXServer.Character.Load(source, characterId)
+function HPXServer.Character.Load(source, characterId, isNew)
   local license = HPXGetLicense(source)
   if not license then return nil, 'no_license' end
   characterId = math.tointeger(tonumber(characterId))
@@ -23,7 +23,12 @@ function HPXServer.Character.Load(source, characterId)
   for otherSource, other in pairs(HPXServer.Players) do
     if otherSource ~= source and other.charid == row.id then return nil, 'already_loaded' end
   end
-  if HPXServer.GetPlayer(source) then HPXServer.Character.Save(source) end
+  local previous = HPXServer.GetPlayer(source)
+  if previous then
+    HPXServer.Character.Save(source)
+    TriggerEvent('hpx:server:characterUnloaded', source, previous)
+    TriggerClientEvent('hpx:client:characterUnloaded', source)
+  end
 
   row.charinfo = decode(row.charinfo, {})
   row.money = decode(row.money, HPX.copy(HPXConfig.character.defaultMoney))
@@ -34,7 +39,9 @@ function HPXServer.Character.Load(source, characterId)
   local player = HPXServer.BuildPlayer(source, row)
   player.phone = row.phone
   HPXServer.SetPlayer(source, player)
-  TriggerEvent('hpx:server:characterLoaded', source, player)
+  isNew = isNew == true
+  TriggerEvent('hpx:server:characterLoaded', source, player, isNew)
+  TriggerClientEvent('hpx:client:characterLoaded', source, HPXServer.GetClientData(player), isNew)
   return player
 end
 
@@ -60,6 +67,16 @@ function HPXServer.Character.Save(source)
   })
 
   return changed == 1
+end
+
+function HPXServer.Character.Unload(source)
+  local player = HPXServer.GetPlayer(source)
+  if not player then return false end
+  HPXServer.Character.Save(source)
+  TriggerEvent('hpx:server:characterUnloaded', source, player)
+  TriggerClientEvent('hpx:client:characterUnloaded', source)
+  HPXServer.RemovePlayer(source)
+  return true
 end
 
 function HPXServer.Character.List(source)
@@ -116,7 +133,7 @@ function HPXServer.Character.Create(source, slot, charinfo)
   })
 
   if not id then return nil, 'database_error' end
-  return HPXServer.Character.Load(source, id)
+  return HPXServer.Character.Load(source, id, true)
 end
 
 function HPXServer.Character.Delete(source, characterId)
@@ -135,6 +152,7 @@ function HPXServer.Character.SetJob(source, name, grade)
   grade = tonumber(grade) or 0
   player.job = { name = name, label = name, grade = grade, onduty = false, payment = 0 }
   TriggerEvent('hpx:server:jobChanged', source, player.job)
+  HPXServer.SyncClient(source)
   return true
 end
 
@@ -143,5 +161,6 @@ function HPXServer.Character.SetGang(source, name, grade)
   if not player or not HPXValidate.text(name, 64) then return false end
   player.gang = { name = name, label = name, grade = tonumber(grade) or 0 }
   TriggerEvent('hpx:server:gangChanged', source, player.gang)
+  HPXServer.SyncClient(source)
   return true
 end

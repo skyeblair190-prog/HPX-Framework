@@ -1,3 +1,13 @@
+local function ensureColumn(tableName, column, definition)
+  local exists = MySQL.scalar.await(
+    'SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?',
+    { tableName, column }
+  )
+  if (tonumber(exists) or 0) == 0 then
+    MySQL.query.await(('ALTER TABLE %s ADD COLUMN %s %s'):format(tableName, column, definition))
+  end
+end
+
 CreateThread(function()
   MySQL.query.await([[
     CREATE TABLE IF NOT EXISTS hpx_characters (
@@ -11,6 +21,7 @@ CreateThread(function()
       gang LONGTEXT NOT NULL,
       metadata LONGTEXT NOT NULL,
       position LONGTEXT NULL,
+      inventory LONGTEXT NULL,
       permission SMALLINT NOT NULL DEFAULT 0,
       phone VARCHAR(32) NULL,
       last_seen TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
@@ -54,6 +65,8 @@ CreateThread(function()
       KEY idx_hpx_tx_character (character_id, created_at)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   ]])
+
+  ensureColumn('hpx_characters', 'inventory', 'LONGTEXT NULL')
 
   TriggerEvent('hpx:server:ready')
 end)

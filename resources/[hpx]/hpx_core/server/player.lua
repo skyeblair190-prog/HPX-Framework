@@ -49,7 +49,10 @@ local function attachMethods(player)
   player.SetMetadata = function(_, key, value)
     local p = current()
     if not p or type(key) ~= 'string' then return false end
-    p.metadata[key] = value
+    if p.metadata[key] ~= value then
+      p.metadata[key] = value
+      HPXServer.SyncClient(source)
+    end
     return true
   end
 
@@ -58,13 +61,8 @@ local function attachMethods(player)
     return p and p.money[kind] or 0
   end
 
-  player.SetMoney = function(_, kind, amount)
-    local p = current()
-    if not p or not HPXValidate.moneyType(kind) then return false end
-    amount = tonumber(amount)
-    if not amount or amount < 0 then return false end
-    p.money[kind] = HPX.round(amount, 2)
-    return true
+  player.SetMoney = function(_, kind, amount, reason)
+    return HPXServer.Money.Set(source, kind, amount, reason or 'set')
   end
 
   player.AddMoney = function(_, kind, amount, reason)

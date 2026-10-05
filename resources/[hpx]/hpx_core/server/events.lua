@@ -9,6 +9,7 @@ AddEventHandler('playerDropped', function()
   if player and HPXConfig.persistence.saveOnDrop then
     HPXServer.Character.Save(source)
   end
+  if player then TriggerEvent('hpx:server:characterUnloaded', source, player) end
   HPXServer.RemovePlayer(source)
 end)
 

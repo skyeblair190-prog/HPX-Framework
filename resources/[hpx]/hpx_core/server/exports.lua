@@ -57,3 +57,33 @@ end)
 exports('GeneratePhoneNumber', function()
   return HPXServer.GeneratePhoneNumber()
 end)
+
+exports('SetMoney', function(source, kind, amount, reason)
+  return HPXServer.Money.Set(source, kind, amount, reason)
+end)
+
+exports('UnloadCharacter', function(source)
+  return HPXServer.Character.Unload(source)
+end)
+
+exports('CreateUsableItem', function(name, cb)
+  return HPXServer.CreateUsableItem(name, cb)
+end)
+
+exports('CanUseItem', function(name)
+  return HPXServer.CanUseItem(name)
+end)
+
+exports('IsGradeBoss', function(group, grade)
+  return HPXServer.IsGradeBoss(group, grade)
+end)
+
+exports('GetPlayersData', function()
+  local list = {}
+  for source, player in pairs(HPXServer.Players) do
+    local data = HPXServer.GetClientData(player)
+    data.source = source
+    list[#list + 1] = data
+  end
+  return list
+end)

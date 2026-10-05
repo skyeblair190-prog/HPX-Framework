@@ -46,6 +46,8 @@ CreateThread(function()
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   ]])
   ensureColumn('depot_price', 'INT UNSIGNED NOT NULL DEFAULT 0')
+  ensureColumn('glovebox', 'LONGTEXT NULL')
+  ensureColumn('trunk', 'LONGTEXT NULL')
 end)
 
 local function generatePlate()
