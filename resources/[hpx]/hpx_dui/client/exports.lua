@@ -1,5 +1,17 @@
+local function summary(surface)
+    if not surface then return nil end
+    return {
+        id = surface.id,
+        txd = surface.txd,
+        txn = surface.txn,
+        width = surface.width,
+        height = surface.height,
+        url = surface.url
+    }
+end
+
 exports('Create', function(data)
-    return HPXDUI.Create(data)
+    return summary(HPXDUI.Create(data))
 end)
 
 exports('Destroy', function(id)
@@ -19,5 +31,5 @@ exports('GetTexture', function(id)
 end)
 
 exports('Get', function(id)
-    return HPXDUI.Get(id)
+    return summary(HPXDUI.Get(id))
 end)
