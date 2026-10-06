@@ -16,16 +16,6 @@ local function decodeProps(raw)
   return ok and type(decoded) == 'table' and decoded or {}
 end
 
-local function ensureColumn(name, definition)
-  local exists = MySQL.scalar.await(
-    'SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?',
-    { 'hpx_vehicles', name }
-  )
-  if (tonumber(exists) or 0) == 0 then
-    MySQL.query.await(('ALTER TABLE hpx_vehicles ADD COLUMN %s %s'):format(name, definition))
-  end
-end
-
 CreateThread(function()
   MySQL.query.await([[
     CREATE TABLE IF NOT EXISTS hpx_vehicles (
@@ -45,9 +35,9 @@ CreateThread(function()
       KEY idx_hpx_vehicle_character (character_id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
   ]])
-  ensureColumn('depot_price', 'INT UNSIGNED NOT NULL DEFAULT 0')
-  ensureColumn('glovebox', 'LONGTEXT NULL')
-  ensureColumn('trunk', 'LONGTEXT NULL')
+  HPXDatabase.ensureColumn('hpx_vehicles', 'depot_price', 'INT UNSIGNED NOT NULL DEFAULT 0')
+  HPXDatabase.ensureColumn('hpx_vehicles', 'glovebox', 'LONGTEXT NULL')
+  HPXDatabase.ensureColumn('hpx_vehicles', 'trunk', 'LONGTEXT NULL')
 end)
 
 local function generatePlate()
@@ -77,7 +67,7 @@ local function getOwned(characterId)
 end
 
 lib.callback.register('hpx:vehicles:listOwned', function(source)
-  local player = exports.hpx_core:GetPlayer(source)
+  local player = HPXServer.GetPlayer(source)
   if not player then return {} end
   return getOwned(player.charid)
 end)
@@ -86,7 +76,7 @@ exports('GeneratePlate', generatePlate)
 exports('GetOwned', getOwned)
 
 exports('ListOwned', function(source)
-  local player = exports.hpx_core:GetPlayer(source)
+  local player = HPXServer.GetPlayer(source)
   return player and getOwned(player.charid) or {}
 end)
 
@@ -285,7 +275,7 @@ exports('SpawnVehicle', function(params)
   local spawn = params.spawnSource
   if not owner or not hash or type(spawn) == 'nil' or type(spawn.x) ~= 'number' then return nil end
 
-  local vehicleType = lib.callback.await('hpx_vehicles:client:getVehicleType', owner, hash)
+  local vehicleType = lib.callback.await('hpx:vehicles:getVehicleType', owner, hash)
   if not vehicleType then return nil end
 
   local heading = type(spawn) == 'vector3' and 0.0 or tonumber(spawn.w) or 0.0

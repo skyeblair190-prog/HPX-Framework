@@ -1,4 +1,4 @@
-local registered = {}
+local registered = false
 
 local atmModels = {
     `prop_atm_01`,
@@ -8,11 +8,7 @@ local atmModels = {
 }
 
 CreateThread(function()
-    while not exports.hpx_interact do
-        Wait(500)
-    end
-
-    exports.hpx_interact:AddModelInteraction({
+    exports.hpx_core:AddModelInteraction({
         models = atmModels,
         name = 'hpx_atm',
         distance = 1.6,
@@ -32,7 +28,5 @@ end)
 
 AddEventHandler('onResourceStop', function(resource)
     if resource ~= GetCurrentResourceName() or not registered then return end
-    if exports.hpx_interact.RemoveModelInteraction then
-        exports.hpx_interact:RemoveModelInteraction('hpx_atm')
-    end
+    exports.hpx_core:RemoveModelInteraction('hpx_atm')
 end)

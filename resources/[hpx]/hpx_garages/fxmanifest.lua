@@ -37,4 +37,4 @@ files {
 lua54 'yes'
 use_experimental_fxv2_oal 'yes'
 
-dependencies { 'hpx_core', 'hpx_vehicles', 'hpx_notify', 'ox_lib', 'oxmysql' }
+dependencies { 'hpx_core', 'hpx_notify', 'ox_lib', 'oxmysql' }

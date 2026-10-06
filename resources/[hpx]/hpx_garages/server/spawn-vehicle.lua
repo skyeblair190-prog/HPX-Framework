@@ -4,7 +4,7 @@ local logger = require 'server.logger'
 ---@param modelName string
 local function setVehicleStateToOut(vehicleId, vehicle, modelName)
     local depotPrice = Config.calculateImpoundFee(vehicleId, modelName) or 0
-    exports.hpx_vehicles:SaveVehicle(vehicle, {
+    exports.hpx_core:SaveVehicle(vehicle, {
         state = VehicleState.OUT,
         depotPrice = depotPrice
     })
@@ -79,7 +79,7 @@ lib.callback.register('qbx_garages:server:spawnVehicle', function (source, vehic
     end
 
     local filter = GetPlayerVehicleFilter(source, garageName)
-    local playerVehicle = exports.hpx_vehicles:GetPlayerVehicle(vehicleId, filter)
+    local playerVehicle = exports.hpx_core:GetPlayerVehicle(vehicleId, filter)
     if not playerVehicle then
         Notify(source, locale('error.not_owned'), 'error')
         return
@@ -102,7 +102,7 @@ lib.callback.register('qbx_garages:server:spawnVehicle', function (source, vehic
     playerVehicle.props.lockState = 1 -- Modify the veh props lock state here to avoid conflicts with the vehicleConfig.noLock system.
 
     local warpPed = Config.warpInVehicle and GetPlayerPed(source)
-    local netId, veh = exports.hpx_vehicles:SpawnVehicle({ owner = source, spawnSource = spawnCoords, model = playerVehicle.props.model, props = playerVehicle.props, warp = warpPed })
+    local netId, veh = exports.hpx_core:SpawnVehicle({ owner = source, spawnSource = spawnCoords, model = playerVehicle.props.model, props = playerVehicle.props, warp = warpPed })
     if not netId then
         Notify(source, locale('error.spawn_failed'), 'error')
         return

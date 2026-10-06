@@ -6,4 +6,4 @@ shared_scripts { '@ox_lib/init.lua', 'shared/config.lua' }
 client_script 'client/main.lua'
 server_script 'server/main.lua'
 
-dependencies { 'hpx_core', 'hpx_dui', 'hpx_interact', 'ox_lib' }
+dependencies { 'hpx_core', 'hpx_dui', 'ox_lib' }

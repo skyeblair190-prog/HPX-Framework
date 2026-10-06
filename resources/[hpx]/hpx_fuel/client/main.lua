@@ -46,8 +46,7 @@ CreateThread(function()
 end)
 
 CreateThread(function()
-  while GetResourceState('hpx_interact') ~= 'started' do Wait(500) end
-  exports.hpx_interact:AddModelInteraction({
+  exports.hpx_core:AddModelInteraction({
     models = { `prop_gas_pump_1a`, `prop_gas_pump_1b`, `prop_gas_pump_1c`, `prop_gas_pump_1d`, `prop_gas_pump_old2`, `prop_gas_pump_old3` },
     name = 'hpx_fuel_pump',
     distance = 2.0,

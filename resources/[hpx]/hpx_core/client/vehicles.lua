@@ -25,7 +25,7 @@ local SUBMARINES <const> = {
   [joaat('kosatka')] = true,
 }
 
-lib.callback.register('hpx_vehicles:client:getVehicleType', function(model)
+lib.callback.register('hpx:vehicles:getVehicleType', function(model)
   if type(model) ~= 'number' or not IsModelInCdimage(model) or not IsModelAVehicle(model) then return nil end
   if SUBMARINES[model] then return 'submarine' end
   if IsThisModelABike(model) or IsThisModelABicycle(model) then return 'bike' end

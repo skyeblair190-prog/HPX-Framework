@@ -214,7 +214,7 @@ lib.callback.register('qbx_garages:server:getGarageVehicles', function(source, g
     if not garage then return end
     if not getCanAccessGarage(player, garage) then return end
     local filter = GetPlayerVehicleFilter(source, garageName)
-    local playerVehicles = exports.hpx_vehicles:GetPlayerVehicles(filter)
+    local playerVehicles = exports.hpx_core:GetPlayerVehicles(filter)
     local toSend = {}
     if not playerVehicles[1] then return end
 
@@ -242,7 +242,7 @@ local function isParkable(source, vehicleId, garageName, vehicle)
         return false
     end
     ---@type PlayerVehicle
-    local playerVehicle = exports.hpx_vehicles:GetPlayerVehicle(vehicleId)
+    local playerVehicle = exports.hpx_core:GetPlayerVehicle(vehicleId)
     if not playerVehicle or getVehicleType(vehicle) ~= garage.vehicleType then
         return false
     end
@@ -256,7 +256,7 @@ end
 
 lib.callback.register('qbx_garages:server:isParkable', function(source, garage, netId)
     local vehicle = NetworkGetEntityFromNetworkId(netId)
-    local vehicleId = Entity(vehicle).state.vehicleid or exports.hpx_vehicles:GetVehicleIdByPlate(GetVehicleNumberPlateText(vehicle))
+    local vehicleId = Entity(vehicle).state.vehicleid or exports.hpx_core:GetVehicleIdByPlate(GetVehicleNumberPlateText(vehicle))
     return isParkable(source, vehicleId, garage, vehicle)
 end)
 
@@ -267,14 +267,14 @@ end)
 lib.callback.register('qbx_garages:server:parkVehicle', function(source, netId, props, garage)
     assert(Garages[garage] ~= nil, string.format('Garage %s not found. Did you register this garage?', garage))
     local vehicle = NetworkGetEntityFromNetworkId(netId)
-    local vehicleId = Entity(vehicle).state.vehicleid or exports.hpx_vehicles:GetVehicleIdByPlate(GetVehicleNumberPlateText(vehicle))
+    local vehicleId = Entity(vehicle).state.vehicleid or exports.hpx_core:GetVehicleIdByPlate(GetVehicleNumberPlateText(vehicle))
     local owned = isParkable(source, vehicleId, garage, vehicle) --Check ownership
     if not owned then
         Notify(source, locale('error.not_owned'), 'error')
         return
     end
 
-    exports.hpx_vehicles:SaveVehicle(vehicle, {
+    exports.hpx_core:SaveVehicle(vehicle, {
         garage = garage,
         state = VehicleState.GARAGED,
         props = props

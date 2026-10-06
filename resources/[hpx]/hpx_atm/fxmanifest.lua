@@ -5,6 +5,6 @@ lua54 'yes'
 client_scripts { 'client/main.lua' }
 
 dependencies {
-  'hpx_banking',
-  'hpx_interact'
+  'hpx_core',
+  'hpx_banking'
 }

@@ -23,3 +23,13 @@ end
 function HPXDatabase.transaction(queries)
   return MySQL.transaction.await(queries)
 end
+
+function HPXDatabase.ensureColumn(tableName, column, definition)
+  local exists = MySQL.scalar.await(
+    'SELECT COUNT(*) FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ? AND COLUMN_NAME = ?',
+    { tableName, column }
+  )
+  if (tonumber(exists) or 0) == 0 then
+    MySQL.query.await(('ALTER TABLE %s ADD COLUMN %s %s'):format(tableName, column, definition))
+  end
+end

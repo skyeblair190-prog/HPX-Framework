@@ -135,7 +135,7 @@ end
 ---@return number | string
 ---@diagnostic disable-next-line: duplicate-set-field
 function server.getOwnedVehicleId(entityId)
-    return Entity(entityId).state.vehicleid or exports.hpx_vehicles:GetVehicleIdByPlate(GetVehicleNumberPlateText(entityId))
+    return Entity(entityId).state.vehicleid or exports.hpx_core:GetVehicleIdByPlate(GetVehicleNumberPlateText(entityId))
 end
 
 ---@diagnostic disable-next-line: duplicate-set-field

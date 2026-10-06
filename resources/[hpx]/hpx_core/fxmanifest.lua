@@ -11,7 +11,10 @@ shared_scripts {
 }
 
 client_scripts {
-  'client/main.lua'
+  'client/main.lua',
+  'client/characters.lua',
+  'client/interact.lua',
+  'client/vehicles.lua'
 }
 
 server_scripts {
@@ -27,6 +30,8 @@ server_scripts {
   'server/character.lua',
   'server/money.lua',
   'server/items.lua',
+  'server/characters.lua',
+  'server/vehicles.lua',
   'server/callbacks.lua',
   'server/events.lua',
   'server/main.lua',

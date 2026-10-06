@@ -12,18 +12,18 @@ RegisterCommand('characters', function()
   TriggerEvent('hpx:characters:opened', characters)
 end, false)
 
-exports('List', function()
+exports('GetCharacters', function()
   return request('list')
 end)
 
-exports('Select', function(id)
+exports('SelectCharacter', function(id)
   return request('select', tonumber(id))
 end)
 
-exports('Create', function(slot, charinfo)
+exports('CreateCharacter', function(slot, charinfo)
   return request('create', { slot = slot, charinfo = charinfo })
 end)
 
-exports('Delete', function(id)
+exports('DeleteCharacter', function(id)
   return request('delete', tonumber(id))
 end)
