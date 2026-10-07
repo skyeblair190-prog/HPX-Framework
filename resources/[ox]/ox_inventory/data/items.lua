@@ -247,4 +247,25 @@ return {
 		label = 'Printer',
 		weight = 2500,
 	},
+
+	['bank_card'] = {
+		label = 'Bank Card',
+		weight = 10,
+		stack = false,
+		close = false,
+		description = 'A bank card linked to your account.',
+	},
+
+	['atm_receipt'] = {
+		label = 'ATM Receipt',
+		weight = 10,
+		stack = false,
+		description = 'A receipt from the ATM.',
+		client = {
+			image = 'atm_receipt.png',
+		},
+		server = {
+			export = 'hpx_banking.use_atm_receipt',
+		},
+	},
 }
