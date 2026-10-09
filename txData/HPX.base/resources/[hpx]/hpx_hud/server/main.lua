@@ -12,7 +12,7 @@ CreateThread(function()
     local frameworkResource = Config.FrameworkResources[framework]
 
     if not frameworkResource then
-        log(('^1Invalid Config.Framework "%s". Use qbcore, esx or qbox.^7'):format(tostring(framework)))
+        log(('^1Invalid Config.Framework "%s". Use hpx, qbcore, esx or qbox.^7'):format(tostring(framework)))
         return
     end
 

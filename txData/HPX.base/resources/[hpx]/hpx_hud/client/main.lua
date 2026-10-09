@@ -47,7 +47,7 @@ local function refreshNeeds()
     if Framework == 'qbcore' and Core then
         local ok, data = pcall(function() return Core.Functions.GetPlayerData() end)
         if ok then readMetadata(data) end
-    elseif Framework == 'qbox' then
+    elseif Framework == 'qbox' or Framework == 'hpx' then
         local ok, data = pcall(function() return exports[FrameworkResource]:GetPlayerData() end)
         if ok then readMetadata(data) end
     elseif Framework == 'esx' then
@@ -65,7 +65,7 @@ end
 
 CreateThread(function()
     if not FrameworkResource then
-        print(('^1[codera-hud]^7 Unknown Config.Framework "%s". Use qbcore, esx or qbox.'):format(tostring(Framework)))
+        print(('^1[codera-hud]^7 Unknown Config.Framework "%s". Use hpx, qbcore, esx or qbox.'):format(tostring(Framework)))
         return
     end
 
@@ -76,6 +76,8 @@ CreateThread(function()
         CoderaHud.loaded = LocalPlayer.state.isLoggedIn == true
     elseif Framework == 'qbox' then
         CoderaHud.loaded = LocalPlayer.state.isLoggedIn == true
+    elseif Framework == 'hpx' then
+        CoderaHud.loaded = exports[FrameworkResource]:IsLoaded() == true
     elseif Framework == 'esx' then
         Core = exports[FrameworkResource]:getSharedObject()
         CoderaHud.loaded = Core and Core.IsPlayerLoaded and Core.IsPlayerLoaded() or false
@@ -85,11 +87,29 @@ CreateThread(function()
 
     while true do
         Wait(Config.NeedsRefreshInterval or 5000)
-        if Framework ~= 'esx' then
+        if Framework == 'hpx' then
+            CoderaHud.loaded = exports[FrameworkResource]:IsLoaded() == true
+        elseif Framework ~= 'esx' then
             CoderaHud.loaded = LocalPlayer.state.isLoggedIn == true
         end
         refreshNeeds()
     end
+end)
+
+RegisterNetEvent('hpx:client:characterLoaded', function(data)
+    if Framework ~= 'hpx' then return end
+    CoderaHud.loaded = true
+    readMetadata(data)
+end)
+
+RegisterNetEvent('hpx:client:characterUnloaded', function()
+    if Framework ~= 'hpx' then return end
+    CoderaHud.loaded = false
+end)
+
+RegisterNetEvent('hpx:client:setPlayerData', function(data)
+    if Framework ~= 'hpx' then return end
+    readMetadata(data)
 end)
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()

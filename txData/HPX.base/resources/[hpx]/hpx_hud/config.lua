@@ -1,9 +1,10 @@
 Config = {}
 
--- Supported values: 'qbcore', 'esx', 'qbox'
-Config.Framework = 'qbcore'
+-- Supported values: 'hpx', 'qbcore', 'esx', 'qbox'
+Config.Framework = 'hpx'
 
 Config.FrameworkResources = {
+    hpx = 'hpx_core',
     qbcore = 'qb-core',
     esx = 'es_extended',
     qbox = 'qbx_core'
@@ -13,6 +14,7 @@ Config.FrameworkResources = {
 -- automatically; set a resource name here only when it exposes
 -- HasSeatbeltOn()/HasHarness() like qb-smallresources.
 Config.SeatbeltResources = {
+    hpx = false,
     qbcore = 'qb-smallresources',
     esx = false,
     qbox = false

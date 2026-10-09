@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lorz-vcontrol</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,600;0,700;0,800;1,700;1,800;1,900&family=Barlow+Semi+Condensed:ital,wght@0,700;1,700;1,800;1,900&family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="f2b0g9um.css?v=26">
+    <script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="vehcontrol-container" id="vehcontrol-root">
+        <div class="vehcontrol-backdrop"></div>
+        <div class="vehcontrol-panel">
+            <!-- Header with Vehicle Name -->
+            <div class="vehcontrol-header">
+                <div class="vehcontrol-title" id="veh-title">VEHICLE</div>
+            </div>
+
+            <!-- 5 Main Sections -->
+            <div class="vehcontrol-body">
+                <!-- 1. BODY -->
+                <div class="vehcontrol-section">
+                    <span class="section-label">BODY</span>
+                    <div class="section-buttons">
+                        <!-- Hood -->
+                        <button class="btn-slot" id="btn-hood" data-action="door" data-door="4" title="Hood">
+                            <img src="img/bxsvcbt0.png" alt="Hood" />
+                        </button>
+                        <!-- Trunk -->
+                        <button class="btn-slot" id="btn-trunk" data-action="door" data-door="5" title="Trunk">
+                            <img src="img/tf39v8iz.png" alt="Trunk" />
+                        </button>
+                        <div class="btn-slot empty"></div>
+                        <div class="btn-slot empty"></div>
+                    </div>
+                </div>
+
+                <!-- 2. DOORS -->
+                <div class="vehcontrol-section">
+                    <span class="section-label">DOORS</span>
+                    <div class="section-buttons">
+                        <!-- Front Left Door -->
+                        <button class="btn-slot" id="btn-door-fl" data-action="door" data-door="0" title="Front Left Door">
+                            <img src="img/ueotect4.png" alt="Front Left Door" />
+                        </button>
+                        <!-- Front Right Door -->
+                        <button class="btn-slot" id="btn-door-fr" data-action="door" data-door="1" title="Front Right Door">
+                            <img src="img/xxznk6cn.png" alt="Front Right Door" />
+                        </button>
+                        <!-- Rear Left Door -->
+                        <button class="btn-slot" id="btn-door-rl" data-action="door" data-door="2" title="Rear Left Door">
+                            <img src="img/72kca7m4.png" alt="Rear Left Door" />
+                        </button>
+                        <!-- Rear Right Door -->
+                        <button class="btn-slot" id="btn-door-rr" data-action="door" data-door="3" title="Rear Right Door">
+                            <img src="img/vm44szwu.png" alt="Rear Right Door" />
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 3. WINDOWS -->
+                <div class="vehcontrol-section">
+                    <span class="section-label">WINDOWS</span>
+                    <div class="section-buttons">
+                        <!-- Front Left Window -->
+                        <button class="btn-slot" id="btn-win-fl" data-action="window" data-window="0" data-door="0" title="Front Left Window">
+                            <img src="img/dyfh1oj4.png" alt="Front Left Window" />
+                        </button>
+                        <!-- Front Right Window -->
+                        <button class="btn-slot" id="btn-win-fr" data-action="window" data-window="1" data-door="1" title="Front Right Window">
+                            <img src="img/kq6x060t.png" alt="Front Right Window" />
+                        </button>
+                        <!-- Rear Left Window -->
+                        <button class="btn-slot" id="btn-win-rl" data-action="window" data-window="2" data-door="2" title="Rear Left Window">
+                            <img src="img/bcajtq80.png" alt="Rear Left Window" />
+                        </button>
+                        <!-- Rear Right Window -->
+                        <button class="btn-slot" id="btn-win-rr" data-action="window" data-window="3" data-door="3" title="Rear Right Window">
+                            <img src="img/mkjnw7l0.png" alt="Rear Right Window" />
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 4. SEATS -->
+                <div class="vehcontrol-section">
+                    <span class="section-label">SEATS</span>
+                    <div class="section-buttons">
+                        <!-- Driver Seat -->
+                        <button class="btn-slot" id="btn-seat-driver" data-action="seat" data-seat="-1" title="Driver Seat">
+                            <svg viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2.2"/>
+                                <circle cx="12" cy="12" r="2.8"/>
+                                <path d="M5 12h4.2M14.8 12H19M12 14.8V19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                        <!-- Front Passenger -->
+                        <button class="btn-slot" id="btn-seat-pass" data-action="seat" data-seat="0" title="Passenger Seat">
+                            <img src="img/1lsk15g5.png" alt="Passenger Seat" />
+                        </button>
+                        <!-- Rear Left Seat -->
+                        <button class="btn-slot" id="btn-seat-rl" data-action="seat" data-seat="1" title="Rear Left Seat">
+                            <img src="img/1lsk15g5.png" alt="Rear Left Seat" />
+                        </button>
+                        <!-- Rear Right Seat -->
+                        <button class="btn-slot" id="btn-seat-rr" data-action="seat" data-seat="2" title="Rear Right Seat">
+                            <img src="img/1lsk15g5.png" alt="Rear Right Seat" />
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 5. AUXILIARY -->
+                <div class="vehcontrol-section">
+                    <span class="section-label">AUXILIARY</span>
+                    <div class="section-buttons">
+                        <!-- Engine / Ignition -->
+                        <button class="btn-slot" id="btn-engine" data-action="ignition" title="Toggle Engine">
+                            <svg viewBox="0 0 24 24">
+                                <path d="M12 2a1 1 0 0 1 1 1v8a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1z" />
+                                <path d="M16.24 7.76a1 1 0 0 1 1.42 0A9 9 0 1 1 6.34 7.76a1 1 0 0 1 1.42 1.42A7 7 0 1 0 16.24 9.18a1 1 0 0 1 0-1.42z" />
+                            </svg>
+                        </button>
+                        <!-- Interior Light -->
+                        <button class="btn-slot" id="btn-light" data-action="interiorLight" title="Interior Dome Light">
+                            <img src="img/te3i968g.png" alt="Interior Dome Light" />
+                        </button>
+                        <!-- Hazard Lights -->
+                        <button class="btn-slot" id="btn-hazard" data-action="hazard" title="Hazard Lights">
+                            <svg viewBox="0 0 24 24" class="hazard-svg">
+                                <path class="hazard-bg" d="M12 3.2c-.55 0-1.05.3-1.35.82L2.3 18.6c-.55.95.14 2.15 1.25 2.15h16.9c1.1 0 1.8-1.2 1.25-2.15L13.35 4.02c-.3-.52-.8-.82-1.35-.82z"/>
+                                <path class="hazard-mark" d="M12 8.5c.6 0 1.05.45 1.05 1.05v4.5c0 .6-.45 1.05-1.05 1.05s-1.05-.45-1.05-1.05v-4.5c0-.6.45-1.05 1.05-1.05zm0 7.8c.65 0 1.15.5 1.15 1.15s-.5 1.15-1.15 1.15-1.15-.5-1.15-1.15.5-1.15 1.15-1.15z"/>
+                            </svg>
+                        </button>
+                        <div class="btn-slot empty"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(function() {
+            const root = $('#vehcontrol-root');
+
+            function post(url, data = {}) {
+                const resourceName = typeof GetParentResourceName === 'function' ? GetParentResourceName() : 'lorz-vcontrol';
+                try {
+                    fetch(`https://${resourceName}/${url}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                        body: JSON.stringify(data)
+                    }).catch(function() {
+                        $.ajax({
+                            url: `http://${resourceName}/${url}`,
+                            type: 'POST',
+                            data: JSON.stringify(data),
+                            contentType: 'application/json; charset=UTF-8'
+                        });
+                    });
+                } catch (e) {
+                    $.ajax({
+                        url: `http://${resourceName}/${url}`,
+                        type: 'POST',
+                        data: JSON.stringify(data),
+                        contentType: 'application/json; charset=UTF-8'
+                    });
+                }
+            }
+
+            function updateUI(status) {
+                if (!status) return;
+
+                if (status.vehicleName) {
+                    $('#veh-title').text(status.vehicleName);
+                }
+
+                // Hood & Trunk
+                updateButton($('#btn-hood'), status.doors.frontHood, 'active');
+                updateButton($('#btn-trunk'), status.doors.rearHood, 'active');
+
+                // Doors
+                updateButton($('#btn-door-fl'), status.doors.frontLeft, 'active', status.hasDoors.frontLeft);
+                updateButton($('#btn-door-fr'), status.doors.frontRight, 'active', status.hasDoors.frontRight);
+                updateButton($('#btn-door-rl'), status.doors.rearLeft, 'active', status.hasDoors.rearLeft);
+                updateButton($('#btn-door-rr'), status.doors.rearRight, 'active', status.hasDoors.rearRight);
+
+                // Windows
+                updateButton($('#btn-win-fl'), status.windows.frontLeft, 'active', status.hasDoors.frontLeft);
+                updateButton($('#btn-win-fr'), status.windows.frontRight, 'active', status.hasDoors.frontRight);
+                updateButton($('#btn-win-rl'), status.windows.rearLeft, 'active', status.hasDoors.rearLeft);
+                updateButton($('#btn-win-rr'), status.windows.rearRight, 'active', status.hasDoors.rearRight);
+
+                // Seats
+                const mySeat = status.seats.mySeat;
+                const occ = status.seats.occupied || {};
+                const maxSeats = status.seats.maxSeats || 4;
+
+                updateSeatButton($('#btn-seat-driver'), mySeat === -1, occ['-1'], true);
+                updateSeatButton($('#btn-seat-pass'), mySeat === 0, occ['0'], maxSeats >= 2);
+                updateSeatButton($('#btn-seat-rl'), mySeat === 1, occ['1'], maxSeats >= 3);
+                updateSeatButton($('#btn-seat-rr'), mySeat === 2, occ['2'], maxSeats >= 4);
+
+                // Auxiliary
+                updateButton($('#btn-engine'), status.engine, 'active');
+                updateButton($('#btn-light'), status.interiorLight, 'active');
+                updateButton($('#btn-hazard'), status.hazard, 'active');
+            }
+
+            function updateButton($btn, isActive, activeClass = 'active', isAvailable = true) {
+                $btn.removeClass('active active-white empty');
+                if (!isAvailable) {
+                    $btn.addClass('empty');
+                    return;
+                }
+                if (isActive) {
+                    $btn.addClass(activeClass);
+                }
+            }
+
+            function updateSeatButton($btn, isMySeat, isOccupied, isAvailable) {
+                $btn.removeClass('active active-white empty');
+                if (!isAvailable) {
+                    $btn.addClass('empty');
+                    return;
+                }
+                if (isMySeat || isOccupied) {
+                    $btn.addClass('active');
+                }
+            }
+
+            // Message handler
+            window.addEventListener('message', function(event) {
+                if (event.data.type === 'openGeneral') {
+                    root.addClass('visible');
+                    if (event.data.status) {
+                        updateUI(event.data.status);
+                    }
+                } else if (event.data.type === 'updateStatus') {
+                    if (event.data.status) {
+                        updateUI(event.data.status);
+                    }
+                } else if (event.data.type === 'closeAll') {
+                    root.removeClass('visible');
+                }
+            });
+
+            // ESC or Right click to close
+            $(document).on('keyup', function(e) {
+                if (e.which === 27) {
+                    closeMenu();
+                }
+            });
+
+            $(document).on('contextmenu', function(e) {
+                e.preventDefault();
+                closeMenu();
+            });
+
+            function closeMenu() {
+                root.removeClass('visible');
+                post('NUIFocusOff');
+            }
+
+            // Button actions
+            $('.btn-slot').on('click', function() {
+                const $this = $(this);
+                if ($this.hasClass('empty')) return;
+
+                const action = $this.data('action');
+
+                if (action === 'door') {
+                    post('doors', { door: $this.data('door') });
+                } else if (action === 'window') {
+                    post('windows', { window: $this.data('window'), door: $this.data('door') });
+                } else if (action === 'seat') {
+                    post('seatchange', { seat: $this.data('seat') });
+                } else if (action === 'ignition') {
+                    post('ignition');
+                } else if (action === 'interiorLight') {
+                    post('interiorLight');
+                } else if (action === 'hazard') {
+                    post('hazard');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

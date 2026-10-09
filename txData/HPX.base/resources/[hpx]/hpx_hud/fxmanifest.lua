@@ -28,11 +28,5 @@ files {
     'web/index.html',
     'web/css/*.css',
     'web/fonts/*.woff2',
-    'web/js/*.js',
-    'audiodirectory/seatbelt_sounds.awc',
-    'data/seatbelt_sounds.dat54.rel'
+    'web/js/*.js'
 }
-
--- Custom seatbelt sounds (played by the seatbelt resource, e.g. qb-smallresources)
-data_file 'AUDIO_WAVEPACK' 'audiodirectory'
-data_file 'AUDIO_SOUNDDATA' 'data/seatbelt_sounds.dat'

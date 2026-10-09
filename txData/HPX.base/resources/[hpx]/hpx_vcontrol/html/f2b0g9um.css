@@ -1,0 +1,286 @@
+@font-face {
+    font-family: 'Inter-Medium';
+    src: url('b841ys85.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('b841ys85.woff2') format('woff2');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+body {
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+    font-family: 'Barlow Semi Condensed', 'Barlow', -apple-system, sans-serif;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+.vehcontrol-container {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.35s ease, visibility 0s linear 0.35s;
+    z-index: 1000;
+}
+
+.vehcontrol-container.visible {
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 0.35s ease, visibility 0s linear 0s;
+}
+
+/* Blue Gradient Backdrop (47, 216, 242) - Rising Curved Dome Arch */
+.vehcontrol-backdrop {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 480px;
+    background: radial-gradient(
+        ellipse 62% 100% at 50% 100%,
+        rgba(47, 216, 242, 0.85) 0%,
+        rgba(47, 216, 242, 0.60) 25%,
+        rgba(47, 216, 242, 0.30) 55%,
+        rgba(47, 216, 242, 0.10) 80%,
+        rgba(47, 216, 242, 0) 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+}
+
+.vehcontrol-panel {
+    position: absolute;
+    left: 50%;
+    bottom: 45px;
+    transform: translateX(-50%) translateY(70px);
+    opacity: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    width: max-content;
+    pointer-events: auto;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    z-index: 2;
+}
+
+.vehcontrol-container.visible .vehcontrol-panel {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+}
+
+/* Top Header */
+.vehcontrol-header {
+    width: 100%;
+    padding: 0 0 10px 0;
+    text-align: center;
+    background: transparent;
+    border: none;
+}
+
+.vehcontrol-title {
+    display: block;
+    width: 100%;
+    background: linear-gradient(
+        90deg,
+        rgba(12, 12, 15, 0) 0%,
+        rgba(12, 12, 15, 0.5) 20%,
+        rgba(12, 12, 15, 0.5) 80%,
+        rgba(12, 12, 15, 0) 100%
+    );
+    border: none;
+    padding: 3px 0;
+    color: #ffffff;
+    font-family: 'Barlow Semi Condensed', 'Barlow', sans-serif;
+    font-size: 15px;
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: center;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* Sections Row */
+.vehcontrol-body {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+}
+
+.vehcontrol-section {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0 20px;
+    position: relative;
+}
+
+.vehcontrol-section:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 2px;
+    bottom: 2px;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.section-label {
+    display: block;
+    width: 100%;
+    background: rgba(12, 12, 15, 0.5);
+    border: none;
+    padding: 4px 8px;
+    color: #ffffff;
+    font-family: 'Barlow Semi Condensed', 'Barlow', sans-serif;
+    font-size: 13px;
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    text-align: left;
+    text-shadow: 
+        0 1px 2px rgba(0, 0, 0, 0.95),
+        0 2px 4px rgba(0, 0, 0, 0.75),
+        0 0 1px #000000;
+}
+
+.section-buttons {
+    display: grid;
+    grid-template-columns: repeat(2, 50px);
+    grid-template-rows: repeat(2, 50px);
+    gap: 7px;
+}
+
+/* Buttons */
+.btn-slot {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(12, 12, 15, 0.65);
+    border: none;
+    color: #ffffff;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.1s ease, color 0.1s ease;
+    position: relative;
+}
+
+.btn-slot:hover {
+    background: #ffffff;
+    color: #000000;
+}
+
+/* Active State (#4dffc6 / rgb(47, 216, 242)) */
+.btn-slot.active,
+.btn-slot.active-white {
+    background: rgb(47, 216, 242);
+    border: none;
+    color: #000000;
+    box-shadow: 0 0 12px rgba(47, 216, 242, 0.55);
+}
+
+.btn-slot.active:hover,
+.btn-slot.active-white:hover {
+    background: #ffffff;
+    color: #000000;
+}
+
+/* Empty / Placeholder Slot */
+.btn-slot.empty {
+    background: rgba(12, 12, 15, 0.65);
+    border: none;
+    cursor: default;
+    pointer-events: none;
+}
+
+/* Icon Image Styling */
+.btn-slot img {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    pointer-events: none;
+}
+
+.btn-slot:hover img,
+.btn-slot.active img,
+.btn-slot.active-white img {
+    filter: brightness(0);
+}
+
+/* Icon SVG Styling */
+.btn-slot svg {
+    width: 25px;
+    height: 25px;
+    fill: currentColor;
+    pointer-events: none;
+}
+
+
+/* Hazard Icon with Inner Exclamation Mark */
+.btn-slot svg.hazard-svg {
+    width: 25px;
+    height: 25px;
+}
+
+.hazard-bg {
+    fill: #ffffff;
+    transition: fill 0.1s ease;
+}
+
+.hazard-mark {
+    fill: #0c0c0f;
+    transition: fill 0.1s ease;
+}
+
+.btn-slot:hover .hazard-bg {
+    fill: #000000;
+}
+
+.btn-slot:hover .hazard-mark {
+    fill: #ffffff;
+}
+
+.btn-slot.active .hazard-bg,
+.btn-slot.active-white .hazard-bg {
+    fill: #000000;
+}
+
+.btn-slot.active .hazard-mark,
+.btn-slot.active-white .hazard-mark {
+    fill: rgb(47, 216, 242);
+}
+
+.btn-slot.active:hover .hazard-bg,
+.btn-slot.active-white:hover .hazard-bg {
+    fill: #000000;
+}
+
+.btn-slot.active:hover .hazard-mark,
+.btn-slot.active-white:hover .hazard-mark {
+    fill: #ffffff;
+}
