@@ -159,43 +159,24 @@ local function useATM(passed)
 end
 
 CreateThread(function()
-  local models = {}
-  for name in pairs(atm.textures) do models[#models + 1] = joaat(name) end
+  local modelData = {}
+  for name in pairs(atm.textures) do modelData[#modelData + 1] = { model = joaat(name), offset = vec3(0.0, 0.0, 1.0) } end
 
-  exports.hpx_core:AddModelInteraction({
-    models = models,
+  exports.interact:AddModelInteraction({
     name = 'hpx_atm',
-    distance = atm.interactDistance,
+    modelData = modelData,
+    distance = 5.0,
+    interactDst = atm.interactDistance,
     options = {
       {
+        name = 'hpx_atm:use',
         label = 'Use ATM',
-        icon = 'credit-card',
         action = function(entity) useATM(entity) end
       }
     }
   })
 
   setupSurface()
-end)
-
--- Prompt used only while the interact resource is not running.
-CreateThread(function()
-  while true do
-    local sleep = 750
-
-    if GetResourceState('interact') ~= 'started' and not HPXBank.IsActive() then
-      local entity = nearestATM(atm.interactDistance)
-      if entity then
-        sleep = 0
-        BeginTextCommandDisplayHelp('STRING')
-        AddTextComponentSubstringPlayerName('Press ~INPUT_CONTEXT~ to use the ATM')
-        EndTextCommandDisplayHelp(0, false, true, -1)
-        if IsControlJustReleased(0, 38) then useATM(entity) end
-      end
-    end
-
-    Wait(sleep)
-  end
 end)
 
 AddEventHandler('onClientResourceStart', function(resource)
@@ -211,6 +192,5 @@ AddEventHandler('onClientResourceStop', function(resource)
     removeTextures()
     if surface and GetResourceState('hpx_dui') == 'started' then exports.hpx_dui:Destroy(surface.id) end
     surface = nil
-    exports.hpx_core:RemoveModelInteraction('hpx_atm')
   end
 end)

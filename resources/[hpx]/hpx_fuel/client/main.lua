@@ -46,12 +46,18 @@ CreateThread(function()
 end)
 
 CreateThread(function()
-  exports.hpx_core:AddModelInteraction({
-    models = { `prop_gas_pump_1a`, `prop_gas_pump_1b`, `prop_gas_pump_1c`, `prop_gas_pump_1d`, `prop_gas_pump_old2`, `prop_gas_pump_old3` },
+  local modelData = {}
+  for _, model in ipairs({ `prop_gas_pump_1a`, `prop_gas_pump_1b`, `prop_gas_pump_1c`, `prop_gas_pump_1d`, `prop_gas_pump_old2`, `prop_gas_pump_old3` }) do
+    modelData[#modelData + 1] = { model = model, offset = vec3(0.0, 0.0, 1.0) }
+  end
+
+  exports.interact:AddModelInteraction({
     name = 'hpx_fuel_pump',
-    distance = 2.0,
+    modelData = modelData,
+    distance = 6.0,
+    interactDst = 1.5,
     options = {
-      { label = 'Fuel vehicle', icon = 'gas-pump', action = openPump }
+      { name = 'hpx_fuel_pump:fuel', label = 'Fuel Vehicle', action = openPump }
     }
   })
 end)

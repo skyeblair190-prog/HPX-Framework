@@ -29,6 +29,7 @@ server_scripts {
 dependencies {
   'hpx_core',
   'hpx_dui',
+  'interact',
   'ox_lib',
   'oxmysql'
 }
