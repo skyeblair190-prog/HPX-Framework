@@ -7,6 +7,7 @@ function HPXServer.GetClientData(player)
     gang = player.gang,
     metadata = player.metadata,
     phone = player.phone,
+    position = player.position,
     permission = player.permission
   }
 end

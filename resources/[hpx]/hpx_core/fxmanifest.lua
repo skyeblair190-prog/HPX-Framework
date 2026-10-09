@@ -13,6 +13,7 @@ shared_scripts {
 client_scripts {
   'client/main.lua',
   'client/characters.lua',
+  'client/spawn.lua',
   'client/vehicles.lua'
 }
 

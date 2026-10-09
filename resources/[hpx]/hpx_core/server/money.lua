@@ -5,6 +5,7 @@ function HPXServer.Money.Change(source, kind, delta, reason)
   if not player or not HPXValidate.moneyType(kind) then return false end
   delta = tonumber(delta)
   if not delta or math.abs(delta) > HPXConfig.security.maxMoneyDelta then return false end
+  if delta == 0 then return true end
 
   local old = tonumber(player.money[kind]) or 0
   local new = old + delta

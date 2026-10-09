@@ -19,6 +19,7 @@ function HPXServer.Character.Load(source, characterId, isNew)
   ]], { characterId, license })
 
   if not row then return nil, 'not_found' end
+  if not HPXValidate.source(source) then return nil, 'disconnected' end
 
   for otherSource, other in pairs(HPXServer.Players) do
     if otherSource ~= source and other.charid == row.id then return nil, 'already_loaded' end
@@ -35,6 +36,7 @@ function HPXServer.Character.Load(source, characterId, isNew)
   row.job = decode(row.job, HPX.copy(HPXConfig.character.defaultJob))
   row.gang = decode(row.gang, HPX.copy(HPXConfig.character.defaultGang))
   row.metadata = decode(row.metadata, {})
+  row.position = decode(row.position, nil)
 
   local player = HPXServer.BuildPlayer(source, row)
   player.phone = row.phone
@@ -48,6 +50,14 @@ end
 function HPXServer.Character.Save(source)
   local player = HPXServer.GetPlayer(source)
   if not player then return false end
+
+  local ped = GetPlayerPed(source)
+  if ped and ped ~= 0 then
+    local coords = GetEntityCoords(ped)
+    if coords.x ~= 0.0 or coords.y ~= 0.0 or coords.z ~= 0.0 then
+      player.position = { x = HPX.round(coords.x, 2), y = HPX.round(coords.y, 2), z = HPX.round(coords.z, 2), w = HPX.round(GetEntityHeading(ped), 2) }
+    end
+  end
 
   local changed = MySQL.update.await([[
     UPDATE hpx_characters

@@ -1,5 +1,3 @@
-local State = {}
-
 function HPXServer.SetState(source, key, value)
   local player = HPXServer.GetPlayer(source)
   if not player then return false end

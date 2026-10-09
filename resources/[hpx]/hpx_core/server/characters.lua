@@ -18,3 +18,21 @@ end)
 lib.callback.register('hpx:characters:delete', function(source, id)
   return HPXServer.Character.Delete(source, id)
 end)
+
+lib.callback.register('hpx:characters:autoload', function(source)
+  if not HPXConfig.character.autoLoad then return nil, 'disabled' end
+  if HPXServer.GetPlayer(source) then return nil, 'already_loaded' end
+
+  local list, err = HPXServer.Character.List(source)
+  if not list then return nil, err end
+
+  local player, loadErr
+  if #list == 0 then
+    player, loadErr = HPXServer.Character.Create(source, 1, {})
+  else
+    player, loadErr = HPXServer.Character.Load(source, list[1].id)
+  end
+
+  if not player then return nil, loadErr end
+  return true
+end)
