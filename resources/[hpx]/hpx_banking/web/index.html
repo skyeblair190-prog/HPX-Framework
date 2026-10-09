@@ -1,19 +1,16 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>hpx_banking</title>
-<link rel="stylesheet" href="style.css">
-</head>
-<body>
-<div id="screen" class="screen">
-  <header class="bar">
-    <span class="brand">HPX BANK</span>
-    <span class="meta" id="meta"></span>
-  </header>
-  <main id="content"></main>
-  <footer class="hints" id="hints"></footer>
-</div>
-<script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ATM DUI - Advanced React UI</title>
+    <!-- Preload fonts to avoid FOUT -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-transparent text-[#f0f2f5] overflow-hidden select-none antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
