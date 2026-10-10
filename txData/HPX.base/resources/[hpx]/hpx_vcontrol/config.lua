@@ -47,6 +47,11 @@ end
 function Config.Notify(msg, msgType)
     msgType = msgType or 'info'
 
+    if GetResourceState('hpx_notify') == 'started' then
+        exports.hpx_notify:Notify(msg, msgType)
+        return
+    end
+
     local framework = Config.NotifyFramework
     if framework == 'auto' then
         framework = DetectFramework()
