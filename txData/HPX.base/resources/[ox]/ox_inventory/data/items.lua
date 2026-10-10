@@ -268,4 +268,21 @@ return {
 			export = 'hpx_banking.use_atm_receipt',
 		},
 	},
+
+	['tablet'] = {
+		label = 'Tablet',
+		weight = 700,
+		stack = false,
+		close = true,
+		description = 'A tablet with job and utility apps.',
+		client = {
+			event = 'codera-tablet:openTablet',
+		},
+	},
+
+	['ugchip'] = {
+		label = 'Underground Chip',
+		weight = 50,
+		description = 'Unlocks restricted tablet applications.',
+	},
 }

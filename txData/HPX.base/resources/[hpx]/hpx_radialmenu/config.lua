@@ -1832,3 +1832,56 @@ Config.Benny = {
     vector3(108.3242, 6624.0996, 31.7873),
     vector3(140.6093, -3030.3933, 7.0409),
 }
+
+-- Drop menu entries wired to scripts that do not exist in HPX (qb-* events); empty submenus go with them.
+local function isDeadEntry(entry)
+    if type(entry) ~= 'table' or type(entry.event) ~= 'string' then return false end
+    return entry.event:find('^qb%-') ~= nil and entry.event:find('^qb%-trunk:') == nil
+end
+
+local function prune(node)
+    if type(node) ~= 'table' then return 0 end
+
+    local keys = {}
+    for key, child in pairs(node) do
+        if type(key) == 'number' then keys[#keys + 1] = key end
+        if type(child) == 'table' then prune(child) end
+    end
+
+    if #keys == 0 then return 0 end
+    table.sort(keys)
+
+    local kept, removed = {}, 0
+    for _, key in ipairs(keys) do
+        local entry = node[key]
+        local emptied = type(entry) == 'table' and type(entry.items) == 'table' and next(entry.items) == nil and entry._had_items
+        if isDeadEntry(entry) or emptied then
+            removed = removed + 1
+        else
+            kept[#kept + 1] = entry
+        end
+        node[key] = nil
+    end
+    for index, entry in ipairs(kept) do node[index] = entry end
+    return removed
+end
+
+local function markSubmenus(node)
+    if type(node) ~= 'table' then return end
+    if type(node.items) == 'table' and next(node.items) ~= nil then node._had_items = true end
+    for _, child in pairs(node) do
+        if type(child) == 'table' then markSubmenus(child) end
+    end
+end
+
+local function stripMarks(node)
+    if type(node) ~= 'table' then return end
+    node._had_items = nil
+    for _, child in pairs(node) do
+        if type(child) == 'table' then stripMarks(child) end
+    end
+end
+
+markSubmenus(Config)
+prune(Config)
+stripMarks(Config)
