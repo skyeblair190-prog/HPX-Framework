@@ -269,8 +269,8 @@ return {
 		},
 	},
 
-	['tablet'] = {
-		label = 'Tablet',
+	['codera_tablet'] = {
+		label = 'Work Tablet',
 		weight = 700,
 		stack = false,
 		close = true,
@@ -284,5 +284,140 @@ return {
 		label = 'Underground Chip',
 		weight = 50,
 		description = 'Unlocks restricted tablet applications.',
+	},
+
+	['phone_black'] = {
+		label = 'Phone (Black)',
+		weight = 190,
+		stack = false,
+		close = true,
+		description = 'A smartphone.',
+	},
+
+	['phone_blue'] = {
+		label = 'Phone (Blue)',
+		weight = 190,
+		stack = false,
+		close = true,
+		description = 'A smartphone.',
+	},
+
+	['phone_green'] = {
+		label = 'Phone (Green)',
+		weight = 190,
+		stack = false,
+		close = true,
+		description = 'A smartphone.',
+	},
+
+	['phone_orange'] = {
+		label = 'Phone (Orange)',
+		weight = 190,
+		stack = false,
+		close = true,
+		description = 'A smartphone.',
+	},
+
+	['phone_pink'] = {
+		label = 'Phone (Pink)',
+		weight = 190,
+		stack = false,
+		close = true,
+		description = 'A smartphone.',
+	},
+
+	['phone_purple'] = {
+		label = 'Phone (Purple)',
+		weight = 190,
+		stack = false,
+		close = true,
+		description = 'A smartphone.',
+	},
+
+	['phone_red'] = {
+		label = 'Phone (Red)',
+		weight = 190,
+		stack = false,
+		close = true,
+		description = 'A smartphone.',
+	},
+
+	['phone_yellow'] = {
+		label = 'Phone (Yellow)',
+		weight = 190,
+		stack = false,
+		close = true,
+		description = 'A smartphone.',
+	},
+
+	['tablet_black'] = {
+		label = 'Tablet (Black)',
+		weight = 700,
+		stack = false,
+		close = true,
+		description = 'A tablet that shares your phone data.',
+	},
+
+	['tablet_blue'] = {
+		label = 'Tablet (Blue)',
+		weight = 700,
+		stack = false,
+		close = true,
+		description = 'A tablet that shares your phone data.',
+	},
+
+	['tablet_green'] = {
+		label = 'Tablet (Green)',
+		weight = 700,
+		stack = false,
+		close = true,
+		description = 'A tablet that shares your phone data.',
+	},
+
+	['tablet_orange'] = {
+		label = 'Tablet (Orange)',
+		weight = 700,
+		stack = false,
+		close = true,
+		description = 'A tablet that shares your phone data.',
+	},
+
+	['tablet_pink'] = {
+		label = 'Tablet (Pink)',
+		weight = 700,
+		stack = false,
+		close = true,
+		description = 'A tablet that shares your phone data.',
+	},
+
+	['tablet_purple'] = {
+		label = 'Tablet (Purple)',
+		weight = 700,
+		stack = false,
+		close = true,
+		description = 'A tablet that shares your phone data.',
+	},
+
+	['tablet_red'] = {
+		label = 'Tablet (Red)',
+		weight = 700,
+		stack = false,
+		close = true,
+		description = 'A tablet that shares your phone data.',
+	},
+
+	['tablet_yellow'] = {
+		label = 'Tablet (Yellow)',
+		weight = 700,
+		stack = false,
+		close = true,
+		description = 'A tablet that shares your phone data.',
+	},
+
+	['sim_card'] = {
+		label = 'SIM Card',
+		weight = 5,
+		stack = false,
+		description = 'Holds a phone number.',
 	},
 }

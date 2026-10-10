@@ -1,0 +1,1 @@
+var e={width:.42,height:1},t={width:.92,height:.52},n=.12;function r(n,r,i,a,o=0){let s=a===`landscape`?t:e,c=Math.min(1,s.width/i),l=Math.min(1,s.height/i),u=Math.floor(n*c),d=Math.floor(r*l),f=Math.floor((n-u)/2);return{width:u,height:d,offsetX:Math.max(0,Math.min(n-u,f-Math.round(o*n))),offsetY:Math.floor((r-d)/2)}}export{n,r,e as t};
