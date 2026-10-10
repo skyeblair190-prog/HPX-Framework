@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="output.css">
+    <script src="script.js"></script>
+</head>
+<body>
+    <div class="dispatchs">
+        <!-- <div class="dispatch red">
+            <div class="dispatch_head">
+                <div class="left">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <p>Gun shots reported</p>
+                </div>
+                <div class="right">
+                    <div>10-71A</div>
+                    <div>785</div>
+                </div>
+            </div>
+            <div class="dispatch_informations">
+                <div>
+                    <div class="dispatch_info">
+                        <i class="fa-solid fa-earth-americas"></i>
+                        <p>Hawick Ave Meteor St</p>
+                    </div>
+                    <div class="dispatch_info">
+                        <i class="fa-solid fa-bars-staggered"></i>
+                        <p>Priotry 1</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="dispatch_info">
+                        <i class="fa-solid fa-clock"></i>
+                        <p>in a few seconds</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="dispatch red">
+            <div class="dispatch_head">
+                <div class="left">
+                    <i class="fa-solid fa-bullhorn"></i>
+                    <p>Gun shots reported</p>
+                </div>
+                <div class="right">
+                    <div>10-71A</div>
+                    <div>785</div>
+                </div>
+            </div>
+            <div class="dispatch_informations">
+                <div>
+                    <div class="dispatch_info">
+                        <i class="fa-solid fa-earth-americas"></i>
+                        <p>Hawick Ave Meteor St</p>
+                    </div>
+                    <div class="dispatch_info">
+                        <i class="fa-solid fa-bars-staggered"></i>
+                        <p>Priotry 1</p>
+                    </div>
+                    <div class="dispatch_info">
+                        <i class="fa-solid fa-bars-staggered"></i>
+                        <p>Priotry 1</p>
+                    </div>
+                    <div class="dispatch_info">
+                        <i class="fa-solid fa-bars-staggered"></i>
+                        <p>Önderingo</p>
+                    </div>
+                </div>
+                <div>
+                    <div class="dispatch_info">
+                        <i class="fa-solid fa-clock"></i>
+                        <p>in a few seconds</p>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+    </div>
+    <div class="dispatchmenu dispatch-menu" style="display:none;">
+        <div class="left">
+            <div class="dpm_left_header">
+                <p>Codera Dispatch</p>
+                <p id="text">Recent Alerts</p>
+            </div>
+            <div class="dpm_left_kalan">
+                <div class="overview menus" style="display:flex;">
+                    <div class="recentdispatchs">
+                        <!-- <div class="dispatch red">
+                            <div class="dispatch_head">
+                                <div class="left">
+                                    <i class="fa-solid fa-bullhorn"></i>
+                                    <p>Gun shots reported</p>
+                                </div>
+                                <div class="right">
+                                    <div>10-71A</div>
+                                    <div>785</div>
+                                </div>
+                            </div>
+                            <div class="dispatch_informations">
+                                <div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-earth-americas"></i>
+                                        <p>Hawick Ave Meteor St</p>
+                                    </div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-bars-staggered"></i>
+                                        <p>Priotry 1</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-clock"></i>
+                                        <p>in a few seconds</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dispatch red">
+                            <div class="dispatch_head">
+                                <div class="left">
+                                    <i class="fa-solid fa-bullhorn"></i>
+                                    <p>Gun shots reported</p>
+                                </div>
+                                <div class="right">
+                                    <div>10-71A</div>
+                                    <div>785</div>
+                                </div>
+                            </div>
+                            <div class="dispatch_informations">
+                                <div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-earth-americas"></i>
+                                        <p>Hawick Ave Meteor St</p>
+                                    </div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-bars-staggered"></i>
+                                        <p>Priotry 1</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-clock"></i>
+                                        <p>in a few seconds</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                    <p>Active Calls</p>
+                    <div class="activecalls">
+                        <!-- <div class="dispatch blue">
+                            <div class="dispatch_head">
+                                <div class="left">
+                                    <i class="fa-solid fa-bullhorn"></i>
+                                    <p>Gun shots reported</p>
+                                </div>
+                                <div class="right">
+                                    <div>10-71A</div>
+                                    <div>785</div>
+                                </div>
+                            </div>
+                            <div class="dispatch_informations">
+                                <div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-earth-americas"></i>
+                                        <p>Hawick Ave Meteor St</p>
+                                    </div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-bars-staggered"></i>
+                                        <p>Priotry 1</p>
+                                    </div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-bars-staggered"></i>
+                                        <p>Priotry 1</p>
+                                    </div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-bars-staggered"></i>
+                                        <p>Priotry 1</p>
+                                    </div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-bars-staggered"></i>
+                                        <p>Priotry 1</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-clock"></i>
+                                        <p>in a few seconds</p>
+                                    </div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-walkie-talkie"></i>
+                                        <p>1</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+                <div class="units menus"  style="display:none;">
+                    <div class="button" id="createunit" act="create">
+                        Create Unit
+                    </div>
+                    <input type="text" placeholder="Search">
+
+                    <div class="dispatchinputmenu" style="display:none;">
+                        <div class="head">
+                            <div class="cu_header">
+                                <i class="fa-solid fa-user-plus"></i>
+                                <p>Create your Unit</p>
+                            </div>
+                            <div class="cu_row">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <input type="text" placeholder="Unit Callsign" id="unitname">
+                            </div>
+                            <div class="cu_row">
+                                <i class="fa-solid fa-tag"></i>
+                                <input type="text" placeholder="Unit Code" id="unitcallcode">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="x unitslist">
+                        <p>LSPD</p>
+                        <div class="dispatch blue">
+                            <div class="dispatch_head">
+                                <div class="left">
+                                    <i class="fa-solid fa-user-large"></i>
+                                    <p>175-Cassidy Leon Cassidy [TAURUS]</p>
+                                </div>
+                            </div>
+                            <div class="dispatch_informations">
+                                <div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-id-badge"></i>
+                                        <p>175-Cassidy Leon Cassidy</p>
+                                    </div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-note-sticky"></i>
+                                        <p>10-8</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dispatch blue">
+                            <div class="dispatch_head">
+                                <div class="left">
+                                    <i class="fa-solid fa-user-large"></i>
+                                    <p>175-Cassidy Leon Cassidy [TAURUS]</p>
+                                </div>
+                            </div>
+                            <div class="dispatch_informations">
+                                <div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-id-badge"></i>
+                                        <p>175-Cassidy Leon Cassidy</p>
+                                    </div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-note-sticky"></i>
+                                        <p>10-8</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dispatch blue">
+                            <div class="dispatch_head">
+                                <div class="left">
+                                    <i class="fa-solid fa-user-large"></i>
+                                    <p>175-Cassidy Leon Cassidy [TAURUS]</p>
+                                </div>
+                            </div>
+                            <div class="dispatch_informations">
+                                <div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-id-badge"></i>
+                                        <p>175-Cassidy Leon Cassidy</p>
+                                    </div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-note-sticky"></i>
+                                        <p>10-8</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p>LSMS</p>
+                        <div class="dispatch blue">
+                            <div class="dispatch_head">
+                                <div class="left">
+                                    <i class="fa-solid fa-user-large"></i>
+                                    <p>175-Cassidy Leon Cassidy [TAURUS]</p>
+                                </div>
+                            </div>
+                            <div class="dispatch_informations">
+                                <div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-id-badge"></i>
+                                        <p>175-Cassidy Leon Cassidy</p>
+                                    </div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-note-sticky"></i>
+                                        <p>10-8</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dispatch blue">
+                            <div class="dispatch_head">
+                                <div class="left">
+                                    <i class="fa-solid fa-user-large"></i>
+                                    <p>175-Cassidy Leon Cassidy [TAURUS]</p>
+                                </div>
+                            </div>
+                            <div class="dispatch_informations">
+                                <div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-id-badge"></i>
+                                        <p>175-Cassidy Leon Cassidy</p>
+                                    </div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-note-sticky"></i>
+                                        <p>10-8</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="dispatch blue">
+                            <div class="dispatch_head">
+                                <div class="left">
+                                    <i class="fa-solid fa-user-large"></i>
+                                    <p>175-Cassidy Leon Cassidy [TAURUS]</p>
+                                </div>
+                            </div>
+                            <div class="dispatch_informations">
+                                <div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-id-badge"></i>
+                                        <p>175-Cassidy Leon Cassidy</p>
+                                    </div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-note-sticky"></i>
+                                        <p>10-8</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="officers menus" style="display:none;">
+                    <input type="text" placeholder="Search">
+                    
+                    <div class="x officers_lists">
+                        <p>LSPD</p>
+                        <div class="dispatch blue">
+                            <div class="dispatch_head">
+                                <div class="left">
+                                    <i class="fa-solid fa-user-large"></i>
+                                    <p>175-Cassidy Leon Cassidy</p>
+                                </div>
+                            </div>
+                            <div class="dispatch_informations">
+                                <div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-note-sticky"></i>
+                                        <p>lspd</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="dispatch_info">
+                                        <i class="fa-solid fa-id-badge"></i>
+                                        <p>Officer</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="right">
+            <div id="overview" style="background: linear-gradient(210deg, rgba(4,4,4,0) 0%, rgba(88, 177, 162, 0.7) 100%);">
+                <img src="icons/overview-icon.svg">
+                <p>Overview</p>
+            </div>
+            <div id="assignedcalls" class="menubtn" style="background: linear-gradient(180deg, rgba(4,4,4,0) 0%, rgba(255,125,111,0.7) 100%);">
+                <img src="icons/assigned-icon.svg">
+                <p>Assigned Calls</p>
+            </div>
+            <div id="units" style="background: linear-gradient(210deg, rgba(4,4,4,0) 0%, rgba(76,161,195,0.7) 100%);">
+                <i class="fa-solid fa-people-group" style="color:#4CA1C3;"></i>
+                <p>Units</p>
+            </div> 
+            <div id="officers" style="background-color: #161822;">
+                <i class="fa-solid fa-people-group" style="color:#4CA1C3;"></i>
+                <p>Officers</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -2,9 +2,20 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 
-shared_script '@ox_lib/init.lua'
+description 'HPX Dispatch (Codera dispatch UI)'
 
-client_script 'client/main.lua'
-server_script 'server/main.lua'
+shared_scripts {
+  '@ox_lib/init.lua',
+  'config.lua'
+}
 
-dependencies { 'hpx_core', 'ox_lib' }
+client_script 'client.lua'
+server_script 'server.lua'
+
+ui_page 'html/index.html'
+
+files {
+  'html/**'
+}
+
+dependencies { 'ox_lib', 'hpx_core', 'hpx_notify' }

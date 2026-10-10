@@ -160,7 +160,7 @@ local function SetupRadialMenu()
                 title = '10-13A - Officer Down',
                 icon = 'sad-tear',
                 type = 'client',
-                event = 'ps-dispatch:client:officerdown', -- replace with your event
+                event = 'hpx_dispatch:client:officerDown', -- replace with your event
                 shouldClose = true,
             },
             [2] = {
@@ -168,7 +168,7 @@ local function SetupRadialMenu()
                 title = '10-13B - EMS Down',
                 icon = 'sad-cry',
                 type = 'client',
-                event = 'ps-dispatch:client:emsdown', -- replace with your event
+                event = 'hpx_dispatch:client:emsDown', -- replace with your event
                 shouldClose = true,
             },
         }
