@@ -81,7 +81,9 @@ function Bridge.GetIdentifier(src)
     loadCore()
     local player = Bridge.GetPlayer(src)
     if not player then return nil end
-
+    if framework == 'hpx' then
+        return player.citizenid
+    end
     if framework == 'esx' then
         return player.identifier
     end
@@ -107,6 +109,7 @@ local function aceCheck(src, level)
     return IsPlayerAceAllowed(src, 'command')
 end
 
+local HPX_LEVELS = { mod = 'mod', admin = 'admin', god = 'owner', superadmin = 'superadmin' }
 local RANK = { user = 0, mod = 1, admin = 2, god = 3, superadmin = 3 }
 
 local function identifierCheck(src, level)
@@ -126,6 +129,12 @@ function Bridge.HasPermission(src, level)
     if not src then return false end
 
     if identifierCheck(src, level) then return true end
+
+    if framework == 'hpx' then
+        local ok, res = pcall(function() return exports.hpx_core:HasPermission(src, HPX_LEVELS[level] or level) end)
+        if ok and res then return true end
+        return aceCheck(src, level)
+    end
 
     if framework == 'esx' then
         local player = ESX.GetPlayerFromId(src)
@@ -163,6 +172,12 @@ end, false)
 
 function Bridge.SetPermission(src, group)
     loadCore()
+
+    if framework == 'hpx' then
+        local ok = exports.hpx_core:SetPermission(src, HPX_LEVELS[group] or group)
+        if ok then exports.hpx_core:SavePlayer(src) end
+        return ok and true or false
+    end
     if framework == 'qb' then
         if group == 'user' then
             QBCore.Functions.RemovePermission(src)
@@ -194,6 +209,7 @@ end
 
 function Bridge.AddMoney(src, kind, amount, reason)
     loadCore()
+    if framework == 'hpx' then return exports.hpx_core:AddMoney(src, kind, amount, reason) and true or false end
     local player = Bridge.GetPlayer(src)
     if not player then return false end
 
@@ -213,6 +229,7 @@ end
 
 function Bridge.RemoveMoney(src, kind, amount, reason)
     loadCore()
+    if framework == 'hpx' then return exports.hpx_core:RemoveMoney(src, kind, amount, reason) and true or false end
     local player = Bridge.GetPlayer(src)
     if not player then return false end
 
@@ -232,6 +249,10 @@ end
 
 function Bridge.SetJob(src, job, grade)
     loadCore()
+    if framework == 'hpx' then
+        local player = Bridge.GetPlayer(src)
+        return player and player.SetJob(player, job, grade) and true or false
+    end
     local player = Bridge.GetPlayer(src)
     if not player then return false end
 
@@ -248,6 +269,10 @@ end
 
 function Bridge.SetGang(src, gang, grade)
     loadCore()
+    if framework == 'hpx' then
+        local player = Bridge.GetPlayer(src)
+        return player and player.SetGang(player, gang, grade) and true or false
+    end
     local player = Bridge.GetPlayer(src)
     if not player then return false end
 
@@ -260,6 +285,11 @@ end
 
 function Bridge.ToggleDuty(src)
     loadCore()
+    if framework == 'hpx' then
+        local player = Bridge.GetPlayer(src)
+        if not player or type(player.job) ~= 'table' then return nil end
+        return exports.hpx_core:SetJobDuty(src, not player.job.onduty)
+    end
     local player = Bridge.GetPlayer(src)
     if not player or not player.PlayerData then return nil end
 
@@ -270,6 +300,11 @@ end
 
 function Bridge.SetStress(src)
     loadCore()
+    if framework == 'hpx' then
+        local player = Bridge.GetPlayer(src)
+        if player then player.SetMetadata(player, 'stress', 0) end
+        return
+    end
     local player = Bridge.GetPlayer(src)
     if not player then return end
 

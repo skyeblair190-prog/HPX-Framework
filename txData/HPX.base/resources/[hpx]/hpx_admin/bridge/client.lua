@@ -25,7 +25,9 @@ function Bridge.NotifyFramework(msg, kind)
     loadCore()
     kind = kind or 'primary'
 
-    if framework == 'qb' then
+    if framework == 'hpx' then
+        exports.hpx_notify:Notify(msg, kind)
+    elseif framework == 'qb' then
         QBCore.Functions.Notify(msg, kind)
     elseif framework == 'qbx' then
         exports.qbx_core:Notify(msg, kind == 'primary' and 'inform' or kind)

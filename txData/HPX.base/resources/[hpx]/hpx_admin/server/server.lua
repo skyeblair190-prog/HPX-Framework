@@ -516,6 +516,17 @@ Actions.give_car = function(src, p, target)
     local garage = tostring(p.garage or ''):gsub('[^%w_%- ]', ''):sub(1, 50)
     if garage == '' then garage = Config.DefaultGarage end
 
+    if Config.Framework == 'hpx' then
+        local owner = Bridge.GetPlayer(target)
+        local id, result = exports.hpx_core:AddOwned(owner and owner.charid, model:lower(), garage, plate, {})
+        if id then
+            notify(src, ('Gave %s (%s) to %s.'):format(model, result, Bridge.GetName(target)), 'success')
+        else
+            notify(src, ('Could not give the vehicle (%s).'):format(tostring(result)), 'error')
+        end
+        return
+    end
+
     local table_, plateColumn = 'player_vehicles', 'plate'
     if Config.Framework == 'esx' then table_ = 'owned_vehicles' end
 
@@ -560,7 +571,13 @@ Actions.set_garage_state = function(src, p)
     end
 
     local affected
-    if Config.Framework == 'esx' then
+    if Config.Framework == 'hpx' then
+        if state == 'impound' then
+            affected = exports.hpx_core:Impound(plate, 0) and 1 or 0
+        else
+            affected = exports.oxmysql:update_async('UPDATE hpx_vehicles SET stored = ? WHERE plate = ?', { state == 'garaged' and 1 or 0, plate })
+        end
+    elseif Config.Framework == 'esx' then
         local stored = state == 'garaged' and 1 or 0
         affected = exports.oxmysql:update_async('UPDATE owned_vehicles SET stored = ? WHERE plate = ?', { stored, plate })
     else
@@ -588,7 +605,10 @@ Actions.spawn_personal_vehicle = function(src, p)
     end
 
     local model
-    if Config.Framework == 'esx' then
+    if Config.Framework == 'hpx' then
+        local row = exports.oxmysql:single_async('SELECT model FROM hpx_vehicles WHERE plate = ?', { plate })
+        model = row and row.model
+    elseif Config.Framework == 'esx' then
         local row = exports.oxmysql:single_async('SELECT vehicle FROM owned_vehicles WHERE plate = ?', { plate })
         local data = row and json.decode(row.vehicle)
         model = data and data.model
