@@ -1,1 +1,0 @@
-import{r as e}from"./rolldown-runtime-QTnfLwEv.js";import{t}from"./react-Biaal4sZ.js";var n=e(t(),1);function r(e,t,r=!0){(0,n.useLayoutEffect)(()=>{if(!r)return;let t=e.current;t&&(t.scrollTop=t.scrollHeight)},[e,t,r])}export{r as t};
