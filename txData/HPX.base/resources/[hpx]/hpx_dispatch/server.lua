@@ -103,7 +103,7 @@ local function addCall(data)
   local call = sanitizeCall(data)
   if not call then return nil end
 
-  nextCallId += 1
+  nextCallId = nextCallId + 1
   call.dispatchnumber = nextCallId
   call.date = os.date('%Y-%m-%d %H:%M:%S')
 
@@ -237,7 +237,7 @@ lib.callback.register('hpx_dispatch:createUnit', function(source, data)
   end
   officers[#officers + 1] = { callsign = callsignOf(me), name = fullName(me), source = source, unithead = true }
 
-  nextUnitId += 1
+  nextUnitId = nextUnitId + 1
   units[nextUnitId] = {
     id = nextUnitId,
     active = true,
