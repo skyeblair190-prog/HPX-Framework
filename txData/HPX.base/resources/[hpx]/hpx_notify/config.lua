@@ -5,6 +5,10 @@ Config.Types = {
     success = 'success',
     sucess  = 'success', -- common typo, mapped for compatibility
     inform  = 'inform',
+    info    = 'inform',
+    primary = 'inform',
+    warning = 'warning',
+    warn    = 'warning',
     error   = 'error'
 }
 

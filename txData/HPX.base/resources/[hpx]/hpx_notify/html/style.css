@@ -52,6 +52,7 @@ html, body {
 
 .notification.success { --accent: #43df78; }
 .notification.inform  { --accent: #13dff2; }
+.notification.warning { --accent: #ffb020; }
 .notification.error   { --accent: #ff4e55; }
 
 .icon-box, .message-box {

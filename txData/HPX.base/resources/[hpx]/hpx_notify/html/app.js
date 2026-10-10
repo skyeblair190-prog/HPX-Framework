@@ -4,6 +4,7 @@ class NotificationManager {
         this.icons = {
             success: '✓',
             inform: '!',
+            warning: '!',
             error: '×'
         };
         this.minDuration = 500;
