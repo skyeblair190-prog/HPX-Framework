@@ -38,19 +38,6 @@ AddEventHandler('onResourceStop', function(res)
     if res == GetCurrentResourceName() then Hide() end
 end)
 
-if Config.Debug then
-    RegisterCommand('deathscreen_test', function(_, args)
-        local mode = args[1] or 'dead'
-        if mode == 'respawn' then
-            Update({ state = 'dead', showRespawn = true, showTimer = false })
-        else
-            Update({ state = mode, timer = '05:00' })
-        end
-    end, false)
-    RegisterCommand('deathscreen_hide', Hide, false)
-end
-
-
 local function FormatTime(seconds)
     seconds = math.floor(tonumber(seconds) or 0)
     if seconds < 0 then seconds = 0 end
