@@ -31,6 +31,14 @@ local settings = require 'resource.settings'
 ---@param data NotifyProps
 ---@diagnostic disable-next-line: duplicate-set-field
 function lib.notify(data)
+    -- HPX: route every notification (including ox_lib:notify from the server) through hpx_notify.
+    if GetResourceState('hpx_notify') == 'started' then
+        local message = data.description or data.title or ''
+        if data.title and data.description then message = ('%s: %s'):format(data.title, data.description) end
+        exports.hpx_notify:Notify(message, data.type, data.duration)
+        return
+    end
+
     local sound = settings.notification_audio and data.sound
     local payload = table.clone(data)
     payload.sound = nil
