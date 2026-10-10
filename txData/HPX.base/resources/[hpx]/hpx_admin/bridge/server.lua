@@ -42,7 +42,9 @@ function Bridge.GetPlayer(src)
     src = tonumber(src)
     if not src then return nil end
 
-    if framework == 'qb' then
+    if framework == 'hpx' then
+        return exports.hpx_core:GetPlayer(src)
+    elseif framework == 'qb' then
         return QBCore.Functions.GetPlayer(src)
     elseif framework == 'qbx' then
         return exports.qbx_core:GetPlayer(src)
@@ -57,6 +59,11 @@ function Bridge.GetName(src)
     loadCore()
     local player = Bridge.GetPlayer(src)
     if not player then return GetPlayerName(src) or 'Unknown' end
+
+    if framework == 'hpx' then
+        local name = player.GetName and player.GetName()
+        return (name and name ~= '') and name or GetPlayerName(src) or 'Unknown'
+    end
 
     if framework == 'esx' then
         return player.getName() or GetPlayerName(src)

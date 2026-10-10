@@ -8,7 +8,9 @@ local function isPresent(name)
 end
 
 if Config.Framework == 'auto' then
-    if isPresent('qbx_core') then
+    if isPresent('hpx_core') then
+        Config.Framework = 'hpx'
+    elseif isPresent('qbx_core') then
         Config.Framework = 'qbx'
     elseif isPresent('qb-core') then
         Config.Framework = 'qb'
@@ -153,7 +155,7 @@ Config.Commands = {
         category = 'user', icon = 'zap', type = 'input', perms = 'admin',
         extra = { { key = 'amount', label = 'Ammo Amount', kind = 'number', default = '250', placeholder = '250' } }
     },
-    { id = 'toggle_duty', label = 'Toggle Duty', desc = 'Toggle your job duty', category = 'user', icon = 'shield', type = 'self', perms = 'mod', frameworks = { 'qb', 'qbx' } },
+    { id = 'toggle_duty', label = 'Toggle Duty', desc = 'Toggle your job duty', category = 'user', icon = 'shield', type = 'self', perms = 'mod', frameworks = { 'hpx', 'qb', 'qbx' } },
     { id = 'make_drunk', label = 'Make Player Drunk', desc = 'Apply a temporary drunk effect to a player', category = 'user', icon = 'wine', type = 'player', perms = 'mod' },
 
     { id = 'admin_car', label = 'Admin Car', desc = 'Spawn the admin utility vehicle', category = 'vehicles', icon = 'car', type = 'self', perms = 'mod' },
@@ -164,7 +166,7 @@ Config.Commands = {
     },
     {
         id = 'give_car', label = 'Give Car', desc = 'Give an owned vehicle to a player',
-        category = 'vehicles', icon = 'car', type = 'player', perms = 'admin', frameworks = { 'qb', 'qbx', 'esx' },
+        category = 'vehicles', icon = 'car', type = 'player', perms = 'admin', frameworks = { 'hpx', 'qb', 'qbx', 'esx' },
         extra = {
             { key = 'vehicle', label = 'Vehicle', kind = 'datalist', optionsKey = 'Vehicles', placeholder = 'Model name' },
             { key = 'plate', label = 'Plate (Optional)', kind = 'text', placeholder = 'Random if empty' },
@@ -183,7 +185,7 @@ Config.Commands = {
     },
     {
         id = 'set_garage_state', label = 'Set Vehicle Garage State', desc = 'Set garage state of a vehicle by plate',
-        category = 'vehicles', icon = 'warehouse', type = 'input', perms = 'mod', frameworks = { 'qb', 'qbx', 'esx' },
+        category = 'vehicles', icon = 'warehouse', type = 'input', perms = 'mod', frameworks = { 'hpx', 'qb', 'qbx', 'esx' },
         extra = {
             { key = 'plate', label = 'Plate (Empty = current vehicle)', kind = 'text', placeholder = 'Plate' },
             { key = 'state', label = 'State', kind = 'select', options = Config.GarageStates }
@@ -197,7 +199,7 @@ Config.Commands = {
     },
     {
         id = 'spawn_personal_vehicle', label = 'Spawn Personal Vehicle', desc = 'Spawn an owned vehicle by plate',
-        category = 'vehicles', icon = 'car', type = 'input', perms = 'mod', frameworks = { 'qb', 'qbx', 'esx' },
+        category = 'vehicles', icon = 'car', type = 'input', perms = 'mod', frameworks = { 'hpx', 'qb', 'qbx', 'esx' },
         extra = { { key = 'plate', label = 'Plate', kind = 'text', placeholder = 'Plate' } }
     },
 
@@ -264,7 +266,7 @@ Config.Commands = {
     { id = 'clear_inventory', label = 'Clear Inventory', desc = 'Clear the inventory of a player', category = 'players', icon = 'box', type = 'player', perms = 'mod' },
     {
         id = 'clear_inventory_offline', label = 'Clear Inventory Offline', desc = 'Clear the inventory of an offline player',
-        category = 'players', icon = 'box', type = 'input', perms = 'mod', frameworks = { 'qb', 'qbx', 'esx' },
+        category = 'players', icon = 'box', type = 'input', perms = 'mod', frameworks = { 'hpx', 'qb', 'qbx', 'esx' },
         extra = { { key = 'identifier', label = 'Citizen ID / Identifier', kind = 'text', placeholder = 'ABC12345' } }
     },
     { id = 'remove_stress', label = 'Remove Stress', desc = 'Remove stress from a player (empty = yourself)', category = 'players', icon = 'heart', type = 'player', optionalPlayer = true, perms = 'mod' },
@@ -335,7 +337,7 @@ Config.Commands = {
     },
     {
         id = 'set_gang', label = 'Set Gang', desc = 'Set the gang of a player',
-        category = 'economy', icon = 'shield', type = 'player', perms = 'mod', frameworks = { 'qb', 'qbx' },
+        category = 'economy', icon = 'shield', type = 'player', perms = 'mod', frameworks = { 'hpx', 'qb', 'qbx' },
         extra = {
             { key = 'gang', label = 'Gang', kind = 'datalist', optionsKey = 'Gangs', placeholder = 'Gang name' },
             { key = 'grade', label = 'Grade', kind = 'number', default = '0', placeholder = '0' }

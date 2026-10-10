@@ -14,3 +14,15 @@ function HPXServer.SetPermission(source, level)
   player.permission = type(level) == 'number' and level or (HPXConstants.permissions[level] or 0)
   return true
 end
+
+exports('SetPermission', function(source, level)
+  return HPXServer.SetPermission(source, level)
+end)
+
+exports('SetJobDuty', function(source, onDuty)
+  local player = HPXServer.GetPlayer(source)
+  if not player or type(player.job) ~= 'table' then return false end
+  player.job.onduty = onDuty == true
+  HPXServer.SyncClient(source)
+  return player.job.onduty
+end)
