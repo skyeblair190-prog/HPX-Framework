@@ -1,5 +1,11 @@
 lib.callback.register('hpx:characters:list', function(source)
-  return HPXServer.Character.List(source)
+  local list, err = HPXServer.Character.List(source)
+  if not list then return nil, err end
+  return list, HPXConfig.character.maxSlots
+end)
+
+lib.callback.register('hpx:characters:logout', function(source)
+  return HPXServer.Character.Unload(source)
 end)
 
 lib.callback.register('hpx:characters:create', function(source, data)

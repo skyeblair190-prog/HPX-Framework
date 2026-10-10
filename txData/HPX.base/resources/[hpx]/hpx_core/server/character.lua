@@ -38,8 +38,12 @@ function HPXServer.Character.Load(source, characterId, isNew)
   row.gang = decode(row.gang, HPX.copy(HPXConfig.character.defaultGang))
   row.metadata = decode(row.metadata, {})
   for key, value in pairs(HPXConfig.character.defaultMetadata) do
-    if row.metadata[key] == nil then row.metadata[key] = value end
+    if row.metadata[key] == nil then row.metadata[key] = type(value) == 'table' and HPX.copy(value) or value end
   end
+  local bloodTypes = HPXConfig.character.bloodTypes
+  row.metadata.bloodtype = row.metadata.bloodtype or bloodTypes[math.random(#bloodTypes)]
+  row.metadata.fingerprint = row.metadata.fingerprint or HPXServer.GenerateFingerprint()
+  row.metadata.walletid = row.metadata.walletid or HPXServer.GenerateWalletId()
   row.position = decode(row.position, nil)
 
   local player = HPXServer.BuildPlayer(source, row)
@@ -111,6 +115,28 @@ function HPXServer.Character.List(source)
   return rows
 end
 
+local function cleanName(value, max)
+  if type(value) ~= 'string' then return nil end
+  value = value:gsub('^%s+', ''):gsub('%s+$', ''):gsub('%s+', ' ')
+  if #value < 2 or #value > max or not value:match("^%a[%a '%-]*$") then return nil end
+  return (value:lower():gsub("(%a)([%a']*)", function(first, rest) return first:upper() .. rest end))
+end
+
+function HPXServer.SanitizeCharInfo(info)
+  local firstname, lastname = cleanName(info.firstname, 24), cleanName(info.lastname, 24)
+  local nationality = cleanName(info.nationality, 32)
+  local gender = type(info.gender) == 'string' and info.gender:lower() or nil
+  if gender ~= 'male' and gender ~= 'female' then return nil end
+
+  local day, month, year = tostring(info.birthdate or ''):match('^(%d%d)/(%d%d)/(%d%d%d%d)$')
+  day, month, year = tonumber(day), tonumber(month), tonumber(year)
+  local currentYear = tonumber(os.date('%Y'))
+  if not day or day < 1 or day > 31 or month < 1 or month > 12 or year < 1900 or year > currentYear - 18 then return nil end
+
+  if not firstname or not lastname or not nationality then return nil end
+  return { firstname = firstname, lastname = lastname, nationality = nationality, gender = gender, birthdate = info.birthdate }
+end
+
 function HPXServer.Character.Create(source, slot, charinfo)
   local license = HPXGetLicense(source)
   if not license then return nil, 'no_license' end
@@ -123,16 +149,13 @@ function HPXServer.Character.Create(source, slot, charinfo)
   local citizenid = HPXServer.GenerateCitizenId()
   local phone = HPXServer.GeneratePhoneNumber()
   charinfo = type(charinfo) == 'table' and charinfo or {}
-  local function field(value, fallback)
-    return tostring(value or fallback):sub(1, 64)
+  local data = { firstname = 'John', lastname = 'Doe', birthdate = '01/01/2000', gender = 'male', nationality = 'American' }
+  if next(charinfo) ~= nil then
+    data = HPXServer.SanitizeCharInfo(charinfo)
+    if not data then return nil, 'invalid_charinfo' end
   end
-  local data = {
-    firstname = field(charinfo.firstname, 'John'),
-    lastname = field(charinfo.lastname, 'Doe'),
-    birthdate = field(charinfo.birthdate, '01/01/2000'),
-    gender = field(charinfo.gender, 'male'),
-    nationality = field(charinfo.nationality, 'Los Santos')
-  }
+  data.cid = slot
+  data.phone = phone
 
   local id = MySQL.insert.await([[
     INSERT INTO hpx_characters

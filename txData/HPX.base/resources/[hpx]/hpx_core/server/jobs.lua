@@ -22,6 +22,16 @@ function HPXServer.ResolveJob(name, grade, onduty)
   }
 end
 
+function HPXServer.ForEachPlayer(handler)
+  local sources = {}
+  for source in pairs(HPXServer.Players) do sources[#sources + 1] = source end
+  for index, source in ipairs(sources) do
+    local player = HPXServer.Players[source]
+    if player then handler(source, player) end
+    if index % 20 == 0 then Wait(0) end
+  end
+end
+
 exports('GetJobs', function()
   local list = {}
   for name, definition in pairs(HPXConfig.jobs) do
@@ -54,7 +64,7 @@ CreateThread(function()
 
   while true do
     Wait(config.interval)
-    for source, player in pairs(HPXServer.Players) do
+    HPXServer.ForEachPlayer(function(source, player)
       local job = player.job
       local pay = type(job) == 'table' and tonumber(job.payment) or 0
       if pay > 0 and (not config.requireDuty or job.onduty == true) then
@@ -62,6 +72,6 @@ CreateThread(function()
           lib.notify(source, { type = 'success', description = ('Paycheck received: $%d'):format(pay) })
         end
       end
-    end
+    end)
   end
 end)

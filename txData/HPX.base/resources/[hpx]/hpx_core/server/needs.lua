@@ -48,7 +48,7 @@ CreateThread(function()
 
   while true do
     Wait(config.interval)
-    for source, player in pairs(HPXServer.Players) do
+    HPXServer.ForEachPlayer(function(source, player)
       local metadata = player.metadata
       if metadata.isdead ~= true then
         metadata.hunger = clamp((tonumber(metadata.hunger) or 100) - config.hungerLoss)
@@ -56,6 +56,6 @@ CreateThread(function()
         publish(source, metadata)
         HPXServer.SyncClient(source)
       end
-    end
+    end)
   end
 end)

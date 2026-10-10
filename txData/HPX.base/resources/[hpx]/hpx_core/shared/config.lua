@@ -2,11 +2,18 @@ HPXConfig = {
   debug = false,
   character = {
     maxSlots = 5,
-    autoLoad = true,
+    autoLoad = false,
+    selectMenu = true,
     defaultMoney = { cash = 500, bank = 2500, crypto = 0 },
     defaultJob = { name = 'unemployed', label = 'Unemployed', grade = 0, onduty = false, payment = 0 },
     defaultGang = { name = 'none', label = 'None', grade = 0 },
-    defaultMetadata = { hunger = 100, thirst = 100, stress = 0, isdead = false, armor = 0 },
+    defaultMetadata = {
+      hunger = 100, thirst = 100, stress = 0, isdead = false, inlaststand = false, armor = 0,
+      callsign = 'NO CALLSIGN', ishandcuffed = false, tracker = false, injail = 0,
+      licences = { id = true, driver = true, weapon = false },
+      criminalrecord = { hasRecord = false },
+    },
+    bloodTypes = { 'A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-' },
   },
   needs = {
     enabled = true,
