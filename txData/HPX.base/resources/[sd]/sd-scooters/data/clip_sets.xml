@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<fwClipSetManager>
+  <clipSets>
+    <Item type="fwClipSet" key="clipset@veh@bike@sd_scoot@front@base">
+      <fallbackId>clipset@veh@bike@scooter@front@base</fallbackId>
+      <clipDictionaryName>veh@bike@sd_scoot@front@base</clipDictionaryName>
+      <clipItems />
+      <moveNetworkFlags />
+    </Item>
+    <Item type="fwClipSet" key="clipset@veh@bike@sd_scoot@front@ds">
+      <fallbackId>clipset@veh@bike@scooter@front@ds</fallbackId>
+      <clipDictionaryName>veh@bike@sd_scoot@front@ds</clipDictionaryName>
+      <clipItems />
+      <moveNetworkFlags />
+    </Item>
+    <Item type="fwClipSet" key="clipset@veh@bike@sd_scoot@front@ps">
+      <fallbackId>clipset@veh@bike@scooter@front@ps</fallbackId>
+      <clipDictionaryName>veh@bike@sd_scoot@front@ps</clipDictionaryName>
+      <clipItems />
+      <moveNetworkFlags />
+    </Item>
+  </clipSets>
+  <clipDictionaryMetadatas>
+    <Item type="fwClipDictionaryMetadata" key="veh@bike@sd_scoot@front@base">
+      <streamingPolicy>SP_STREAMING</streamingPolicy>
+      <memoryGroup>hash_CC3AA66E</memoryGroup>
+      <streamingPriority>SP_Low</streamingPriority>
+    </Item>
+    <Item type="fwClipDictionaryMetadata" key="veh@bike@sd_scoot@front@ds">
+      <streamingPolicy>SP_STREAMING</streamingPolicy>
+      <memoryGroup>hash_CC3AA66E</memoryGroup>
+      <streamingPriority>SP_Low</streamingPriority>
+    </Item>
+    <Item type="fwClipDictionaryMetadata" key="veh@bike@sd_scoot@front@ps">
+      <streamingPolicy>SP_STREAMING</streamingPolicy>
+      <memoryGroup>hash_CC3AA66E</memoryGroup>
+      <streamingPriority>SP_Low</streamingPriority>
+    </Item>
+  </clipDictionaryMetadatas>
+</fwClipSetManager>

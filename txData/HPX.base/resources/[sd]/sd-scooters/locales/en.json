@@ -1,0 +1,852 @@
+{
+  "err": {
+    "not_allowed": "You are not allowed to do that.",
+    "name_length": "Bunker names are 1 to 48 characters.",
+    "bad_coords": "Those coordinates are not valid.",
+    "no_bunker": "That bunker no longer exists.",
+    "no_scooter": "That scooter no longer exists.",
+    "bad_colour": "Unknown scooter colour.",
+    "spawn_failed": "The scooter could not be spawned.",
+    "model_missing": "The %s model is not registered; is the resource streaming it?",
+    "placement_cancelled": "Placement cancelled.",
+    "busy": "Finish the current placement first.",
+    "no_framework": "No framework is running, so rentals are unavailable.",
+    "already_riding": "You already have a ride going. End it first.",
+    "scooter_taken": "Someone else has that scooter.",
+    "too_far": "Walk up to the scooter to unlock it.",
+    "no_money": "Not enough money for that.",
+    "not_riding": "You have no ride to end.",
+    "app_disabled": "Rentals are switched off on this server.",
+    "station_busy": "That station is busy, give it a moment",
+    "no_stock": "That station is out of scooters",
+    "too_far_station": "Walk up to the station to order a scooter",
+    "no_station": "That charging station no longer exists.",
+    "needs_charge": "That scooter needs charging first.",
+    "no_dock": "No free dock within reach.",
+    "dock_empty": "That dock is empty.",
+    "bad_target": "Pick a charge level above where the battery is now.",
+    "already_charging": "That scooter is already charging to at least that level.",
+    "charge_free": "Charging is free at this station.",
+    "bad_payment": "That payment method is not accepted here.",
+    "not_charging": "That scooter is not charging.",
+    "not_a_scooter": "Only SCOOT scooters fit these docks.",
+    "bad_count": "A station has 1 to 4 docks.",
+    "dock_in_use": "Unlock the scooters in the docks you are removing first.",
+    "already_docked": "That scooter is already docked.",
+    "handling_name": "Profile names are 1 to 48 characters.",
+    "handling_template": "That template does not exist.",
+    "handling_profile": "That handling profile no longer exists.",
+    "handling_history": "That change is no longer in the history.",
+    "handling_other_vehicle": "Get out of your vehicle, or get on a scooter, to start a test ride.",
+    "view_only": "You can view the panel but not change anything.",
+    "bad_stock": "Stock is a whole number from 0 to 999.",
+    "bad_battery": "Battery is a whole number from 0 to 100.",
+    "scooter_rented": "That scooter is on a ride right now.",
+    "scooter_missing": "That scooter has no vehicle in the world right now.",
+    "no_home": "That scooter has no home bunker.",
+    "undo_expired": "Too late to undo that.",
+    "ride_not_active": "That ride has already ended.",
+    "ride_not_found": "That ride does not exist.",
+    "ride_unpaid": "That ride was never paid, so there is nothing to refund.",
+    "ride_refunded": "That ride has already been refunded.",
+    "renter_offline": "The rider has to be online to receive a refund.",
+    "bad_setting": "One of those settings is not valid.",
+    "no_box": "That scooter has no storage box.",
+    "box_not_yours": "Only the rider renting this scooter can open its storage.",
+    "box_too_far": "Walk up to the storage box.",
+    "box_moving": "Park the scooter before opening its storage.",
+    "box_busy": "Someone is already using that storage.",
+    "no_inventory": "No supported inventory is running, so storage is unavailable.",
+    "list_changed": "The list changed while the dialog was open. Close it and try again."
+  },
+  "placer": {
+    "raycast": "**Placing %s**  \n[LMB] place  •  [RMB] cancel  \nScroll rotate  •  ↑ / ↓ height  •  Shift = faster",
+    "gizmo": "**Placing %s** — gizmo  \n[W] move  •  [R] turn  •  [Q] local/world  •  [Alt] drop to ground  \n[Enter] place  •  [Backspace] cancel",
+    "bunker": "bunker",
+    "station": "charging station",
+    "scooter": "scooter"
+  },
+  "notify": {
+    "title": "SCOOT",
+    "bunker_placed": "Bunker %s placed.",
+    "station_placed": "Charging station %s placed.",
+    "bunker_moved": "Bunker %s moved.",
+    "station_moved": "Charging station %s moved.",
+    "flat": "%s ran out of battery. Your ride has ended.",
+    "dock_prompt": "**%s**  \n[E] Dock and charge  •  %d of %d docks free",
+    "dock_full": "**%s**  \nNo free dock here",
+    "view_screen": "[E] View charger screen",
+    "storage_open": "Open storage",
+    "storage_prompt": "[E] Open storage",
+    "docked_charging": "Docked at %s. Charging.",
+    "scooter_placed": "Scooter %s placed.",
+    "teleported": "Teleported.",
+    "ride_started": "Ride started on %s. Have fun!",
+    "charge_bought": "Charging %s to %d%%. Paid %s%d, about %d min.",
+    "charge_stopped": "Stopped charging %s at %d%%.",
+    "charge_refunded": "Refunded %s%d.",
+    "ride_ended": "Ride ended: %d min, %s%d.",
+    "waypoint": "Waypoint set.",
+    "dispensing": "Your scooter is on its way out",
+    "docked": "Scooter docked at %s",
+    "flushed": "Models reloaded: %s",
+    "flush_stuck": "Still resident, reconnect to refresh: %s",
+    "ride_ended_by_admin": "An admin ended your scooter ride.",
+    "ride_refunded": "Your scooter ride was refunded: %s%d."
+  },
+  "ui": {
+    "title": "Scooters Admin",
+    "subtitle": "Fleet, rides and settings",
+    "tabs": {
+      "overview": "Overview",
+      "bunkers": "Bunkers",
+      "stations": "Stations",
+      "scooters": "Scooters",
+      "map": "Map",
+      "handling": "Handling",
+      "rides": "Rides",
+      "settings": "Settings",
+      "log": "Log"
+    },
+    "stats": {
+      "bunkers": "Bunkers",
+      "enabled": "Enabled",
+      "stations": "Charging stations",
+      "charging": "Charging",
+      "scooters": "Scooters",
+      "docked": "At a bunker",
+      "revenue_today": "Revenue today",
+      "rides_today": "Rides today",
+      "active_rides": "On a ride now"
+    },
+    "actions": {
+      "place_bunker": "Place bunker",
+      "place_station": "Place station",
+      "place_scooter": "Spawn on me",
+      "spawn_at_bunker": "Spawn at bunker",
+      "teleport": "Teleport",
+      "rename": "Rename",
+      "move": "Move",
+      "docks": "Docks",
+      "colour": "Colour",
+      "enable": "Enable",
+      "disable": "Disable",
+      "delete": "Delete",
+      "respawn": "Respawn",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "save": "Save",
+      "close": "Close",
+      "undo": "Undo",
+      "stock": "Stock",
+      "bring": "Bring to me",
+      "send_home": "Send home",
+      "lock": "Lock",
+      "unlock": "Unlock",
+      "battery": "Set battery",
+      "release": "Release",
+      "details": "Details",
+      "select": "Select",
+      "clear": "Clear",
+      "delete_all": "Delete all"
+    },
+    "bunkers": {
+      "empty": "No bunkers yet. Place one.",
+      "name": "Name",
+      "coords": "Coords",
+      "scooters": "Scooters",
+      "status": "Status",
+      "enabled": "Enabled",
+      "disabled": "Disabled",
+      "rename_title": "Rename bunker",
+      "delete_title": "Delete bunker?",
+      "delete_body": "%s will be removed from the world and its scooters become free-standing.",
+      "stock": "Stock",
+      "stock_title": "Bunker stock",
+      "stock_body": "How many scooters this bunker can still dispense. Docking a ride puts one back.",
+      "delete_all_title": "Delete every bunker?",
+      "delete_all_body": "All %s bunkers will be removed from the world and their scooters become free-standing. This cannot be undone."
+    },
+    "stations": {
+      "empty": "No charging stations yet. Place one.",
+      "name": "Name",
+      "slots": "Slots",
+      "docks": "Docks",
+      "docks_hint": "How much rail gets built: one dock per scooter, up to four.",
+      "docks_title": "Change docks",
+      "docks_body": "Shortening the rail needs the removed docks to be empty.",
+      "colour": "Colour",
+      "colour_title": "Paint station",
+      "colour_body": "Only the posts and the totem are painted, so the change is instant.",
+      "colour_hint": "Pick the paint this station wears.",
+      "free": "free",
+      "charging": "Charging",
+      "full": "Full",
+      "rename_title": "Rename station",
+      "delete_title": "Delete station?",
+      "delete_body": "%s will be removed from the world and the scooters docked in it become free-standing.",
+      "dock": "Dock %d",
+      "empty_dock": "Empty",
+      "target": "charging to %s",
+      "detail_title": "Docks",
+      "preview_unavailable": "Preview unavailable",
+      "delete_all_title": "Delete every charging station?",
+      "delete_all_body": "All %s charging stations will be removed and any docked scooters released. This cannot be undone."
+    },
+    "scooters": {
+      "empty": "No scooters yet. Place one or spawn one at a bunker.",
+      "plate": "Plate",
+      "colour": "Colour",
+      "home": "Home",
+      "free": "Free",
+      "status": "Status",
+      "missing": "Missing",
+      "spawned": "Spawned",
+      "battery": "Battery",
+      "charging_at": "Charging at",
+      "distance": "%s m",
+      "new_title": "New scooter",
+      "home_bunker": "Home bunker",
+      "no_home": "No home bunker",
+      "delete_title": "Delete scooter?",
+      "delete_body": "%s will be despawned and removed.",
+      "colour_title": "Scooter colour",
+      "filter_all": "All",
+      "filter_available": "Available",
+      "filter_rented": "On a ride",
+      "filter_charging": "Charging",
+      "filter_flat": "Flat",
+      "filter_missing": "Missing",
+      "sort_plate": "Plate",
+      "sort_battery": "Battery",
+      "sort_distance": "Distance",
+      "rented_by": "Ridden by %s",
+      "locked": "Locked",
+      "unlocked": "Unlocked",
+      "battery_title": "Set battery",
+      "bulk_battery_title": "Set battery for %d scooters",
+      "bulk_delete_title": "Delete %d scooters?",
+      "bulk_delete_body": "Scooters on a ride are skipped.",
+      "bulk_done": "%d done, %d skipped",
+      "no_results": "No scooters match.",
+      "detail_status": "Status",
+      "detail_position": "Position",
+      "detail_dock": "Dock",
+      "preview": "Preview",
+      "spawn_on_me_hint": "The scooter spawns where you stand and you get on it with the keys.",
+      "extras": "Extras",
+      "extras_rear": "Storage",
+      "extras_lighting": "Underglow",
+      "extras_trim": "Grips and trim",
+      "extras_box_hint": "Staff can open any storage box; riders only open the one on the scooter they rent.",
+      "sort": "Sort",
+      "extras_box": "Box stripe"
+    },
+    "map": {
+      "bunkers": "Bunkers",
+      "stations": "Charging stations",
+      "scooters": "Scooters",
+      "you": "You",
+      "empty": "Nothing to show yet.",
+      "click": "Click for actions",
+      "satellite": "Satellite",
+      "atlas": "Atlas",
+      "riders": "Riders",
+      "activity": "Activity",
+      "activity_hint": "Recent ride starts and ends",
+      "starts": "Starts",
+      "ends": "Ends",
+      "teleport_here": "Teleport here",
+      "cluster": "%d here · click to zoom",
+      "rider": "Rider"
+    },
+    "recent": {
+      "title": "Recent actions",
+      "empty": "Nothing yet this session."
+    },
+    "placing": {
+      "hint": "The panel hides while you place it and comes back when you confirm or cancel."
+    },
+    "toast": {
+      "failed": "That did not work."
+    },
+    "handling": {
+      "baseline": "handling.meta",
+      "baseline_hint": "The file every profile builds on. Used when no profile is live.",
+      "profiles": "Profiles",
+      "new_profile": "New profile",
+      "new_from": "Start from",
+      "from_defaults": "handling.meta (current file)",
+      "from_profile": "Copy of %s",
+      "name": "Name",
+      "live": "Live",
+      "make_live": "Make live",
+      "use_baseline": "Use handling.meta only",
+      "live_warning": "Live profile: saving changes every scooter on the server straight away.",
+      "not_live": "Not live: saving stores it. Make it live to apply it to every scooter.",
+      "baseline_readonly": "This is the file itself. Create a profile to tune handling live.",
+      "save": "Save",
+      "save_live": "Save & apply to everyone",
+      "discard": "Discard",
+      "test_ride": "Test ride",
+      "export": "Export",
+      "export_title": "Export handling.meta",
+      "export_body": "Paste this over data/handling.meta to make these values the permanent default. Players need to reconnect after the resource restarts.",
+      "copy": "Copy",
+      "copied": "Copied to clipboard",
+      "rename": "Rename profile",
+      "delete_title": "Delete profile",
+      "delete_body": "Delete %s and its change history? If it is live, scooters go back to handling.meta.",
+      "unsaved": "%d unsaved",
+      "unsaved_switch": "You have unsaved changes. Discard them and switch profile?",
+      "saved": "Saved %d change(s)",
+      "nothing_changed": "Nothing changed",
+      "previewing": "Previewing on your scooter",
+      "not_previewing": "Ride a scooter to feel changes before saving",
+      "search": "Search fields",
+      "changed_only": "Changed only",
+      "reset_field": "Reset to handling.meta",
+      "file_value": "File %s",
+      "presets": "Quick tune",
+      "presets_hint": "Plain-language dials. Each one sets the raw values below, which you can still fine-tune.",
+      "history": "History",
+      "history_empty": "No changes saved yet.",
+      "undo": "Undo",
+      "more": "+%d more",
+      "last_run": "Last test ride",
+      "top_speed": "Top speed",
+      "launch": "0-%s",
+      "no_run": "Take a test ride to measure it.",
+      "estimate": "est.",
+      "groups": {
+        "engine": "Engine & speed",
+        "brakes": "Brakes",
+        "traction": "Grip & steering",
+        "suspension": "Suspension",
+        "body": "Body & weight",
+        "bike": "Bike balance & lean",
+        "damage": "Damage",
+        "sound": "Sound"
+      },
+      "preset": {
+        "TopSpeed": {
+          "label": "Top speed",
+          "hint": "Balances drive force against air drag so the scooter tops out here. Test ride to confirm."
+        },
+        "Acceleration": {
+          "label": "Acceleration",
+          "hint": "How hard it pulls away. Keeps the top speed you set."
+        },
+        "Grip": {
+          "label": "Grip",
+          "hint": "Tyre grip in corners and under braking."
+        },
+        "Braking": {
+          "label": "Braking",
+          "hint": "How quickly it stops."
+        },
+        "Lean": {
+          "label": "Lean",
+          "hint": "How far it leans into corners."
+        }
+      },
+      "hud": {
+        "title": "Test ride",
+        "back": "Press %s to return to the editor",
+        "speed": "Speed",
+        "top": "Top",
+        "launch": "0-%s",
+        "best": "best"
+      },
+      "fields": {
+        "fInitialDriveForce": {
+          "label": "Drive force",
+          "hint": "How hard the motor pushes. Raises acceleration and top speed."
+        },
+        "fInitialDragCoeff": {
+          "label": "Air drag",
+          "hint": "Resistance that grows with speed. Higher means a lower top speed."
+        },
+        "fInitialDriveMaxFlatVel": {
+          "label": "Gearing speed",
+          "hint": "Speed the gearing is built for. Keep it above the real top speed so it does not cap it."
+        },
+        "fDriveInertia": {
+          "label": "Throttle response",
+          "hint": "How quickly the motor spins up. Higher is snappier."
+        },
+        "nInitialDriveGears": {
+          "label": "Gears",
+          "hint": "Forward gears. An e-scooter wants 1."
+        },
+        "fClutchChangeRateScaleUpShift": {
+          "label": "Upshift speed",
+          "hint": "How fast it changes up a gear."
+        },
+        "fClutchChangeRateScaleDownShift": {
+          "label": "Downshift speed",
+          "hint": "How fast it changes down a gear."
+        },
+        "fDriveBiasFront": {
+          "label": "Front-wheel drive share",
+          "hint": "0 drives only the rear wheel, 1 only the front."
+        },
+        "fBrakeForce": {
+          "label": "Brake force",
+          "hint": "Stopping power."
+        },
+        "fBrakeBiasFront": {
+          "label": "Front brake share",
+          "hint": "0.5 is even. Higher leans on the front wheel."
+        },
+        "fHandBrakeForce": {
+          "label": "Handbrake force",
+          "hint": "Rear lock-up strength."
+        },
+        "fTractionCurveMax": {
+          "label": "Peak grip",
+          "hint": "Grip before the tyres start to slide."
+        },
+        "fTractionCurveMin": {
+          "label": "Sliding grip",
+          "hint": "Grip left once they slide. Keep it a little under peak grip."
+        },
+        "fTractionCurveLateral": {
+          "label": "Slip angle",
+          "hint": "How far the tyres can angle before grip drops off."
+        },
+        "fTractionSpringDeltaMax": {
+          "label": "Tyre flex",
+          "hint": "How much the tyres squash before gripping."
+        },
+        "fLowSpeedTractionLossMult": {
+          "label": "Launch wheelspin",
+          "hint": "Wheelspin when pulling away. 0 is none."
+        },
+        "fTractionBiasFront": {
+          "label": "Front grip share",
+          "hint": "0.5 is even."
+        },
+        "fTractionLossMult": {
+          "label": "Off-road grip loss",
+          "hint": "Grip lost on grass, dirt and sand."
+        },
+        "fSteeringLock": {
+          "label": "Steering angle",
+          "hint": "Maximum handlebar turn, in degrees."
+        },
+        "fSuspensionForce": {
+          "label": "Spring stiffness",
+          "hint": "Higher is firmer."
+        },
+        "fSuspensionCompDamp": {
+          "label": "Compression damping",
+          "hint": "Resists the suspension squashing."
+        },
+        "fSuspensionReboundDamp": {
+          "label": "Rebound damping",
+          "hint": "Resists the suspension springing back."
+        },
+        "fSuspensionUpperLimit": {
+          "label": "Upward travel",
+          "hint": "How far the wheels move up."
+        },
+        "fSuspensionLowerLimit": {
+          "label": "Downward travel",
+          "hint": "How far the wheels drop."
+        },
+        "fSuspensionRaise": {
+          "label": "Ride height",
+          "hint": "Raises or lowers the body."
+        },
+        "fSuspensionBiasFront": {
+          "label": "Front spring share",
+          "hint": "0.5 is even."
+        },
+        "fMass": {
+          "label": "Mass",
+          "hint": "Weight in kg. Heavier feels planted but slower to react."
+        },
+        "vecCentreOfMassOffset": {
+          "label": "Centre of mass",
+          "hint": "Shifts the balance point: x sideways, y forward, z up."
+        },
+        "vecInertiaMultiplier": {
+          "label": "Rotational inertia",
+          "hint": "Resistance to rolling, pitching and turning."
+        },
+        "fRollCentreHeightFront": {
+          "label": "Front roll centre",
+          "hint": "Height the front of the body rolls around."
+        },
+        "fRollCentreHeightRear": {
+          "label": "Rear roll centre",
+          "hint": "Height the rear of the body rolls around."
+        },
+        "fPercentSubmerged": {
+          "label": "Float depth",
+          "hint": "How deep it sits in water before floating, in percent."
+        },
+        "fLeanFwdForceMult": {
+          "label": "Lean-forward push",
+          "hint": "Extra push when the rider leans forward."
+        },
+        "fLeanBakForceMult": {
+          "label": "Lean-back pull",
+          "hint": "Pull when the rider leans back."
+        },
+        "fLeanFwdCOMMult": {
+          "label": "Lean-forward weight shift",
+          "hint": "How far weight moves forward when leaning forward."
+        },
+        "fLeanBakCOMMult": {
+          "label": "Lean-back weight shift",
+          "hint": "How far weight moves back when leaning back."
+        },
+        "fMaxBankAngle": {
+          "label": "Max lean angle",
+          "hint": "How far it can lean in a corner, in degrees."
+        },
+        "fFullAnimAngle": {
+          "label": "Full lean pose angle",
+          "hint": "Lean angle where the rider reaches the full lean pose."
+        },
+        "fDesLeanReturnFrac": {
+          "label": "Lean return speed",
+          "hint": "How quickly it straightens up."
+        },
+        "fStickLeanMult": {
+          "label": "Steering lean",
+          "hint": "How much steering tips it over."
+        },
+        "fBrakingStabilityMult": {
+          "label": "Braking stability",
+          "hint": "Keeps it straight under hard braking."
+        },
+        "fInAirSteerMult": {
+          "label": "Air control",
+          "hint": "Steering while airborne."
+        },
+        "fWheelieBalancePoint": {
+          "label": "Wheelie balance angle",
+          "hint": "Angle where a wheelie balances, in degrees."
+        },
+        "fStoppieBalancePoint": {
+          "label": "Stoppie balance angle",
+          "hint": "Angle where a stoppie balances, in degrees."
+        },
+        "fWheelieSteerMult": {
+          "label": "Wheelie steering",
+          "hint": "Steering while on the back wheel."
+        },
+        "fRearBalanceMult": {
+          "label": "Rear balance",
+          "hint": "Resists tipping backwards."
+        },
+        "fFrontBalanceMult": {
+          "label": "Front balance",
+          "hint": "Resists tipping forwards."
+        },
+        "fBikeGroundSideFrictionMult": {
+          "label": "Body side grip",
+          "hint": "Sideways friction when it slides on its side."
+        },
+        "fBikeWheelGroundSideFrictionMult": {
+          "label": "Wheel side grip",
+          "hint": "Sideways friction of the wheels."
+        },
+        "fBikeOnStandLeanAngle": {
+          "label": "Stand lean angle",
+          "hint": "How far it leans when parked."
+        },
+        "fBikeOnStandSteerAngle": {
+          "label": "Stand steering angle",
+          "hint": "Handlebar angle when parked."
+        },
+        "fJumpForce": {
+          "label": "Jump force",
+          "hint": "Bunny-hop strength. 0 turns it off."
+        },
+        "fCollisionDamageMult": {
+          "label": "Collision damage",
+          "hint": "Damage taken from crashes."
+        },
+        "fWeaponDamageMult": {
+          "label": "Weapon damage",
+          "hint": "Damage taken from weapons."
+        },
+        "fDeformationDamageMult": {
+          "label": "Body deformation",
+          "hint": "How much the body dents."
+        },
+        "fEngineDamageMult": {
+          "label": "Motor damage",
+          "hint": "How quickly crashes damage the motor."
+        },
+        "horn": {
+          "label": "Horn",
+          "hint": "What the horn key (E) plays on a scooter. No horn switches it off so the key does nothing."
+        }
+      },
+      "changed_from_file": "changed from file",
+      "group_templates": "Templates",
+      "group_profiles": "Your profiles",
+      "horn_play": "Play",
+      "horn_no_scooter": "Get on a scooter, or stand within 15 m of one, to hear the horn."
+    },
+    "common": {
+      "search": "Search",
+      "all": "All",
+      "none": "None",
+      "loading": "Loading",
+      "load_more": "Load more",
+      "view_only": "View only",
+      "view_only_hint": "You can look around, but changes need the edit permission.",
+      "deleted": "%s deleted",
+      "restored": "Restored",
+      "minutes": "%d min",
+      "ago": "%s ago",
+      "just_now": "just now",
+      "of": "%d of %d",
+      "selected": "%d selected",
+      "shortcuts": "Keyboard: 1-9 tabs, / search, Esc close"
+    },
+    "rides": {
+      "live": "Live rides",
+      "live_empty": "Nobody is riding right now.",
+      "history": "History",
+      "history_empty": "No rides yet.",
+      "search": "Search rider or plate",
+      "today": "Today",
+      "week": "Last 7 days",
+      "all": "All time",
+      "rides": "Rides",
+      "revenue": "Revenue",
+      "unpaid": "Unpaid",
+      "minutes": "Ride time",
+      "by_bunker": "By start bunker · 7 days",
+      "no_bunker": "Parked scooters",
+      "last_24h": "Last 24 hours",
+      "end_ride": "End ride",
+      "end_title": "End this ride?",
+      "end_body": "%s is billed for the minutes so far and the scooter docks if it is at a station.",
+      "refund": "Refund",
+      "refund_title": "Refund this ride?",
+      "refund_body": "%s%d goes back to %s. They have to be online.",
+      "refunded": "Refunded %s%d",
+      "refunded_tag": "refunded",
+      "unpaid_tag": "unpaid",
+      "player": "Rider",
+      "player_rides": "Rides by %s",
+      "ended": {
+        "rider": "Ended by rider",
+        "admin": "Ended by admin",
+        "flat": "Battery ran flat",
+        "dropped": "Rider disconnected",
+        "timeout": "Hit the time limit",
+        "restart": "Server restart"
+      },
+      "columns": {
+        "rider": "Rider",
+        "scooter": "Scooter",
+        "when": "Started",
+        "duration": "Time",
+        "cost": "Cost"
+      }
+    },
+    "settings": {
+      "intro": "Changes apply to the whole server straight away. Leave a value at its file default to keep using the config file.",
+      "file": "File: %s",
+      "changed": "changed",
+      "save": "Save changes",
+      "discard": "Discard",
+      "reset_all": "Reset all to file",
+      "reset_title": "Reset every setting?",
+      "reset_body": "Every live override is removed and the config file values apply again.",
+      "reset_one": "Reset to file",
+      "saved": "Saved %d change(s)",
+      "unsaved": "%d unsaved",
+      "updated_by": "Changed by %s",
+      "on": "On",
+      "off": "Off",
+      "groups": {
+        "pricing": "Pricing",
+        "rides": "Rides",
+        "battery": "Battery",
+        "charging": "Paid charging",
+        "fleet": "Fleet"
+      },
+      "fields": {
+        "Rentals_UnlockFee": {
+          "label": "Unlock fee",
+          "hint": "The one-time fare, charged when a ride starts. Extras are added on top."
+        },
+        "Rentals_Account": {
+          "label": "Pay from",
+          "hint": "Where ride fees are taken from."
+        },
+        "Rentals_MaxRideMinutes": {
+          "label": "Maximum ride time",
+          "hint": "Longer rides are ended and billed automatically."
+        },
+        "Rentals_LockIdle": {
+          "label": "Lock idle scooters",
+          "hint": "Parked scooters can only be ridden through the app."
+        },
+        "Rentals_RentDistance": {
+          "label": "Unlock distance",
+          "hint": "How close a player must be to unlock a scooter."
+        },
+        "Rentals_StationDistance": {
+          "label": "Bunker distance",
+          "hint": "How close a player must be to order from a bunker."
+        },
+        "Rentals_DockDistance": {
+          "label": "Dock distance",
+          "hint": "Ending a ride this close to a bunker or station docks the scooter."
+        },
+        "Rentals_NearbyRadius": {
+          "label": "App search radius",
+          "hint": "How far the phone app lists scooters and bunkers."
+        },
+        "Battery_DrainPerMinute": {
+          "label": "Drain while riding",
+          "hint": "Percent used per ride minute."
+        },
+        "Battery_ChargePerMinute": {
+          "label": "Charge speed",
+          "hint": "Percent gained per minute at a station."
+        },
+        "Battery_MinToRent": {
+          "label": "Minimum to rent",
+          "hint": "Scooters below this cannot be unlocked."
+        },
+        "Battery_FlatRecoverMinutes": {
+          "label": "Flat recovery time",
+          "hint": "How long a flat scooter waits before the fleet collects it."
+        },
+        "Battery_AdoptedLevel": {
+          "label": "Adopted scooter battery",
+          "hint": "Battery of a non-fleet scooter docked at a station."
+        },
+        "Battery_Paid_Enabled": {
+          "label": "Charging costs money",
+          "hint": "Off: every docked scooter charges to full for free."
+        },
+        "Battery_Paid_PricePerPercent": {
+          "label": "Price per percent",
+          "hint": "Rounded up to whole currency."
+        },
+        "Battery_Paid_MinimumFee": {
+          "label": "Minimum charge fee",
+          "hint": "The smallest bill for any charge."
+        },
+        "Battery_Paid_Step": {
+          "label": "Target step",
+          "hint": "The charge target moves in steps of this size."
+        },
+        "Battery_Paid_RefundOnStop": {
+          "label": "Refund on stop",
+          "hint": "Stopping early refunds the undelivered percent."
+        },
+        "Battery_Paid_Account": {
+          "label": "Charging paid from",
+          "hint": "Where charging fees are taken from."
+        },
+        "Bunkers_Stock": {
+          "label": "New bunker stock",
+          "hint": "Scooters a freshly placed bunker starts with."
+        }
+      },
+      "options": {
+        "bank": "Bank",
+        "cash": "Cash",
+        "mph": "mph",
+        "kmh": "km/h"
+      }
+    },
+    "log": {
+      "title": "Action log",
+      "search": "Search admin or action",
+      "empty": "No admin actions recorded yet."
+    },
+    "overview": {
+      "rides_24h": "Rides · last 24 hours",
+      "battery_spread": "Fleet battery",
+      "no_data": "No data yet"
+    },
+    "placement": {
+      "title": "Placing %s",
+      "handles": {
+        "move": "Move",
+        "rotate": "Rotate"
+      },
+      "modes": {
+        "snap": "Snap",
+        "local": "Local axes",
+        "world": "World axes",
+        "stick": "Stick to ground",
+        "cursor": "Cursor",
+        "move": "Move",
+        "rotate": "Rotate"
+      },
+      "warnings": {
+        "floating": "Floating %s m above the ground — press Alt to drop it"
+      },
+      "groups": {
+        "gizmo": "Gizmo",
+        "move": "Adjust",
+        "edit": "Edit"
+      },
+      "keys": {
+        "drag": "Grab arrow or ring",
+        "nudge": "Nudge",
+        "height": "Height",
+        "rotate": "Turn",
+        "snap": "Snap",
+        "stick": "Stick",
+        "drop": "Drop",
+        "undo": "Undo",
+        "cancel": "Cancel",
+        "confirm": "Place",
+        "cursor": "Cursor on / off",
+        "move": "Move mode",
+        "rotate_mode": "Rotate mode"
+      }
+    }
+  },
+  "app": {
+    "name": "SCOOT",
+    "tagline": "Ride the city",
+    "nearby": "Nearby",
+    "scooters": "Scooters",
+    "bunkers": "Stations",
+    "none_nearby": "No scooters near you. Check a station on the map.",
+    "unlock": "Unlock",
+    "unlock_fee": "unlock",
+    "per_minute": "per min",
+    "ride": "Your ride",
+    "end_ride": "End ride",
+    "locate": "Locate",
+    "away": "%s m away",
+    "walk_closer": "Walk closer to unlock",
+    "elapsed": "Elapsed",
+    "cost": "Running cost",
+    "history": "Rides",
+    "history_empty": "No rides yet.",
+    "receipt": "Ride ended",
+    "minutes": "%d min",
+    "paid": "Paid",
+    "unpaid": "Unpaid",
+    "station": "Station",
+    "busy": "In use",
+    "free": "Free",
+    "you": "You",
+    "tabs": {
+      "map": "Map",
+      "rides": "Rides",
+      "account": "Account"
+    }
+  },
+  "err.bad_extras": "Choose valid scooter extras."
+}

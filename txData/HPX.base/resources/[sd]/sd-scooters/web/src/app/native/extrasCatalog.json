@@ -1,0 +1,339 @@
+{
+  "rear": [
+    {
+      "id": "none",
+      "label": "None",
+      "fee": 0
+    },
+    {
+      "id": "delivery",
+      "label": "Storage box",
+      "fee": 5
+    }
+  ],
+  "trim": [
+    {
+      "id": "stock",
+      "label": "Original teal",
+      "fee": 0
+    },
+    {
+      "id": "black",
+      "label": "Black",
+      "fee": 1,
+      "hex": "#0d1116"
+    },
+    {
+      "id": "white",
+      "label": "White",
+      "fee": 1,
+      "hex": "#f4f4f4"
+    },
+    {
+      "id": "red",
+      "label": "Red",
+      "fee": 1,
+      "hex": "#c00e1a"
+    },
+    {
+      "id": "blue",
+      "label": "Blue",
+      "fee": 1,
+      "hex": "#0d5fb1"
+    },
+    {
+      "id": "yellow",
+      "label": "Yellow",
+      "fee": 1,
+      "hex": "#f7d117"
+    },
+    {
+      "id": "orange",
+      "label": "Orange",
+      "fee": 1,
+      "hex": "#f78616"
+    },
+    {
+      "id": "green",
+      "label": "Green",
+      "fee": 1,
+      "hex": "#4cc81f"
+    },
+    {
+      "id": "violet",
+      "label": "Purple",
+      "fee": 1,
+      "hex": "#7f2fdb"
+    },
+    {
+      "id": "pink",
+      "label": "Pink",
+      "fee": 1,
+      "hex": "#f21f99"
+    },
+    {
+      "id": "teal",
+      "label": "Teal",
+      "fee": 1,
+      "hex": "#1a6b78"
+    },
+    {
+      "id": "silver",
+      "label": "Silver",
+      "fee": 1,
+      "hex": "#777c87"
+    },
+    {
+      "id": "forest",
+      "label": "Forest Green",
+      "fee": 1,
+      "hex": "#003805"
+    },
+    {
+      "id": "ice",
+      "label": "Ice Blue",
+      "fee": 1,
+      "hex": "#95b2db"
+    },
+    {
+      "id": "cream",
+      "label": "Cream",
+      "fee": 1,
+      "hex": "#cfc0a5"
+    },
+    {
+      "id": "burgundy",
+      "label": "Burgundy",
+      "fee": 1,
+      "hex": "#4a0a0a"
+    }
+  ],
+  "lighting": [
+    {
+      "id": "off",
+      "label": "Off",
+      "fee": 0
+    },
+    {
+      "id": "black",
+      "label": "Black",
+      "fee": 2,
+      "hex": "#0d1116"
+    },
+    {
+      "id": "white",
+      "label": "White",
+      "fee": 2,
+      "hex": "#f4f4f4"
+    },
+    {
+      "id": "red",
+      "label": "Red",
+      "fee": 2,
+      "hex": "#c00e1a"
+    },
+    {
+      "id": "blue",
+      "label": "Blue",
+      "fee": 2,
+      "hex": "#0d5fb1"
+    },
+    {
+      "id": "yellow",
+      "label": "Yellow",
+      "fee": 2,
+      "hex": "#f7d117"
+    },
+    {
+      "id": "orange",
+      "label": "Orange",
+      "fee": 2,
+      "hex": "#f78616"
+    },
+    {
+      "id": "green",
+      "label": "Green",
+      "fee": 2,
+      "hex": "#4cc81f"
+    },
+    {
+      "id": "violet",
+      "label": "Purple",
+      "fee": 2,
+      "hex": "#7f2fdb"
+    },
+    {
+      "id": "pink",
+      "label": "Pink",
+      "fee": 2,
+      "hex": "#f21f99"
+    },
+    {
+      "id": "teal",
+      "label": "Teal",
+      "fee": 2,
+      "hex": "#1a6b78"
+    },
+    {
+      "id": "silver",
+      "label": "Silver",
+      "fee": 2,
+      "hex": "#777c87"
+    },
+    {
+      "id": "forest",
+      "label": "Forest Green",
+      "fee": 2,
+      "hex": "#003805"
+    },
+    {
+      "id": "ice",
+      "label": "Ice Blue",
+      "fee": 2,
+      "hex": "#95b2db"
+    },
+    {
+      "id": "cream",
+      "label": "Cream",
+      "fee": 2,
+      "hex": "#cfc0a5"
+    },
+    {
+      "id": "burgundy",
+      "label": "Burgundy",
+      "fee": 2,
+      "hex": "#4a0a0a"
+    }
+  ],
+  "box": [
+    {
+      "id": "stock",
+      "label": "Original teal",
+      "fee": 0
+    },
+    {
+      "id": "black",
+      "label": "Black",
+      "fee": 0,
+      "hex": "#0d1116"
+    },
+    {
+      "id": "white",
+      "label": "White",
+      "fee": 0,
+      "hex": "#f4f4f4"
+    },
+    {
+      "id": "red",
+      "label": "Red",
+      "fee": 0,
+      "hex": "#c00e1a"
+    },
+    {
+      "id": "blue",
+      "label": "Blue",
+      "fee": 0,
+      "hex": "#0d5fb1"
+    },
+    {
+      "id": "yellow",
+      "label": "Yellow",
+      "fee": 0,
+      "hex": "#f7d117"
+    },
+    {
+      "id": "orange",
+      "label": "Orange",
+      "fee": 0,
+      "hex": "#f78616"
+    },
+    {
+      "id": "green",
+      "label": "Green",
+      "fee": 0,
+      "hex": "#4cc81f"
+    },
+    {
+      "id": "violet",
+      "label": "Purple",
+      "fee": 0,
+      "hex": "#7f2fdb"
+    },
+    {
+      "id": "pink",
+      "label": "Pink",
+      "fee": 0,
+      "hex": "#f21f99"
+    },
+    {
+      "id": "teal",
+      "label": "Teal",
+      "fee": 0,
+      "hex": "#1a6b78"
+    },
+    {
+      "id": "silver",
+      "label": "Silver",
+      "fee": 0,
+      "hex": "#777c87"
+    },
+    {
+      "id": "forest",
+      "label": "Forest Green",
+      "fee": 0,
+      "hex": "#003805"
+    },
+    {
+      "id": "ice",
+      "label": "Ice Blue",
+      "fee": 0,
+      "hex": "#95b2db"
+    },
+    {
+      "id": "cream",
+      "label": "Cream",
+      "fee": 0,
+      "hex": "#cfc0a5"
+    },
+    {
+      "id": "burgundy",
+      "label": "Burgundy",
+      "fee": 0,
+      "hex": "#4a0a0a"
+    }
+  ],
+  "defaults": {
+    "rear": "none",
+    "trim": "stock",
+    "lighting": "off",
+    "box": "stock"
+  },
+  "presets": [
+    {
+      "id": "commuter",
+      "label": "Commuter",
+      "description": "Everyday essentials",
+      "options": {
+        "trim": "black"
+      }
+    },
+    {
+      "id": "night",
+      "label": "Night Rider",
+      "description": "A little after-dark character",
+      "options": {
+        "trim": "violet",
+        "lighting": "violet"
+      }
+    },
+    {
+      "id": "courier",
+      "label": "Courier",
+      "description": "Carry the look",
+      "options": {
+        "rear": "delivery",
+        "trim": "orange"
+      }
+    }
+  ]
+}

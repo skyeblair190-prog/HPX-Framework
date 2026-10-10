@@ -1,0 +1,554 @@
+{
+  "rack": {
+    "model": "sdx_rack",
+    "bone": "chassis",
+    "group": "rack",
+    "triangles": 5632
+  },
+  "delivery": {
+    "model": "sdx_delivery",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  },
+  "light_black": {
+    "model": "sdx_light_black",
+    "bone": "chassis",
+    "group": "lighting",
+    "triangles": 504
+  },
+  "light_white": {
+    "model": "sdx_light_white",
+    "bone": "chassis",
+    "group": "lighting",
+    "triangles": 504
+  },
+  "light_red": {
+    "model": "sdx_light_red",
+    "bone": "chassis",
+    "group": "lighting",
+    "triangles": 504
+  },
+  "light_blue": {
+    "model": "sdx_light_blue",
+    "bone": "chassis",
+    "group": "lighting",
+    "triangles": 504
+  },
+  "light_yellow": {
+    "model": "sdx_light_yellow",
+    "bone": "chassis",
+    "group": "lighting",
+    "triangles": 504
+  },
+  "light_orange": {
+    "model": "sdx_light_orange",
+    "bone": "chassis",
+    "group": "lighting",
+    "triangles": 504
+  },
+  "light_green": {
+    "model": "sdx_light_green",
+    "bone": "chassis",
+    "group": "lighting",
+    "triangles": 504
+  },
+  "light_violet": {
+    "model": "sdx_light_violet",
+    "bone": "chassis",
+    "group": "lighting",
+    "triangles": 504
+  },
+  "light_pink": {
+    "model": "sdx_light_pink",
+    "bone": "chassis",
+    "group": "lighting",
+    "triangles": 504
+  },
+  "light_teal": {
+    "model": "sdx_light_teal",
+    "bone": "chassis",
+    "group": "lighting",
+    "triangles": 504
+  },
+  "light_silver": {
+    "model": "sdx_light_silver",
+    "bone": "chassis",
+    "group": "lighting",
+    "triangles": 504
+  },
+  "light_forest": {
+    "model": "sdx_light_forest",
+    "bone": "chassis",
+    "group": "lighting",
+    "triangles": 504
+  },
+  "light_ice": {
+    "model": "sdx_light_ice",
+    "bone": "chassis",
+    "group": "lighting",
+    "triangles": 504
+  },
+  "light_cream": {
+    "model": "sdx_light_cream",
+    "bone": "chassis",
+    "group": "lighting",
+    "triangles": 504
+  },
+  "light_burgundy": {
+    "model": "sdx_light_burgundy",
+    "bone": "chassis",
+    "group": "lighting",
+    "triangles": 504
+  },
+  "trim_black_grip": {
+    "model": "sdx_trim_black_grip",
+    "bone": "handlebars",
+    "group": "trim",
+    "triangles": 1524
+  },
+  "trim_black_deck": {
+    "model": "sdx_trim_black_deck",
+    "bone": "chassis",
+    "group": "trim",
+    "triangles": 1064
+  },
+  "trim_black_front": {
+    "model": "sdx2_trim_black_front",
+    "bone": "wheel_lf",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_black_rear": {
+    "model": "sdx2_trim_black_rear",
+    "bone": "wheel_lr",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_white_grip": {
+    "model": "sdx_trim_white_grip",
+    "bone": "handlebars",
+    "group": "trim",
+    "triangles": 1524
+  },
+  "trim_white_deck": {
+    "model": "sdx_trim_white_deck",
+    "bone": "chassis",
+    "group": "trim",
+    "triangles": 1064
+  },
+  "trim_white_front": {
+    "model": "sdx2_trim_white_front",
+    "bone": "wheel_lf",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_white_rear": {
+    "model": "sdx2_trim_white_rear",
+    "bone": "wheel_lr",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_red_grip": {
+    "model": "sdx_trim_red_grip",
+    "bone": "handlebars",
+    "group": "trim",
+    "triangles": 1524
+  },
+  "trim_red_deck": {
+    "model": "sdx_trim_red_deck",
+    "bone": "chassis",
+    "group": "trim",
+    "triangles": 1064
+  },
+  "trim_red_front": {
+    "model": "sdx2_trim_red_front",
+    "bone": "wheel_lf",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_red_rear": {
+    "model": "sdx2_trim_red_rear",
+    "bone": "wheel_lr",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_blue_grip": {
+    "model": "sdx_trim_blue_grip",
+    "bone": "handlebars",
+    "group": "trim",
+    "triangles": 1524
+  },
+  "trim_blue_deck": {
+    "model": "sdx_trim_blue_deck",
+    "bone": "chassis",
+    "group": "trim",
+    "triangles": 1064
+  },
+  "trim_blue_front": {
+    "model": "sdx2_trim_blue_front",
+    "bone": "wheel_lf",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_blue_rear": {
+    "model": "sdx2_trim_blue_rear",
+    "bone": "wheel_lr",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_yellow_grip": {
+    "model": "sdx_trim_yellow_grip",
+    "bone": "handlebars",
+    "group": "trim",
+    "triangles": 1524
+  },
+  "trim_yellow_deck": {
+    "model": "sdx_trim_yellow_deck",
+    "bone": "chassis",
+    "group": "trim",
+    "triangles": 1064
+  },
+  "trim_yellow_front": {
+    "model": "sdx2_trim_yellow_front",
+    "bone": "wheel_lf",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_yellow_rear": {
+    "model": "sdx2_trim_yellow_rear",
+    "bone": "wheel_lr",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_orange_grip": {
+    "model": "sdx_trim_orange_grip",
+    "bone": "handlebars",
+    "group": "trim",
+    "triangles": 1524
+  },
+  "trim_orange_deck": {
+    "model": "sdx_trim_orange_deck",
+    "bone": "chassis",
+    "group": "trim",
+    "triangles": 1064
+  },
+  "trim_orange_front": {
+    "model": "sdx2_trim_orange_front",
+    "bone": "wheel_lf",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_orange_rear": {
+    "model": "sdx2_trim_orange_rear",
+    "bone": "wheel_lr",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_green_grip": {
+    "model": "sdx_trim_green_grip",
+    "bone": "handlebars",
+    "group": "trim",
+    "triangles": 1524
+  },
+  "trim_green_deck": {
+    "model": "sdx_trim_green_deck",
+    "bone": "chassis",
+    "group": "trim",
+    "triangles": 1064
+  },
+  "trim_green_front": {
+    "model": "sdx2_trim_green_front",
+    "bone": "wheel_lf",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_green_rear": {
+    "model": "sdx2_trim_green_rear",
+    "bone": "wheel_lr",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_violet_grip": {
+    "model": "sdx_trim_violet_grip",
+    "bone": "handlebars",
+    "group": "trim",
+    "triangles": 1524
+  },
+  "trim_violet_deck": {
+    "model": "sdx_trim_violet_deck",
+    "bone": "chassis",
+    "group": "trim",
+    "triangles": 1064
+  },
+  "trim_violet_front": {
+    "model": "sdx2_trim_violet_front",
+    "bone": "wheel_lf",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_violet_rear": {
+    "model": "sdx2_trim_violet_rear",
+    "bone": "wheel_lr",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_pink_grip": {
+    "model": "sdx_trim_pink_grip",
+    "bone": "handlebars",
+    "group": "trim",
+    "triangles": 1524
+  },
+  "trim_pink_deck": {
+    "model": "sdx_trim_pink_deck",
+    "bone": "chassis",
+    "group": "trim",
+    "triangles": 1064
+  },
+  "trim_pink_front": {
+    "model": "sdx2_trim_pink_front",
+    "bone": "wheel_lf",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_pink_rear": {
+    "model": "sdx2_trim_pink_rear",
+    "bone": "wheel_lr",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_teal_grip": {
+    "model": "sdx_trim_teal_grip",
+    "bone": "handlebars",
+    "group": "trim",
+    "triangles": 1524
+  },
+  "trim_teal_deck": {
+    "model": "sdx_trim_teal_deck",
+    "bone": "chassis",
+    "group": "trim",
+    "triangles": 1064
+  },
+  "trim_teal_front": {
+    "model": "sdx2_trim_teal_front",
+    "bone": "wheel_lf",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_teal_rear": {
+    "model": "sdx2_trim_teal_rear",
+    "bone": "wheel_lr",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_silver_grip": {
+    "model": "sdx_trim_silver_grip",
+    "bone": "handlebars",
+    "group": "trim",
+    "triangles": 1524
+  },
+  "trim_silver_deck": {
+    "model": "sdx_trim_silver_deck",
+    "bone": "chassis",
+    "group": "trim",
+    "triangles": 1064
+  },
+  "trim_silver_front": {
+    "model": "sdx2_trim_silver_front",
+    "bone": "wheel_lf",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_silver_rear": {
+    "model": "sdx2_trim_silver_rear",
+    "bone": "wheel_lr",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_forest_grip": {
+    "model": "sdx_trim_forest_grip",
+    "bone": "handlebars",
+    "group": "trim",
+    "triangles": 1524
+  },
+  "trim_forest_deck": {
+    "model": "sdx_trim_forest_deck",
+    "bone": "chassis",
+    "group": "trim",
+    "triangles": 1064
+  },
+  "trim_forest_front": {
+    "model": "sdx2_trim_forest_front",
+    "bone": "wheel_lf",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_forest_rear": {
+    "model": "sdx2_trim_forest_rear",
+    "bone": "wheel_lr",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_ice_grip": {
+    "model": "sdx_trim_ice_grip",
+    "bone": "handlebars",
+    "group": "trim",
+    "triangles": 1524
+  },
+  "trim_ice_deck": {
+    "model": "sdx_trim_ice_deck",
+    "bone": "chassis",
+    "group": "trim",
+    "triangles": 1064
+  },
+  "trim_ice_front": {
+    "model": "sdx2_trim_ice_front",
+    "bone": "wheel_lf",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_ice_rear": {
+    "model": "sdx2_trim_ice_rear",
+    "bone": "wheel_lr",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_cream_grip": {
+    "model": "sdx_trim_cream_grip",
+    "bone": "handlebars",
+    "group": "trim",
+    "triangles": 1524
+  },
+  "trim_cream_deck": {
+    "model": "sdx_trim_cream_deck",
+    "bone": "chassis",
+    "group": "trim",
+    "triangles": 1064
+  },
+  "trim_cream_front": {
+    "model": "sdx2_trim_cream_front",
+    "bone": "wheel_lf",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_cream_rear": {
+    "model": "sdx2_trim_cream_rear",
+    "bone": "wheel_lr",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_burgundy_grip": {
+    "model": "sdx_trim_burgundy_grip",
+    "bone": "handlebars",
+    "group": "trim",
+    "triangles": 1524
+  },
+  "trim_burgundy_deck": {
+    "model": "sdx_trim_burgundy_deck",
+    "bone": "chassis",
+    "group": "trim",
+    "triangles": 1064
+  },
+  "trim_burgundy_front": {
+    "model": "sdx2_trim_burgundy_front",
+    "bone": "wheel_lf",
+    "group": "trim",
+    "triangles": 432
+  },
+  "trim_burgundy_rear": {
+    "model": "sdx2_trim_burgundy_rear",
+    "bone": "wheel_lr",
+    "group": "trim",
+    "triangles": 432
+  },
+  "delivery_black": {
+    "model": "sdx_delivery_black",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  },
+  "delivery_white": {
+    "model": "sdx_delivery_white",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  },
+  "delivery_red": {
+    "model": "sdx_delivery_red",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  },
+  "delivery_blue": {
+    "model": "sdx_delivery_blue",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  },
+  "delivery_yellow": {
+    "model": "sdx_delivery_yellow",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  },
+  "delivery_orange": {
+    "model": "sdx_delivery_orange",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  },
+  "delivery_green": {
+    "model": "sdx_delivery_green",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  },
+  "delivery_violet": {
+    "model": "sdx_delivery_violet",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  },
+  "delivery_pink": {
+    "model": "sdx_delivery_pink",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  },
+  "delivery_teal": {
+    "model": "sdx_delivery_teal",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  },
+  "delivery_silver": {
+    "model": "sdx_delivery_silver",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  },
+  "delivery_forest": {
+    "model": "sdx_delivery_forest",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  },
+  "delivery_ice": {
+    "model": "sdx_delivery_ice",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  },
+  "delivery_cream": {
+    "model": "sdx_delivery_cream",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  },
+  "delivery_burgundy": {
+    "model": "sdx_delivery_burgundy",
+    "bone": "chassis",
+    "group": "delivery",
+    "triangles": 4055
+  }
+}

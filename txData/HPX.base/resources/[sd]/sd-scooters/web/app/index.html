@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SCOOT</title>
+    <style>
+      /* Two rules from the sd-phone app guide: the resource's ui_page also renders as a fullscreen
+         game overlay, so the document stays invisible and transparent until the phone says it is
+         hosting us; the app's own background lives on #root. */
+      html, body { visibility: hidden; background: transparent; margin: 0; height: 100%; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="../src/app/main.tsx"></script>
+  </body>
+</html>

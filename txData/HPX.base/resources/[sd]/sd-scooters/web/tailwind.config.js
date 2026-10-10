@@ -1,0 +1,142 @@
+import { palette } from './src/theme/palette';
+
+export default {
+  content: ['./index.html', './app/index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: ['selector', '[data-theme="dark"]'],
+  theme: {
+    extend: {
+      colors: {
+        ios: {
+          blue: 'rgb(var(--ios-blue) / <alpha-value>)',
+          green: '#34c759',
+          indigo: '#5e5ce6',
+          orange: '#ff9f0a',
+          pink: '#ff375f',
+          purple: '#bf5af2',
+          red: '#ff453a',
+          teal: '#64d2ff',
+          yellow: '#ffd60a',
+          gray: 'rgb(var(--ios-gray) / <alpha-value>)',
+          gray2: '#aeaeb2',
+          gray3: '#c7c7cc',
+          gray4: '#d1d1d6',
+          gray5: '#e5e5ea',
+          gray6: '#f2f2f7',
+        },
+        label: 'rgb(var(--label) / <alpha-value>)',
+        hairline: 'rgb(var(--hairline) / <alpha-value>)',
+        base: 'rgb(var(--base) / <alpha-value>)',
+        surface: 'rgb(var(--surface) / <alpha-value>)',
+        elevated: 'rgb(var(--elevated) / <alpha-value>)',
+        control: 'rgb(var(--control) / <alpha-value>)',
+        glass: {
+          dock: 'rgba(255, 255, 255, 0.18)',
+          'dock-border': 'rgba(255, 255, 255, 0.22)',
+          card: 'rgba(40, 40, 45, 0.55)',
+          'card-border': 'rgba(255, 255, 255, 0.12)',
+        },
+        scoot: {
+          accent: palette.accent,
+          bright: palette.bright,
+          dim: palette.dim,
+          slate: palette.slate,
+          deep: palette.deep,
+          panel: palette.raise,
+          ink: palette.ink,
+          danger: palette.danger,
+          warn: palette.warn,
+        },
+      },
+      fontFamily: {
+        sf: ['-apple-system', 'BlinkMacSystemFont', '"SF Pro Display"', '"SF Pro Text"', 'Inter', 'system-ui', 'sans-serif'],
+        sfRound: ['"SF Pro Rounded"', '-apple-system', 'BlinkMacSystemFont', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['Quantico', 'Oswald', 'system-ui', 'sans-serif'],
+        sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+      },
+      keyframes: {
+        'slide-up-fade': {
+          '0%': { opacity: 0, transform: 'translateY(12px)' },
+          '100%': { opacity: 1, transform: 'translateY(0)' },
+        },
+        'slide-down-fade': {
+          '0%': { opacity: 0, transform: 'translateY(-12px)' },
+          '100%': { opacity: 1, transform: 'translateY(0)' },
+        },
+        'notif-drop': {
+          '0%': { opacity: 0, transform: 'translateY(-16px) scale(0.95)' },
+          '55%': { opacity: 1 },
+          '100%': { opacity: 1, transform: 'translateY(0) scale(1)' },
+        },
+        'slide-out-down': {
+          '0%': { opacity: 1, transform: 'translateY(0)' },
+          '100%': { opacity: 0, transform: 'translateY(12px)' },
+        },
+        'fade-in': {
+          '0%': { opacity: 0 },
+          '100%': { opacity: 1 },
+        },
+        'pin-drop': {
+          '0%': { opacity: 0, transform: 'translateY(-18px) scale(0.7)' },
+          '55%': { opacity: 1, transform: 'translateY(3px) scale(1.04)' },
+          '75%': { transform: 'translateY(-2px) scale(0.98)' },
+          '100%': { opacity: 1, transform: 'translateY(0) scale(1)' },
+        },
+        'icon-pop': {
+          '0%': { transform: 'scale(0.94)' },
+          '50%': { transform: 'scale(1.04)' },
+          '100%': { transform: 'scale(1.00)' },
+        },
+        'swipe-in-left': {
+          '0%': { opacity: 0, transform: 'translateX(calc(var(--dir-x, 1) * -48px))' },
+          '100%': { opacity: 1, transform: 'translateX(0)' },
+        },
+        'tab-in-right': {
+          '0%': { opacity: 0, transform: 'translateX(calc(var(--dir-x, 1) * 26px))' },
+          '100%': { opacity: 1, transform: 'translateX(0)' },
+        },
+        'tab-in-left': {
+          '0%': { opacity: 0, transform: 'translateX(calc(var(--dir-x, 1) * -26px))' },
+          '100%': { opacity: 1, transform: 'translateX(0)' },
+        },
+        plop: {
+          '0%': { transform: 'scale(1)' },
+          '32%': { transform: 'scale(1.18)' },
+          '62%': { transform: 'scale(0.93)' },
+          '100%': { transform: 'scale(1)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' },
+        },
+        'heart-pop': {
+          '0%': { transform: 'scale(1)' },
+          '30%': { transform: 'scale(1.38)' },
+          '60%': { transform: 'scale(0.88)' },
+          '100%': { transform: 'scale(1)' },
+        },
+        'burst-ring': {
+          '0%': { transform: 'scale(0.3)', opacity: 0.55 },
+          '70%': { transform: 'scale(1.25)', opacity: 0.22 },
+          '100%': { transform: 'scale(1.55)', opacity: 0 },
+        },
+      },
+      animation: {
+        'slide-up-fade': 'slide-up-fade 0.32s ease-out',
+        'slide-down-fade': 'slide-down-fade 0.32s ease-out',
+        'notif-drop': 'notif-drop 0.44s cubic-bezier(0.22,1,0.32,1.04)',
+        'slide-out-down': 'slide-out-down 0.3s ease-in forwards',
+        'fade-in': 'fade-in 0.4s ease-out',
+        'pin-drop': 'pin-drop 0.45s cubic-bezier(0.22,0.61,0.36,1)',
+        'icon-pop': 'icon-pop 0.18s ease-out',
+        'swipe-in-left': 'swipe-in-left 0.45s cubic-bezier(0.22,1,0.36,1)',
+        'tab-in-right': 'tab-in-right 0.26s cubic-bezier(0.22,0.9,0.3,1)',
+        'tab-in-left': 'tab-in-left 0.26s cubic-bezier(0.22,0.9,0.3,1)',
+        plop: 'plop 0.4s cubic-bezier(0.34,1.56,0.64,1)',
+        shimmer: 'shimmer 1.6s linear infinite',
+        'heart-pop': 'heart-pop 0.42s cubic-bezier(0.34,1.56,0.64,1)',
+        'burst-ring': 'burst-ring 0.5s ease-out forwards',
+      },
+    },
+  },
+  plugins: [],
+};
