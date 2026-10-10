@@ -19,8 +19,4 @@ Config.MinDuration     = 500
 Config.MaxDuration     = 30000
 Config.DefaultDuration = 4000
 
--- Keybind used by the /notifyall preview command
-Config.PreviewKey = 'L'
 
--- Delay between each notification in the /notifyall preview (ms)
-Config.PreviewGap = 1500
