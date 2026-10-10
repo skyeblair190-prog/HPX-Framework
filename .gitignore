@@ -7,3 +7,6 @@ node_modules/
 Thumbs.db
 *.bak
 *.tmp
+
+# Licensed third-party resources (sd-phone, sd-scooters) stay local; never commit them to this public repo
+txData/HPX.base/resources/[[]sd[]]/
