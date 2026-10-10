@@ -14,7 +14,8 @@ client_scripts {
   'client/main.lua',
   'client/characters.lua',
   'client/spawn.lua',
-  'client/vehicles.lua'
+  'client/vehicles.lua',
+  'client/needs.lua'
 }
 
 server_scripts {
@@ -30,6 +31,8 @@ server_scripts {
   'server/character.lua',
   'server/money.lua',
   'server/items.lua',
+  'server/jobs.lua',
+  'server/needs.lua',
   'server/characters.lua',
   'server/vehicles.lua',
   'server/callbacks.lua',

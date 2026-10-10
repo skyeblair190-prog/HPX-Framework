@@ -34,8 +34,12 @@ function HPXServer.Character.Load(source, characterId, isNew)
   row.charinfo = decode(row.charinfo, {})
   row.money = decode(row.money, HPX.copy(HPXConfig.character.defaultMoney))
   row.job = decode(row.job, HPX.copy(HPXConfig.character.defaultJob))
+  row.job = HPXServer.ResolveJob(row.job.name, row.job.grade, row.job.onduty) or HPX.copy(HPXConfig.character.defaultJob)
   row.gang = decode(row.gang, HPX.copy(HPXConfig.character.defaultGang))
   row.metadata = decode(row.metadata, {})
+  for key, value in pairs(HPXConfig.character.defaultMetadata) do
+    if row.metadata[key] == nil then row.metadata[key] = value end
+  end
   row.position = decode(row.position, nil)
 
   local player = HPXServer.BuildPlayer(source, row)
@@ -160,7 +164,9 @@ function HPXServer.Character.SetJob(source, name, grade)
   local player = HPXServer.GetPlayer(source)
   if not player or not HPXValidate.text(name, 64) then return false end
   grade = tonumber(grade) or 0
-  player.job = { name = name, label = name, grade = grade, onduty = false, payment = 0 }
+  local job = HPXServer.ResolveJob(name, grade, false)
+  if not job then return false end
+  player.job = job
   TriggerEvent('hpx:server:jobChanged', source, player.job)
   HPXServer.SyncClient(source)
   return true

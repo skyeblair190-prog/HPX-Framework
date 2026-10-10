@@ -12,7 +12,7 @@ end
 
 function HPXServer.IsGradeBoss(group, grade)
   if type(group) ~= 'string' then return false end
-  local definition = HPXConstants.jobs[group] or HPXConstants.gangs[group]
+  local definition = HPXConfig.jobs[group] or HPXConfig.gangs[group]
   local grades = definition and definition.grades
   local entry = grades and (grades[grade] or grades[tostring(grade)])
   return entry ~= nil and entry.isboss == true
