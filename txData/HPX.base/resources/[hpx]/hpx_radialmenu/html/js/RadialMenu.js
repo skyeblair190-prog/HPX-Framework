@@ -71,7 +71,7 @@ RadialMenu.prototype.close = function (bool) {
         ++self.navigationVersion;
         self.isEntering = false;
         self.isReturning = false;
-        $.post(`https://codera-radialmenu/closeRadial`, JSON.stringify({ delay: bool }) );
+        $.post(`https://hpx_radialmenu/closeRadial`, JSON.stringify({ delay: bool }) );
         var closingMenu = self.currentMenu;
         self.currentMenu = null;
         self.levelItems = null;

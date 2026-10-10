@@ -34,7 +34,7 @@ function createMenu(items) {
             }
             
             if (item.items == null && item.shouldClose != null) {
-                $.post('https://codera-radialmenu/selectItem', JSON.stringify({
+                $.post('https://hpx_radialmenu/selectItem', JSON.stringify({
                     itemData: item
                 }))
             }

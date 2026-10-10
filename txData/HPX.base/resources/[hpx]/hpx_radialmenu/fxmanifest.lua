@@ -7,17 +7,32 @@ version '1.0.0'
 ui_page 'html/index.html'
 
 shared_scripts {
+    '@ox_lib/init.lua',
     'config.lua',
     'shared/locale.lua',
     'locales/en.lua' -- Change this to your preferred language
 }
 
 client_scripts {
-    'client/*.lua',
+    'client/qb.lua',
+    'client/main.lua',
+    'client/blips.lua',
+    'client/clothing.lua',
+    'client/extraevents.lua',
+    'client/stretcher.lua',
+    'client/trunk.lua'
 }
 
 server_scripts {
-    'server/*.lua',
+    'server/qb.lua',
+    'server/stretcher.lua',
+    'server/trunk.lua'
+}
+
+dependencies {
+    'ox_lib',
+    'hpx_core',
+    'hpx_notify'
 }
 
 files {

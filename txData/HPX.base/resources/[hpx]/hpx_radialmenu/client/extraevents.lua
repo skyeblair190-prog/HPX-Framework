@@ -8,7 +8,7 @@ local mdtid = nil
 local function givekeys()
     local Player = PlayerPedId()
     if IsPedInAnyVehicle(Player) then
-        vehoption1 = exports['codera-radialmenu']:AddOption({
+        vehoption1 = exports['hpx_radialmenu']:AddOption({
             id = 'give_keys',
             title = 'Give Keys',
             icon = 'key',
@@ -18,7 +18,7 @@ local function givekeys()
         }, vehoption1)
     else
         if vehoption1 ~= nil then
-            exports['codera-radialmenu']:RemoveOption(vehoption1)
+            exports['hpx_radialmenu']:RemoveOption(vehoption1)
             vehoption1 = nil
         end
     end
@@ -28,7 +28,7 @@ local function PlayerCloseMenu()
     local player, distance = QBCore.Functions.GetClosestPlayer()
     if player ~= -1 and distance <= 1.5 then
         if not IsPedInAnyVehicle(PlayerPedId()) then
-            cuffid = exports['codera-radialmenu']:AddOption({
+            cuffid = exports['hpx_radialmenu']:AddOption({
                 id = 'handcuff',
                 title = 'Cuff',
                 icon = 'user-lock',
@@ -36,7 +36,7 @@ local function PlayerCloseMenu()
                 event = 'police:client:CuffPlayerSoft',
                 shouldClose = true
             }, cuffid)
-            stealid = exports['codera-radialmenu']:AddOption({
+            stealid = exports['hpx_radialmenu']:AddOption({
                 id = 'stealplayer',
                 title = 'Steal',
                 icon = 'shopping-bag',
@@ -47,8 +47,8 @@ local function PlayerCloseMenu()
         end
     else
         if cuffid ~= nil and stealid ~= nil then
-            exports['codera-radialmenu']:RemoveOption(cuffid)
-            exports['codera-radialmenu']:RemoveOption(stealid)
+            exports['hpx_radialmenu']:RemoveOption(cuffid)
+            exports['hpx_radialmenu']:RemoveOption(stealid)
             cuffid = nil
             stealid = nil
         end
@@ -57,7 +57,7 @@ end
 
 local function mdt()
     if QBCore.Functions.GetPlayerData().job.name == "police" then
-        mdtid = exports['codera-radialmenu']:AddOption({
+        mdtid = exports['hpx_radialmenu']:AddOption({
             id = 'mdt',
             title = 'Mdt',
             icon = 'tablet',
@@ -67,7 +67,7 @@ local function mdt()
         }, mdtid)
     else
         if mdtid ~= nil then
-            exports['codera-radialmenu']:RemoveOption(mdtid)
+            exports['hpx_radialmenu']:RemoveOption(mdtid)
             mdtid = nil
         end
     end
@@ -80,7 +80,7 @@ local function vehoptions()
     local vehicle = QBCore.Functions.GetClosestVehicle()
     local vehpos = GetEntityCoords(vehicle)
     if #(pos - vehpos) < 2.5 and not IsPedInAnyVehicle(PlayerPedId()) then
-        vehoption2 = exports['codera-radialmenu']:AddOption({
+        vehoption2 = exports['hpx_radialmenu']:AddOption({
             id = 'playeroutvehicle',
             title = 'Take Out',
             icon = 'user',
@@ -88,7 +88,7 @@ local function vehoptions()
             event = 'police:client:SetPlayerOutVehicle',
             shouldClose = true
         }, vehoption2)
-        vehoption3 = exports['codera-radialmenu']:AddOption({
+        vehoption3 = exports['hpx_radialmenu']:AddOption({
             id = 'playerinvehicle',
             title = 'Put In',
             icon = 'user',
@@ -98,8 +98,8 @@ local function vehoptions()
         }, vehoption3)
     else
         if vehoption2 ~= nil and vehoption3 ~= nil then
-            exports['codera-radialmenu']:RemoveOption(vehoption2)
-            exports['codera-radialmenu']:RemoveOption(vehoption3)
+            exports['hpx_radialmenu']:RemoveOption(vehoption2)
+            exports['hpx_radialmenu']:RemoveOption(vehoption3)
             vehoption2 = nil
             vehoption3 = nil
         end

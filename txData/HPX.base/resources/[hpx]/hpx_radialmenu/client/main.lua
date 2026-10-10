@@ -1,4 +1,3 @@
-QBCore = exports['qb-core']:GetCoreObject()
 PlayerData = QBCore.Functions.GetPlayerData() -- Setting this for when you restart the resource in game
 local inRadialMenu = false
 
@@ -219,18 +218,18 @@ RegisterKeyMapping('radialmenu', Lang:t("general.command_description"), 'keyboar
 -- Events
 
 -- Sets the metadata when the player spawns
-RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
-    PlayerData = QBCore.Functions.GetPlayerData()
+RegisterNetEvent('hpx:client:characterLoaded', function(data)
+    PlayerData = QBCore.Functions.NormalizePlayerData(data)
 end)
 
 -- Sets the playerdata to an empty table when the player has quit or did /logout
-RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
-    PlayerData = {}
+RegisterNetEvent('hpx:client:characterUnloaded', function()
+    PlayerData = QBCore.Functions.NormalizePlayerData(nil)
 end)
 
 -- This will update all the PlayerData that doesn't get updated with a specific event other than this like the metadata
-RegisterNetEvent('QBCore:Player:SetPlayerData', function(val)
-    PlayerData = val
+RegisterNetEvent('hpx:client:setPlayerData', function(val)
+    PlayerData = QBCore.Functions.NormalizePlayerData(val)
 end)
 
 RegisterNetEvent('codera-radialmenu:client:noPlayers', function()
@@ -315,7 +314,8 @@ RegisterNetEvent('codera-radialmenu:client:ChangeSeat', function(data)
     local Veh = GetVehiclePedIsIn(PlayerPedId())
     local IsSeatFree = IsVehicleSeatFree(Veh, data.id)
     local speed = GetEntitySpeed(Veh)
-    local HasHarnass = exports['qb-smallresources']:HasHarness()
+    local harnessOk, harness = pcall(function() return exports['qb-smallresources']:HasHarness() end)
+    local HasHarnass = harnessOk and harness or false
     if not HasHarnass then
         local kmh = speed * 3.6
         if IsSeatFree then
@@ -353,7 +353,7 @@ RegisterNUICallback('selectItem', function(inData, cb)
         elseif data.type == 'command' then
             ExecuteCommand(data.event)
         elseif data.type == 'qbcommand' then
-            TriggerServerEvent('QBCore:CallCommand', data.event, data)
+            ExecuteCommand(data.event)
         end
     end
     cb('ok')
