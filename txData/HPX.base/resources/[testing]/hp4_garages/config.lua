@@ -1,6 +1,5 @@
 Config = {
     command = 'garageadmin',
-    group = 'group.admin',
     ace = 'hp4_garages.admin',
 
     restoreDelay = 420,

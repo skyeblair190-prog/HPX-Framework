@@ -1,5 +1,3 @@
-ExecuteCommand(('add_ace %s %s allow'):format(Config.group, Config.ace))
-
 local H = HP4
 local actions = {}
 
