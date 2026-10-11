@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<link rel="stylesheet" href="nui://sd-scooters/web/build/assets/latin-600.css" />
+<link rel="stylesheet" href="nui://sd-scooters/web/build/assets/index.css" />
+<style>
+html,body{background:transparent;margin:0;height:100%;overflow:hidden}
+#app{position:fixed;inset:0;display:none;align-items:center;justify-content:center}
+#app.on{display:flex}
+.panel{width:980px;max-width:96vw;height:640px;max-height:92vh;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--hairline-strong);border-radius:var(--radius-lg);box-shadow:0 24px 60px rgba(0,0,0,.55);font-family:var(--sans);color:var(--text-1);font-size:13px}
+.hd{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid var(--hairline)}
+.hd h1{font-size:14px;font-weight:600;margin:0;flex:0 0 auto}
+.tabs{display:flex;gap:4px;flex:1}
+.tab{height:28px;padding:0 12px;border-radius:var(--radius-sm);border:1px solid transparent;background:transparent;color:var(--text-2);font-size:12.5px;font-weight:500}
+.tab.on{background:var(--surface-3);color:var(--text-1);border-color:var(--hairline-strong)}
+.bd{flex:1;min-height:0;display:flex}
+.side{width:280px;border-right:1px solid var(--hairline);display:flex;flex-direction:column;min-height:0}
+.main{flex:1;min-width:0;overflow:auto;padding:16px;display:flex;flex-direction:column;gap:14px}
+.scroll{overflow:auto;min-height:0;flex:1}
+.item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 14px;border-bottom:1px solid var(--hairline);cursor:pointer;color:var(--text-2)}
+.item:hover{background:var(--surface-2)}
+.item.on{background:var(--surface-3);color:var(--text-1)}
+.card{background:var(--surface-2);border:1px solid var(--hairline);border-radius:var(--radius);padding:12px;display:flex;flex-direction:column;gap:10px}
+.row{display:flex;align-items:center;gap:8px}
+.grow{flex:1;min-width:0}
+.lbl{font-size:11.5px;color:var(--text-3);font-weight:500}
+.sec{display:flex;align-items:center;justify-content:space-between}
+.sec h2{font-size:13px;font-weight:600;margin:0}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:11.5px;color:var(--text-3);font-weight:500;padding:6px 8px;border-bottom:1px solid var(--hairline)}
+td{padding:6px 8px;border-bottom:1px solid var(--hairline);vertical-align:middle}
+td.act{text-align:right;white-space:nowrap}
+.sc-input{width:100%}
+select.sc-input{padding-right:6px}
+.empty{color:var(--text-3);padding:18px;text-align:center}
+.ft{min-height:34px;display:flex;align-items:center;padding:0 16px;border-top:1px solid var(--hairline);color:var(--text-3);font-size:12px}
+.ft.err{color:var(--danger)}.ft.ok{color:var(--ok)}
+.tp{display:flex;gap:6px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div id="app"><div class="panel">
+  <div class="hd">
+    <h1>Garages</h1>
+    <div class="tabs"><button class="tab" data-tab="garages">Garages</button><button class="tab" data-tab="vehicles">Vehicles</button></div>
+    <button class="sc-btn" data-act="hide">Hide</button>
+    <button class="sc-btn" data-act="close">Close</button>
+  </div>
+  <div class="bd" id="bd"></div>
+  <div class="ft" id="ft"></div>
+</div></div>
+<script>
+const app=document.getElementById('app'),bd=document.getElementById('bd'),ft=document.getElementById('ft')
+const S={tab:'garages',sel:null,snap:null,draft:{name:'',radius:40,types:['automobile'],spot:''},arm:null}
+const ERR={forbidden:'Not allowed',db:'Database unavailable',invalid_input:'Invalid input',not_found:'Not found',spot_too_close:'Too close to another spot',spot_occupied:'Spot is in use',not_in_vehicle:'Sit in the vehicle first',registered:'Vehicle already persistent',invalid_vehicle:'Invalid vehicle',invalid_plate:'Invalid plate',no_spot:'No free spot available',occupied:'Vehicle is occupied',restore_pending:'Restore delay still running',exists:'Vehicle already in the world',not_active:'Vehicle is not active',already_there:'Already in this garage',busy:'Vehicle is busy',error:'Error',unknown:'Error'}
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))
+const post=(n,b)=>fetch(`https://${GetParentResourceName()}/${n}`,{method:'POST',body:JSON.stringify(b||{})}).then(r=>r.json())
+const say=(m,k)=>{ft.textContent=m||'';ft.className='ft'+(k?' '+k:'')}
+const garage=()=>S.snap&&S.snap.garages.find(g=>g.id===S.sel)
+const stTone={free:'ok',occupied:'danger',reserved:'warn',blocked:'warn'}
+const typeBtns=(list,on,attr)=>`<div class="tp">${list.map(t=>`<button class="sc-btn ${on.includes(t)?'sc-btn--on':''}" data-${attr}="${t}">${t}</button>`).join('')}</div>`
+
+async function call(action,data,quiet){
+  const r=await post('call',{action,data})
+  if(r&&r.snapshot){S.snap=r.snapshot;if(S.sel&&!garage())S.sel=null}
+  if(r&&r.ok){if(!quiet)say('Done','ok')}else say(ERR[r&&r.err]||'Error','err')
+  render();return r
+}
+
+function render(){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.tab===S.tab))
+  if(!S.snap){bd.innerHTML='';return}
+  bd.innerHTML=S.tab==='garages'?viewGarages():viewVehicles()
+}
+
+function viewGarages(){
+  const g=garage(),d=S.draft
+  const list=S.snap.garages.map(x=>`<div class="item ${x.id===S.sel?'on':''}" data-sel="${x.id}"><span>${esc(x.name)}</span><span class="lbl">${x.spots.length} spots</span></div>`).join('')||'<div class="empty">No garages</div>'
+  const side=`<div class="side"><div class="scroll">${list}</div>
+    <div class="card" style="margin:10px">
+      <div class="lbl">New garage at your position</div>
+      <input class="sc-input" id="n-name" placeholder="Name" value="${esc(d.name)}"/>
+      <input class="sc-input" id="n-radius" type="number" placeholder="Radius" value="${esc(d.radius)}"/>
+      ${typeBtns(S.snap.types,d.types,'dt')}
+      <button class="sc-btn sc-btn--primary" data-act="g-create">Create garage</button>
+    </div></div>`
+  if(!g)return side+'<div class="main"><div class="empty">Select or create a garage</div></div>'
+  const spots=g.spots.map(s=>`<tr><td><input class="sc-input" data-lbl="${s.id}" value="${esc(s.label)}" placeholder="#${s.id}"/></td>
+    <td><span class="sc-status sc-status--${stTone[s.state]||'ok'}">${s.state}</span></td><td>${esc(s.plate||'')}</td>
+    <td class="act"><button class="sc-btn" data-act="s-move" data-id="${s.id}">Move here</button>
+    <button class="sc-btn sc-btn--danger" data-act="s-del" data-id="${s.id}">${S.arm==='s'+s.id?'Confirm':'Delete'}</button></td></tr>`).join('')
+  return side+`<div class="main">
+    <div class="card">
+      <div class="row"><div class="grow"><div class="lbl">Name</div><input class="sc-input" id="g-name" value="${esc(g.name)}"/></div>
+      <div style="width:110px"><div class="lbl">Radius</div><input class="sc-input" id="g-radius" type="number" value="${esc(g.radius)}"/></div></div>
+      <div><div class="lbl" style="margin-bottom:6px">Supported vehicle types</div>${typeBtns(S.snap.types,g.types,'gt')}</div>
+      <div class="row"><button class="sc-btn sc-btn--primary" data-act="g-save">Save</button>
+      <button class="sc-btn" data-act="g-move">Move center here</button><span class="grow"></span>
+      <button class="sc-btn sc-btn--danger" data-act="g-del">${S.arm==='g'+g.id?'Confirm delete':'Delete garage'}</button></div>
+    </div>
+    <div class="sec"><h2>Parking spots <span class="lbl">${g.spots.length}</span></h2>
+      <div class="row" style="width:340px"><input class="sc-input" id="s-label" placeholder="Label" value="${esc(S.draft.spot)}"/><button class="sc-btn sc-btn--primary" data-act="s-add">Add spot here</button></div></div>
+    <table><thead><tr><th>Label</th><th>State</th><th>Vehicle</th><th></th></tr></thead><tbody>${spots||'<tr><td colspan="4" class="empty">No spots</td></tr>'}</tbody></table>
+  </div>`
+}
+
+function viewVehicles(){
+  const opts=S.snap.garages.map(g=>`<option value="${g.id}">${esc(g.name)}</option>`).join('')
+  const rows=S.snap.vehicles.map(v=>{
+    const g=S.snap.garages.find(x=>x.id===v.garage_id)
+    const where=g?esc(g.name)+(v.spot_id?` #${v.spot_id}`:''):'Street'
+    const tone=v.status==='wrecked'?'danger':v.live?'ok':v.pending?'warn':'warn'
+    const st=v.status!=='active'?v.status:v.live?'live':v.pending?'pending':'idle'
+    return `<tr><td>${esc(v.plate)}</td><td>${esc(v.label||'')}</td><td>${esc(v.vtype)}</td><td><span class="sc-status sc-status--${tone}">${st}</span></td><td>${where}</td>
+    <td class="act">${v.status==='active'?`<select class="sc-input" style="width:130px;display:inline-block" data-g="${v.id}"><option value="">Garage…</option>${opts}</select> <button class="sc-btn" data-act="v-assign" data-id="${v.id}">Assign</button>`:''}
+    ${!v.live&&v.status!=='released'?`<button class="sc-btn" data-act="v-respawn" data-id="${v.id}">Respawn</button>`:''}</td></tr>`}).join('')
+  return `<div class="main" style="width:100%"><div class="sec"><h2>Persistent vehicles <span class="lbl">${S.snap.vehicles.length}</span></h2>
+    <button class="sc-btn sc-btn--primary" data-act="v-persist">Persist my current vehicle</button></div>
+    <table><thead><tr><th>Plate</th><th>Vehicle</th><th>Type</th><th>State</th><th>Location</th><th></th></tr></thead><tbody>${rows||'<tr><td colspan="6" class="empty">No vehicles</td></tr>'}</tbody></table></div>`
+}
+
+function arm(key){
+  if(S.arm===key){S.arm=null;return true}
+  S.arm=key;render();setTimeout(()=>{if(S.arm===key){S.arm=null;render()}},4000);return false
+}
+const toggle=(arr,t)=>{const i=arr.indexOf(t);i>=0?arr.splice(i,1):arr.push(t);return arr}
+
+document.addEventListener('click',async e=>{
+  const t=e.target.closest('button');if(!t)return
+  if(t.dataset.tab){S.tab=t.dataset.tab;render();return}
+  if(t.dataset.dt){toggle(S.draft.types,t.dataset.dt);S.draft.name=document.getElementById('n-name').value;S.draft.radius=document.getElementById('n-radius').value;render();return}
+  if(t.dataset.gt){const g=garage();if(!g)return;const types=g.types.slice();toggle(types,t.dataset.gt);if(types.length)g.types=types;render();return}
+  const id=Number(t.dataset.id),g=garage()
+  switch(t.dataset.act){
+    case 'close':post('close');break
+    case 'hide':post('hide');break
+    case 'g-create':{const n=document.getElementById('n-name'),r=document.getElementById('n-radius');S.draft.name=n.value;S.draft.radius=r.value
+      const res=await call('garage:create',{name:n.value,radius:r.value,types:S.draft.types});if(res.ok){S.draft.name='';S.sel=S.snap.garages[S.snap.garages.length-1].id;render()}break}
+    case 'g-save':if(g)call('garage:update',{id:g.id,name:document.getElementById('g-name').value,radius:document.getElementById('g-radius').value,types:g.types});break
+    case 'g-move':if(g)call('garage:update',{id:g.id,move:true,types:g.types});break
+    case 'g-del':if(g&&arm('g'+g.id))call('garage:delete',{id:g.id});break
+    case 's-add':if(g){const l=document.getElementById('s-label');S.draft.spot='';call('spot:add',{garageId:g.id,label:l.value})}break
+    case 's-move':call('spot:update',{id,move:true});break
+    case 's-del':if(arm('s'+id))call('spot:delete',{id});break
+    case 'v-persist':call('vehicle:persist',{});break
+    case 'v-respawn':call('vehicle:respawn',{vehicleId:id});break
+    case 'v-assign':{const sel=document.querySelector(`select[data-g="${id}"]`);if(sel&&sel.value)call('vehicle:assign',{vehicleId:id,garageId:Number(sel.value)});break}
+  }
+})
+document.addEventListener('click',e=>{const it=e.target.closest('[data-sel]');if(it){S.sel=Number(it.dataset.sel);S.arm=null;render()}})
+document.addEventListener('change',e=>{if(e.target.dataset.lbl)call('spot:update',{id:Number(e.target.dataset.lbl),label:e.target.value},true)})
+document.addEventListener('keydown',e=>{if(e.key==='Escape')post('close')})
+window.addEventListener('message',e=>{
+  const m=e.data
+  if(m.action==='open'){S.snap=m.data;if(S.sel&&!garage())S.sel=null;if(!S.sel&&S.snap.garages[0])S.sel=S.snap.garages[0].id;app.classList.add('on');say(S.snap.restoreEnabled?'':'Vehicle restore pending');render()}
+  else if(m.action==='hidden')app.classList.remove('on')
+  else if(m.action==='close'){app.classList.remove('on');S.arm=null}
+})
+</script>
+</body>
+</html>
