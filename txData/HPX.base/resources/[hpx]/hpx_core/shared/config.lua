@@ -32,7 +32,7 @@ HPXConfig = {
   jobs = {
     unemployed = { label = 'Unemployed', defaultDuty = false, grades = { [0] = { name = 'Unemployed', payment = 0 } } },
     police = {
-      label = 'Los Santos Police Department', defaultDuty = false,
+      label = 'Los Santos Police Department', type = 'leo', defaultDuty = false,
       grades = {
         [0] = { name = 'Recruit', payment = 250 }, [1] = { name = 'Officer', payment = 350 },
         [2] = { name = 'Sergeant', payment = 450 }, [3] = { name = 'Lieutenant', payment = 550 },
@@ -40,14 +40,14 @@ HPXConfig = {
       },
     },
     ambulance = {
-      label = 'Los Santos Medical', defaultDuty = false,
+      label = 'Los Santos Medical', type = 'ems', defaultDuty = false,
       grades = {
         [0] = { name = 'Trainee', payment = 250 }, [1] = { name = 'Paramedic', payment = 350 },
         [2] = { name = 'Doctor', payment = 450 }, [3] = { name = 'Chief', payment = 650, isboss = true },
       },
     },
     mechanic = {
-      label = 'Mechanic', defaultDuty = false,
+      label = 'Mechanic', type = 'mechanic', defaultDuty = false,
       grades = { [0] = { name = 'Apprentice', payment = 200 }, [1] = { name = 'Mechanic', payment = 300 }, [2] = { name = 'Owner', payment = 400, isboss = true } },
     },
     taxi = {

@@ -59,3 +59,18 @@ CreateThread(function()
     end)
   end
 end)
+
+exports('SetMetadata', function(source, key, value)
+  local player = HPXServer.GetPlayer(source)
+  if not player or type(key) ~= 'string' or #key > 40 then return false end
+
+  if key == 'hunger' or key == 'thirst' or key == 'stress' then
+    if type(value) ~= 'number' or value ~= value then return false end
+    value = clamp(value)
+  end
+
+  player.metadata[key] = value
+  publish(source, player.metadata)
+  HPXServer.SyncClient(source)
+  return true
+end)

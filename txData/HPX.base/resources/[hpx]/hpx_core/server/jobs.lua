@@ -14,6 +14,7 @@ function HPXServer.ResolveJob(name, grade, onduty)
   return {
     name = name,
     label = definition.label,
+    type = definition.type,
     grade = grade,
     gradelabel = entry.name,
     onduty = onduty == true,
