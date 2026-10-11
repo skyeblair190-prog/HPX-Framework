@@ -2,6 +2,7 @@ return {
     enableClient = true, 
     engineOn = true, 
     debugPoly = false,
+    interactDistance = 2.0,
 
     ui = {
         vehicleImageUrl = 'https://docs-backend.fivem.net/vehicles/{model}.webp',

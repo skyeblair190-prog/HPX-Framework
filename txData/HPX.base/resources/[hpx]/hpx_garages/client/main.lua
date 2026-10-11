@@ -209,109 +209,94 @@ local function checkCanAccess(garage)
     return true
 end
 
-local radialIds = {}
+local interactIds = {}
+local parkCtx
+local promptShown = false
+
+local function refreshParkPrompt()
+    local want = parkCtx ~= nil and cache.vehicle ~= nil and cache.seat == -1 and not uiOpen
+    if want == promptShown then return end
+    promptShown = want
+    if want then
+        lib.showTextUI(('[E] %s'):format(config.radial.parkLabel))
+    else
+        lib.hideTextUI()
+    end
+end
+
+lib.onCache('vehicle', refreshParkPrompt)
+lib.onCache('seat', refreshParkPrompt)
+
+lib.addKeybind({
+    name = 'hpx_garages_park',
+    description = 'Store vehicle in garage',
+    defaultKey = 'E',
+    onPressed = function()
+        local ctx = parkCtx
+        local vehicle = cache.vehicle
+        if not ctx or not vehicle or cache.seat ~= -1 or ctx.busy then return end
+        ctx.busy = true
+        CreateThread(function()
+            if checkCanAccess(ctx.garage) then
+                parkVehicle(vehicle, ctx.garageName)
+            end
+            ctx.busy = false
+        end)
+    end,
+})
 
 ---@param garageName string
 ---@param garage GarageConfig
 ---@param accessPoint AccessPoint
 ---@param accessPointIndex integer
----@param hasExplicitDrop boolean whether the config explicitly set a separate dropPoint
+---@param hasExplicitDrop boolean
 local function createZones(garageName, garage, accessPoint, accessPointIndex, hasExplicitDrop)
-    CreateThread(function()
-        local useRadius = accessPoint.useRadius or config.radial.useRadius
-        local dropUseRadius = accessPoint.dropUseRadius or config.radial.dropUseRadius
-        local openId = ('qbx_garage_open_%s_%s'):format(garageName, accessPointIndex)
-        local parkId = ('qbx_garage_park_%s_%s'):format(garageName, accessPointIndex)
-        radialIds[#radialIds + 1] = openId
-        radialIds[#radialIds + 1] = parkId
+    local openId = ('hpx_garage_open_%s_%s'):format(garageName, accessPointIndex)
 
-        local inMainZone = false
-
-        -- Main access point: on foot it opens the garage menu, while driving a compatible
-        -- vehicle it swaps to a "Store Vehicle" option instead. Re-evaluated live via
-        -- lib.onCache so getting in/out of a car while standing in the zone updates instantly.
-        local function updateMainRadial()
-            if not inMainZone then return end
-            lib.removeRadialItem(openId)
-            if cache.vehicle and garage.type ~= GarageType.DEPOT then
-                lib.addRadialItem({
-                    id = openId,
-                    icon = config.radial.parkIcon,
-                    label = config.radial.parkLabel,
-                    onSelect = function()
-                        if not checkCanAccess(garage) then return end
-                        parkVehicle(cache.vehicle, garageName)
-                    end,
-                })
-            elseif not cache.vehicle then
-                lib.addRadialItem({
-                    id = openId,
-                    icon = config.radial.icon,
-                    label = garage.label or config.radial.label,
-                    onSelect = function()
+    interactIds[#interactIds + 1] = exports.interact:AddInteraction({
+        name = openId,
+        coords = vec3(accessPoint.coords.x, accessPoint.coords.y, accessPoint.coords.z),
+        distance = accessPoint.useRadius or config.radial.useRadius,
+        interactDst = config.interactDistance,
+        options = {
+            {
+                name = openId,
+                label = garage.label or config.radial.label,
+                action = function()
+                    CreateThread(function()
                         if not checkCanAccess(garage) then return end
                         openGarageMenu(garageName, garage, accessPointIndex, openId)
-                    end,
-                })
-            end
-        end
+                    end)
+                end,
+            },
+        },
+    })
 
+    if garage.type == GarageType.DEPOT then return end
+
+    local function parkZone(coords, radius, id)
         lib.zones.sphere({
-            coords = accessPoint.coords,
-            radius = useRadius,
+            coords = coords,
+            radius = radius,
             onEnter = function()
-                inMainZone = true
-                updateMainRadial()
+                parkCtx = { id = id, garageName = garageName, garage = garage }
+                refreshParkPrompt()
             end,
             onExit = function()
-                inMainZone = false
-                lib.removeRadialItem(openId)
-                if uiCtx and uiCtx.zoneId == openId then closeGarageUi() end
+                if parkCtx and parkCtx.id == id then parkCtx = nil end
+                refreshParkPrompt()
             end,
             debug = config.debugPoly,
         })
+    end
 
-        lib.onCache('vehicle', updateMainRadial)
+    parkZone(accessPoint.coords, accessPoint.useRadius or config.radial.useRadius, ('main_%s_%s'):format(garageName, accessPointIndex))
 
-        -- Optional separate drop-off point, only created when the config explicitly sets one
-        -- (e.g. a distant hangar/dock spawn). Always available for storing a vehicle.
-        if hasExplicitDrop and garage.type ~= GarageType.DEPOT then
-            local inDropZone = false
-
-            local function updateDropRadial()
-                if not inDropZone then return end
-                lib.removeRadialItem(parkId)
-                if cache.vehicle then
-                    lib.addRadialItem({
-                        id = parkId,
-                        icon = config.radial.parkIcon,
-                        label = config.radial.parkLabel,
-                        onSelect = function()
-                            if not checkCanAccess(garage) then return end
-                            parkVehicle(cache.vehicle, garageName)
-                        end,
-                    })
-                end
-            end
-
-            lib.zones.sphere({
-                coords = accessPoint.dropPoint,
-                radius = dropUseRadius,
-                onEnter = function()
-                    inDropZone = true
-                    updateDropRadial()
-                end,
-                onExit = function()
-                    inDropZone = false
-                    lib.removeRadialItem(parkId)
-                end,
-                debug = config.debugPoly,
-            })
-
-            lib.onCache('vehicle', updateDropRadial)
-        end
-    end)
+    if hasExplicitDrop then
+        parkZone(accessPoint.dropPoint, accessPoint.dropUseRadius or config.radial.dropUseRadius, ('drop_%s_%s'):format(garageName, accessPointIndex))
+    end
 end
+
 
 ---@param garageInfo GarageConfig
 ---@param accessPoint AccessPoint
@@ -360,7 +345,8 @@ end)
 AddEventHandler('onResourceStop', function(resource)
     if resource ~= cache.resource then return end
     if uiOpen then SetNuiFocus(false, false) end
-    for i = 1, #radialIds do
-        lib.removeRadialItem(radialIds[i])
+    if promptShown then lib.hideTextUI() end
+    for i = 1, #interactIds do
+        exports.interact:RemoveInteraction(interactIds[i])
     end
 end)
