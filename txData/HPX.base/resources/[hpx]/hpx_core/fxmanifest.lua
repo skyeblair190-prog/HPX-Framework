@@ -2,6 +2,14 @@ fx_version 'cerulean'
 game 'gta5'
 lua54 'yes'
 
+ui_page 'web/index.html'
+
+files {
+  'web/index.html',
+  'web/style.css',
+  'web/app.js'
+}
+
 shared_scripts {
   '@ox_lib/init.lua',
   'shared/config.lua',

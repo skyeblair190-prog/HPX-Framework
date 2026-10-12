@@ -4,6 +4,25 @@ HPXConfig = {
     maxSlots = 5,
     autoLoad = false,
     selectMenu = true,
+    slotOverrides = {},
+    backgrounds = { 'Local', 'Immigrant', 'Ex-Military', 'Drifter', 'Trust Fund' },
+    scene = {
+      center = { x = -75.0, y = -818.0, z = 326.2 },
+      heading = 160.0,
+      spacing = 1.45,
+      wideDistance = 7.0,
+      time = { 21, 30 },
+      weather = 'CLEAR',
+    },
+    spawns = {
+      { key = 'last', label = 'Last location', desc = 'Pick up exactly where you left off' },
+      { key = 'legion', label = 'Legion Square', desc = 'Downtown Los Santos', coords = { x = 195.17, y = -933.77, z = 30.69, w = 144.0 } },
+      { key = 'airport', label = 'LSIA Arrivals', desc = 'Los Santos International', coords = { x = -1037.0, y = -2736.5, z = 20.17, w = 330.0 } },
+      { key = 'pillbox', label = 'Pillbox Hill', desc = 'Outside Pillbox Medical', coords = { x = 298.6, y = -584.5, z = 43.26, w = 70.0 } },
+      { key = 'pier', label = 'Del Perro Pier', desc = 'Beachfront, west coast', coords = { x = -1842.0, y = -1224.0, z = 13.02, w = 320.0 } },
+      { key = 'sandy', label = 'Sandy Shores', desc = 'Blaine County desert', coords = { x = 1961.5, y = 3740.7, z = 32.34, w = 300.0 } },
+      { key = 'paleto', label = 'Paleto Bay', desc = 'Far north, by the bay', coords = { x = -105.8, y = 6465.1, z = 31.63, w = 45.0 } },
+    },
     defaultMoney = { cash = 500, bank = 2500, crypto = 0 },
     defaultJob = { name = 'unemployed', label = 'Unemployed', grade = 0, onduty = false, payment = 0 },
     defaultGang = { name = 'none', label = 'None', grade = 0 },
@@ -70,3 +89,8 @@ HPXConfig = {
     maxCallbackPayload = 16384,
   }
 }
+
+HPXConfig.character.spawnMap = {}
+for _, spawn in ipairs(HPXConfig.character.spawns) do
+  if spawn.coords then HPXConfig.character.spawnMap[spawn.key] = spawn.coords end
+end

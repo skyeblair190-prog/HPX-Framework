@@ -7,7 +7,7 @@ local function decode(value, fallback)
   return ok and type(result) == 'table' and result or fallback
 end
 
-function HPXServer.Character.Load(source, characterId, isNew)
+function HPXServer.Character.Load(source, characterId, isNew, spawnKey)
   local license = HPXGetLicense(source)
   if not license then return nil, 'no_license' end
   characterId = math.tointeger(tonumber(characterId))
@@ -45,11 +45,14 @@ function HPXServer.Character.Load(source, characterId, isNew)
   row.metadata.fingerprint = row.metadata.fingerprint or HPXServer.GenerateFingerprint()
   row.metadata.walletid = row.metadata.walletid or HPXServer.GenerateWalletId()
   row.position = decode(row.position, nil)
+  local spawn = type(spawnKey) == 'string' and HPXConfig.character.spawnMap[spawnKey]
+  if spawn then row.position = { x = spawn.x, y = spawn.y, z = spawn.z, w = spawn.w or 0.0 } end
 
   local player = HPXServer.BuildPlayer(source, row)
   player.phone = row.phone
   HPXServer.SetPlayer(source, player)
   isNew = isNew == true
+  SetPlayerRoutingBucket(source, 0)
   TriggerEvent('hpx:server:characterLoaded', source, player, isNew)
   TriggerClientEvent('hpx:client:characterLoaded', source, HPXServer.GetClientData(player), isNew)
   return player
@@ -102,17 +105,39 @@ function HPXServer.Character.List(source)
   if not license then return nil, 'no_license' end
 
   local rows = MySQL.query.await(
-    'SELECT id, citizenid, slot, charinfo, job, gang, phone, last_seen FROM hpx_characters WHERE license = ? ORDER BY slot ASC',
+    'SELECT id, citizenid, slot, charinfo, money, job, gang, position, phone, last_seen FROM hpx_characters WHERE license = ? ORDER BY slot ASC',
     { license }
   ) or {}
 
   for _, row in ipairs(rows) do
     row.charinfo = decode(row.charinfo, {})
+    row.money = decode(row.money, {})
+    row.position = decode(row.position, nil)
     row.job = decode(row.job, {})
     row.gang = decode(row.gang, {})
   end
 
   return rows
+end
+
+function HPXServer.Character.MaxSlots(source)
+  local license = HPXGetLicense(source)
+  local override = license and HPXConfig.character.slotOverrides[license]
+  return math.tointeger(tonumber(override)) or HPXConfig.character.maxSlots
+end
+
+function HPXServer.Character.Skins(rows)
+  local ids, marks, skins = {}, {}, {}
+  for _, row in ipairs(rows) do
+    ids[#ids + 1] = row.citizenid
+    marks[#marks + 1] = '?'
+  end
+  if #ids == 0 then return skins end
+  local ok, result = pcall(MySQL.query.await, ('SELECT citizenid, model, skin FROM playerskins WHERE active = 1 AND citizenid IN (%s)'):format(table.concat(marks, ',')), ids)
+  if ok and type(result) == 'table' then
+    for _, skin in ipairs(result) do skins[skin.citizenid] = { model = skin.model, skin = decode(skin.skin, nil) } end
+  end
+  return skins
 end
 
 local function cleanName(value, max)
@@ -134,14 +159,19 @@ function HPXServer.SanitizeCharInfo(info)
   if not day or day < 1 or day > 31 or month < 1 or month > 12 or year < 1900 or year > currentYear - 18 then return nil end
 
   if not firstname or not lastname or not nationality then return nil end
-  return { firstname = firstname, lastname = lastname, nationality = nationality, gender = gender, birthdate = info.birthdate }
+  local background = HPXConfig.character.backgrounds[1]
+  for _, allowed in ipairs(HPXConfig.character.backgrounds) do
+    if info.background == allowed then background = allowed break end
+  end
+  return { firstname = firstname, lastname = lastname, nationality = nationality, gender = gender, birthdate = info.birthdate, background = background }
 end
 
 function HPXServer.Character.Create(source, slot, charinfo)
   local license = HPXGetLicense(source)
   if not license then return nil, 'no_license' end
   slot = tonumber(slot)
-  if not slot or slot < 1 or slot > HPXConfig.character.maxSlots then return nil, 'invalid_slot' end
+  slot = math.tointeger(slot)
+  if not slot or slot < 1 or slot > HPXServer.Character.MaxSlots(source) then return nil, 'invalid_slot' end
 
   local exists = MySQL.scalar.await('SELECT 1 FROM hpx_characters WHERE license = ? AND slot = ? LIMIT 1', { license, slot })
   if exists then return nil, 'slot_taken' end
@@ -173,13 +203,20 @@ function HPXServer.Character.Create(source, slot, charinfo)
   return HPXServer.Character.Load(source, id, true)
 end
 
-function HPXServer.Character.Delete(source, characterId)
+function HPXServer.Character.Delete(source, characterId, confirm)
   local license = HPXGetLicense(source)
   local player = HPXServer.GetPlayer(source)
   characterId = math.tointeger(tonumber(characterId))
   if not license or not characterId then return false, 'invalid' end
   if player and tonumber(player.charid) == characterId then return false, 'active_character' end
+  local row = MySQL.single.await('SELECT citizenid, charinfo FROM hpx_characters WHERE id = ? AND license = ? LIMIT 1', { characterId, license })
+  if not row then return false, 'not_found' end
+  if confirm ~= nil then
+    local info = decode(row.charinfo, {})
+    if tostring(confirm):lower() ~= tostring(info.firstname or ''):lower() then return false, 'confirm_mismatch' end
+  end
   local changed = MySQL.update.await('DELETE FROM hpx_characters WHERE id = ? AND license = ?', { characterId, license })
+  if changed == 1 then pcall(MySQL.update.await, 'DELETE FROM playerskins WHERE citizenid = ?', { row.citizenid }) end
   return changed == 1
 end
 

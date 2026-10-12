@@ -1,7 +1,13 @@
 lib.callback.register('hpx:characters:list', function(source)
   local list, err = HPXServer.Character.List(source)
   if not list then return nil, err end
-  return list, HPXConfig.character.maxSlots
+  return list, HPXServer.Character.MaxSlots(source), HPXServer.Character.Skins(list)
+end)
+
+lib.callback.register('hpx:characters:enter', function(source)
+  if HPXServer.GetPlayer(source) then return false end
+  SetPlayerRoutingBucket(source, 5000 + source)
+  return true
 end)
 
 lib.callback.register('hpx:characters:logout', function(source)
@@ -15,14 +21,19 @@ lib.callback.register('hpx:characters:create', function(source, data)
   return HPXServer.GetClientData(player)
 end)
 
-lib.callback.register('hpx:characters:select', function(source, id)
-  local player, err = HPXServer.Character.Load(source, id)
+lib.callback.register('hpx:characters:select', function(source, data)
+  local id, spawn = data, nil
+  if type(data) == 'table' then id, spawn = data.id, data.spawn end
+  local player, err = HPXServer.Character.Load(source, id, false, spawn)
   if not player then return nil, err end
   return HPXServer.GetClientData(player)
 end)
 
-lib.callback.register('hpx:characters:delete', function(source, id)
-  return HPXServer.Character.Delete(source, id)
+lib.callback.register('hpx:characters:delete', function(source, data)
+  if type(data) == 'table' then
+    return HPXServer.Character.Delete(source, data.id, tostring(data.confirm or ''))
+  end
+  return HPXServer.Character.Delete(source, data)
 end)
 
 lib.callback.register('hpx:characters:autoload', function(source)
